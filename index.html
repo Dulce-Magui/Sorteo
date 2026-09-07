@@ -237,6 +237,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+    <!-- Librerías de Firebase (compatibles) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBAaisU4YkdXuy46BcMqazDyK2fx6luazM",
@@ -265,6 +269,7 @@
         let participantesRegistrados = {};
         let tokensValidos = {};
         let sorteoEjecutado = false;
+        let timerInterval = null;
 
         function crearGrid() {
             grid.innerHTML = '';
@@ -278,7 +283,10 @@
             }
         }
 
-        // Sincronización en tiempo real de casillas y tokens
+        // 1. Inicializamos la cuadrícula inmediatamente
+        crearGrid();
+
+        // 2. Sincronización de casillas
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
             for (let i = 1; i <= TOTAL_CASILLAS; i++) {
@@ -295,8 +303,46 @@
             }
         });
 
+        // 3. Sincronización de tokens
         db.ref('tokens').on('value', (snapshot) => {
             tokensValidos = snapshot.val() || {};
+        });
+
+        // 4. Temporizador en tiempo real
+        db.ref('tiempoSorteo').on('value', (snapshot) => {
+            const fechaString = snapshot.val();
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            if (!fechaString) {
+                document.getElementById('timer').innerText = "Fecha de sorteo no definida";
+                return;
+            }
+
+            const targetDate = new Date(fechaString).getTime();
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
+                    iniciarAnimacionSorteo();
+                } else {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    let textoTiempo = "";
+                    if (d > 0) textoTiempo += `${d}d `;
+                    if (h > 0 || d > 0) textoTiempo += `${h}h `;
+                    textoTiempo += `${m}m ${s}s`;
+
+                    document.getElementById('timer').innerText = `Tiempo restante: ${textoTiempo}`;
+                }
+            }, 1000);
         });
 
         async function seleccionarCasilla(numero) {
@@ -305,25 +351,25 @@
                 return;
             }
 
-            const tokenInput = prompt("Coloca el token de seguridad de 5 digitos proporcionado por el anfitrión");
+            const tokenInput = prompt("Coloca el token de seguridad de 5 dígitos:");
             if (!tokenInput) return;
 
             const tokenLimpio = tokenInput.trim().toUpperCase();
 
             if (!tokensValidos[tokenLimpio]) {
-                alert("Token inválido o no existente. Verifica el código e intenta nuevamente.");
+                alert("Token inválido o no existente.");
                 return;
             }
 
             if (tokensValidos[tokenLimpio].usado) {
-                alert(`Este token ya fue utilizado previamente para la casilla #${tokensValidos[tokenLimpio].casilla}.`);
+                alert(`Este token ya fue utilizado para la casilla #${tokensValidos[tokenLimpio].casilla}.`);
                 return;
             }
 
             const nombre = prompt(`Ingresa tu NOMBRE COMPLETO:`);
             if (!nombre) return;
 
-            const telefono = prompt(`Ingresa tu TELÉFONO de contacto:`);
+            const telefono = prompt(`Ingresa tu TELÉFONO:`);
             if (!telefono) return;
 
             const datosReserva = {
@@ -342,10 +388,9 @@
                 fechaUso: Date.now()
             });
 
-            alert(`¡Casilla #${numero} reservada con éxito mediante el token ${tokenLimpio}!`);
+            alert(`¡Casilla #${numero} reservada con éxito!`);
         }
 
-        // Ejecución del sorteo automatizado al vencer el temporizador
         async function iniciarAnimacionSorteo() {
             if (sorteoEjecutado) return;
             sorteoEjecutado = true;
@@ -363,10 +408,7 @@
 
             for (const premio of premios) {
                 for (let i = 1; i <= premio.cantidad; i++) {
-                    if (bolsaSorteo.length === 0) {
-                        alert("Se agotaron las casillas reservadas para entregar los premios restantes.");
-                        return;
-                    }
+                    if (bolsaSorteo.length === 0) return;
                     await sortearUnGanador(premio.catId, `${premio.nombre} #${i}`, bolsaSorteo);
                 }
             }
@@ -428,59 +470,6 @@
                 }, intervalo);
             });
         }
-
-        // Temporizador sincronizado en tiempo real con Firebase
-        let timerInterval = null;
-
-        db.ref('tiempoSorteo').on('value', (snapshot) => {
-            const fechaString = snapshot.val();
-
-            if (timerInterval) clearInterval(timerInterval);
-
-            if (!fechaString) {
-                document.getElementById('timer').innerText = "Fecha de sorteo no definida";
-                return;
-            }
-
-            const targetDate = new Date(fechaString).getTime();
-
-            timerInterval = setInterval(() => {
-                const now = Date.now();
-                const diff = targetDate - now;
-
-                if (diff <= 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
-                    iniciarAnimacionSorteo();
-                } else {
-                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    let textoTiempo = "";
-                    if (d > 0) textoTiempo += `${d}d `;
-                    if (h > 0 || d > 0) textoTiempo += `${h}h `;
-                    textoTiempo += `${m}m ${s}s`;
-
-                    document.getElementById('timer').innerText = `Tiempo restante para el sorteo: ${textoTiempo}`;
-                }
-            }, 1000);
-        });
-        
-
-            if (diff <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
-                iniciarAnimacionSorteo();
-            } else {
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('timer').innerText = `Tiempo restante para el sorteo: ${m}m ${s}s`;
-            }
-        }, 1000);
-
-        crearGrid();
     </script>
 </body>
 </html>
