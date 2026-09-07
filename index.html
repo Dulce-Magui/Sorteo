@@ -310,9 +310,9 @@
             tokensValidos = snapshot.val() || {};
         });
 
-        // 4. Temporizador en tiempo real
-        db.ref('tiempoSorteo').on('value', (snapshot) => {
-            const fechaString = snapshot.val();
+       // 4. Temporizador en tiempo real
+       db.ref('configuracion/fechaSorteo').on('value', (snapshot) => {
+       const fechaString = snapshot.val();
 
             if (timerInterval) clearInterval(timerInterval);
 
@@ -348,50 +348,64 @@
         });
 
         async function seleccionarCasilla(numero) {
-            if (participantesRegistrados[numero]) {
-                alert(`La casilla #${numero} ya está reservada por ${participantesRegistrados[numero].nombre}`);
-                return;
-            }
+    if (participantesRegistrados[numero]) {
+        alert(`La casilla #${numero} ya está reservada por ${participantesRegistrados[numero].nombre}`);
+        return;
+    }
 
-            const tokenInput = prompt("Coloca el token de seguridad de 5 dígitos:");
-            if (!tokenInput) return;
+    const tokenInput = prompt("Coloca el token de seguridad de 5 dígitos:");
+    if (!tokenInput) return;
+    const tokenLimpio = tokenInput.trim().toUpperCase();
 
-            const tokenLimpio = tokenInput.trim().toUpperCase();
+    const tokenRef = db.ref(`tokens/${tokenLimpio}`);
 
-            if (!tokensValidos[tokenLimpio]) {
-                alert("Token inválido o no existente.");
-                return;
-            }
+    try {
+        // Ejecuta la validación y reserva en una sola operación atómica
+        const { committed } = await tokenRef.transaction((currentData) => {
+            if (currentData === null) return; // Token inexistente
+            if (currentData.usado === true) return; // Token ya utilizado
 
-            if (tokensValidos[tokenLimpio].usado) {
-                alert(`Este token ya fue utilizado para la casilla #${tokensValidos[tokenLimpio].casilla}.`);
-                return;
-            }
-
-            const nombre = prompt(`Ingresa tu NOMBRE COMPLETO:`);
-            if (!nombre) return;
-
-            const telefono = prompt(`Ingresa tu TELÉFONO:`);
-            if (!telefono) return;
-
-            const datosReserva = {
-                nombre: nombre.trim(),
-                telefono: telefono.trim(),
-                token: tokenLimpio,
-                fecha: Date.now()
-            };
-
-            await db.ref(`casillas/${numero}`).set(datosReserva);
-            await db.ref(`tokens/${tokenLimpio}`).set({
+            return {
+                ...currentData,
                 usado: true,
-                casilla: numero,
-                nombre: nombre.trim(),
-                telefono: telefono.trim(),
-                fechaUso: Date.now()
-            });
+                casilla: numero
+            };
+        });
 
-            alert(`¡Casilla #${numero} reservada con éxito!`);
+        if (!committed) {
+            alert("Token inválido, no existente o ya utilizado por otra persona.");
+            return;
         }
+
+        const nombre = prompt(`Ingresa tu NOMBRE COMPLETO:`);
+        if (!nombre) return;
+
+        const telefono = prompt(`Ingresa tu TELÉFONO:`);
+        if (!telefono) return;
+
+        const datosReserva = {
+            nombre: nombre.trim(),
+            telefono: telefono.trim(),
+            token: tokenLimpio,
+            fecha: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        // Guarda los datos definitivos en la casilla y en el token
+        await db.ref(`casillas/${numero}`).set(datosReserva);
+        await tokenRef.update({
+            nombre: nombre.trim(),
+            telefono: telefono.trim(),
+            fechaUso: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        alert(`¡Casilla #${numero} reservada con éxito!`);
+
+    } catch (error) {
+        console.error("Error al procesar la reserva:", error);
+        alert("Ocurrió un error al intentar reservar. Inténtalo nuevamente.");
+    }
+}
+
 
         async function iniciarAnimacionSorteo() {
             if (sorteoEjecutado) return;
