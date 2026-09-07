@@ -429,11 +429,45 @@
             });
         }
 
-        // Temporizador de 10 minutos (600,000 ms)
-        const targetDate = new Date().getTime() + (10 * 60 * 1000);
-        const timerInterval = setInterval(() => {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
+        // Temporizador sincronizado en tiempo real con Firebase
+        let timerInterval = null;
+
+        db.ref('tiempoSorteo').on('value', (snapshot) => {
+            const fechaString = snapshot.val();
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            if (!fechaString) {
+                document.getElementById('timer').innerText = "Fecha de sorteo no definida";
+                return;
+            }
+
+            const targetDate = new Date(fechaString).getTime();
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
+                    iniciarAnimacionSorteo();
+                } else {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    let textoTiempo = "";
+                    if (d > 0) textoTiempo += `${d}d `;
+                    if (h > 0 || d > 0) textoTiempo += `${h}h `;
+                    textoTiempo += `${m}m ${s}s`;
+
+                    document.getElementById('timer').innerText = `Tiempo restante para el sorteo: ${textoTiempo}`;
+                }
+            }, 1000);
+        });
+        
 
             if (diff <= 0) {
                 clearInterval(timerInterval);
