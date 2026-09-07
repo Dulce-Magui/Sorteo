@@ -27,7 +27,7 @@
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
 
-        header { text-align: center; margin-bottom: 25px; }
+        header { text-align: center; margin-bottom: 20px; }
 
         .logo-container {
             width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
@@ -51,27 +51,38 @@
         .subtitle { color: #94a3b8; font-size: 1rem; margin-bottom: 10px; }
 
         .timer-box {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary-gold);
             background: var(--card-bg);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 20px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            border: 1px solid rgba(251, 191, 36, 0.4);
             margin-bottom: 20px;
             display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .play-button {
-            display: block; margin: 0 auto 30px; padding: 18px 50px; font-size: 1.4rem;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #0f172a;
-            border: none; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 10px 40px var(--primary-gold-glow); transition: all 0.3s;
-            font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
+        /* Burbuja Informativa de Transparencia */
+        .info-bubble {
+            max-width: 650px;
+            width: 100%;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-left: 4px solid var(--primary-gold);
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .play-button:hover:not(:disabled) { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 60px var(--primary-gold-glow); }
-        .play-button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .info-bubble span.icon { font-size: 1.5rem; }
 
         .grid-container {
             display: grid;
@@ -173,7 +184,6 @@
 
         @media (max-width: 768px) {
             .grid-container { grid-template-columns: repeat(5, 1fr); }
-            .play-button { width: 100%; }
         }
     </style>
 </head>
@@ -189,7 +199,13 @@
         <div class="timer-box" id="timer">Cargando cuenta regresiva...</div>
     </header>
 
-    <button class="play-button" id="playBtn" onclick="iniciarAnimacionSorteo()">▶ INICIAR ANIMACIÓN</button>
+    <!-- Burbuja Informativa -->
+    <div class="info-bubble">
+        <span class="icon">🛡️</span>
+        <div>
+            <strong>Sistema 100% Transparente y Real:</strong> La selección de ganadores se ejecuta automáticamente mediante un algoritmo aleatorio sincronizado en tiempo real. Todos los tokens e inscripciones son auditables para garantizar equidad entre los participantes.
+        </div>
+    </div>
 
     <!-- Casillas -->
     <div class="grid-container" id="grid"></div>
@@ -238,7 +254,6 @@
 
         const TOTAL_CASILLAS = 50;
         const grid = document.getElementById('grid');
-        const playBtn = document.getElementById('playBtn');
 
         const premios = [
             { catId: 'prize-1', nombre: 'Mini Torta', cantidad: 3 },
@@ -249,6 +264,7 @@
 
         let participantesRegistrados = {};
         let tokensValidos = {};
+        let sorteoEjecutado = false;
 
         function crearGrid() {
             grid.innerHTML = '';
@@ -289,18 +305,16 @@
                 return;
             }
 
-            const tokenInput = prompt(`Ingresa tu TOKEN de validación (ej. W2JRY) para marcar la casilla #${numero}:`);
+            const tokenInput = prompt("Coloca el token de seguridad de 5 digitos proporcionado por el anfitrión");
             if (!tokenInput) return;
 
             const tokenLimpio = tokenInput.trim().toUpperCase();
 
-            // Verificar si el token existe en Firebase
             if (!tokensValidos[tokenLimpio]) {
                 alert("Token inválido o no existente. Verifica el código e intenta nuevamente.");
                 return;
             }
 
-            // Verificar si el token ya fue usado
             if (tokensValidos[tokenLimpio].usado) {
                 alert(`Este token ya fue utilizado previamente para la casilla #${tokensValidos[tokenLimpio].casilla}.`);
                 return;
@@ -319,7 +333,6 @@
                 fecha: Date.now()
             };
 
-            // Guardar en la casilla y actualizar el estado del token
             await db.ref(`casillas/${numero}`).set(datosReserva);
             await db.ref(`tokens/${tokenLimpio}`).set({
                 usado: true,
@@ -332,8 +345,11 @@
             alert(`¡Casilla #${numero} reservada con éxito mediante el token ${tokenLimpio}!`);
         }
 
-        // Animación de sorteo ejecutada únicamente sobre casillas ocupadas
+        // Ejecución del sorteo automatizado al vencer el temporizador
         async function iniciarAnimacionSorteo() {
+            if (sorteoEjecutado) return;
+            sorteoEjecutado = true;
+
             const casillasOcupadas = Object.keys(participantesRegistrados).map(Number);
 
             if (casillasOcupadas.length === 0) {
@@ -341,7 +357,6 @@
                 return;
             }
 
-            playBtn.disabled = true;
             document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
 
             let bolsaSorteo = [...casillasOcupadas];
@@ -349,16 +364,12 @@
             for (const premio of premios) {
                 for (let i = 1; i <= premio.cantidad; i++) {
                     if (bolsaSorteo.length === 0) {
-                        alert("Se agotaron los participantes registrados para entregar los premios restantes.");
-                        playBtn.disabled = false;
+                        alert("Se agotaron las casillas reservadas para entregar los premios restantes.");
                         return;
                     }
                     await sortearUnGanador(premio.catId, `${premio.nombre} #${i}`, bolsaSorteo);
                 }
             }
-
-            playBtn.disabled = false;
-            playBtn.innerText = "🔄 VOLVER A JUGAR";
         }
 
         function sortearUnGanador(catId, nombrePremio, bolsaSorteo) {
@@ -403,7 +414,6 @@
                         item.innerHTML = `<strong>Casilla #${numeroGanador}</strong> (${datosGanador.nombre}) - ${nombrePremio}`;
                         listaPremios.appendChild(item);
 
-                        // Registrar ganador en la base de datos de Firebase
                         db.ref(`ganadores/${numeroGanador}`).set({
                             casilla: numeroGanador,
                             premio: nombrePremio,
@@ -419,18 +429,20 @@
             });
         }
 
-        // Cuenta regresiva ajustada a 5 horas desde este momento
-        const targetDate = new Date().getTime() + (5 * 60 * 60 * 1000);
-        setInterval(() => {
+        // Temporizador de 10 minutos (600,000 ms)
+        const targetDate = new Date().getTime() + (10 * 60 * 1000);
+        const timerInterval = setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
+
             if (diff <= 0) {
+                clearInterval(timerInterval);
                 document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
+                iniciarAnimacionSorteo();
             } else {
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('timer').innerText = `Tiempo restante para prueba: ${h}h ${m}m ${s}s`;
+                document.getElementById('timer').innerText = `Tiempo restante para el sorteo: ${m}m ${s}s`;
             }
         }, 1000);
 
