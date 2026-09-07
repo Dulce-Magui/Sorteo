@@ -6,12 +6,17 @@
     <title>Gran Sorteo - 25 Premios</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary-gold: #fbbf24;
-            --primary-gold-glow: rgba(251, 191, 36, 0.6);
-            --text-color: #f8fafc;
-            --cell-default: #334155;
+            --bg-color: #fdf8f5;
+            --card-bg: #ffffff;
+            --primary-pink: #f472b6;
+            --primary-pink-glow: rgba(244, 114, 182, 0.4);
+            --primary-pink-dark: #db2777;
+            --primary-beige: #fef3c7;
+            --primary-beige-border: #fcd34d;
+            --text-color: #4a3e3d;
+            --subtitle-color: #8c7a78;
+            --cell-default: #fce7f3;
+            --cell-border: #fbcfe8;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -24,62 +29,62 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #fdf8f5 0%, #fae8e0 100%);
         }
 
         header { text-align: center; margin-bottom: 20px; }
 
         .logo-container {
             width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-            border: 4px solid var(--primary-gold); margin: 0 auto 15px;
-            box-shadow: 0 0 40px var(--primary-gold-glow);
-            background-color: #000; animation: logoGlow 3s ease-in-out infinite;
+            border: 4px solid var(--primary-pink); margin: 0 auto 15px;
+            box-shadow: 0 0 30px var(--primary-pink-glow);
+            background-color: #fff; animation: logoGlow 3s ease-in-out infinite;
         }
 
         @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 0 30px var(--primary-gold-glow); }
-            50% { box-shadow: 0 0 60px var(--primary-gold-glow), 0 0 100px rgba(251, 191, 36, 0.4); }
+            0%, 100% { box-shadow: 0 0 20px var(--primary-pink-glow); }
+            50% { box-shadow: 0 0 40px var(--primary-pink-glow), 0 0 60px rgba(244, 114, 182, 0.3); }
         }
 
         .logo-container img { width: 100%; height: 100%; object-fit: cover; }
 
         h1 {
-            font-size: 2.2rem; color: var(--primary-gold); text-transform: uppercase;
-            letter-spacing: 2px; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); margin-bottom: 5px;
+            font-size: 2.2rem; color: var(--primary-pink-dark); text-transform: uppercase;
+            letter-spacing: 2px; text-shadow: 0 0 10px rgba(244, 114, 182, 0.3); margin-bottom: 5px;
         }
 
-        .subtitle { color: #94a3b8; font-size: 1rem; margin-bottom: 10px; }
+        .subtitle { color: var(--subtitle-color); font-size: 1rem; margin-bottom: 10px; }
 
         .timer-box {
             font-size: 1.2rem;
             font-weight: bold;
-            color: var(--primary-gold);
+            color: var(--primary-pink-dark);
             background: var(--card-bg);
             padding: 10px 20px;
             border-radius: 20px;
-            border: 1px solid rgba(251, 191, 36, 0.4);
+            border: 1px solid var(--primary-pink);
             margin-bottom: 20px;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15);
         }
 
         /* Burbuja Informativa de Transparencia */
         .info-bubble {
             max-width: 650px;
             width: 100%;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-left: 4px solid var(--primary-gold);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--primary-pink);
+            border-left: 4px solid var(--primary-pink-dark);
             border-radius: 10px;
             padding: 12px 18px;
             margin-bottom: 25px;
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: var(--text-color);
             line-height: 1.4;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .info-bubble span.icon { font-size: 1.5rem; }
@@ -94,8 +99,8 @@
             padding: 15px;
             background: var(--card-bg);
             border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            border: 3px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
+            border: 3px solid var(--primary-beige-border);
         }
 
         .cell {
@@ -108,16 +113,17 @@
             justify-content: center;
             font-weight: 900;
             font-size: 1.1rem;
-            color: #ffffff;
-            border: 2px solid #475569;
+            color: var(--primary-pink-dark);
+            border: 2px solid var(--cell-border);
             user-select: none;
             transition: all 0.2s ease;
             cursor: pointer;
         }
 
         .cell.occupied {
-            background-color: #ef4444;
-            border-color: #dc2626;
+            background-color: #fca5a5;
+            border-color: #f87171;
+            color: #7f1d1d;
             cursor: not-allowed;
         }
 
@@ -128,17 +134,17 @@
         }
 
         @keyframes chaosAnim {
-            0% { background-color: #ef4444; transform: scale(1.15); box-shadow: 0 0 15px #ef4444; }
-            33% { background-color: #f59e0b; transform: scale(1.2); box-shadow: 0 0 20px #f59e0b; }
-            66% { background-color: #8b5cf6; transform: scale(0.9); box-shadow: 0 0 15px #8b5cf6; }
-            100% { background-color: #ec4899; transform: scale(1.15); box-shadow: 0 0 15px #ec4899; }
+            0% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
+            33% { background-color: #fde047; transform: scale(1.2); box-shadow: 0 0 20px #fde047; }
+            66% { background-color: #a7f3d0; transform: scale(0.9); box-shadow: 0 0 15px #a7f3d0; }
+            100% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
         }
 
         .cell.winner {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
             color: #ffffff;
-            border-color: #34d399;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+            border-color: #6ee7b7;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
             animation: winnerReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -149,7 +155,7 @@
 
         .prizes-section { width: 100%; max-width: 900px; }
         .prizes-title {
-            text-align: center; color: var(--primary-gold); font-size: 1.8rem;
+            text-align: center; color: var(--primary-pink-dark); font-size: 1.8rem;
             margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
         }
 
@@ -158,21 +164,21 @@
         }
 
         .prize-card {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 12px;
-            padding: 15px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+            border: 2px solid var(--primary-beige-border); border-radius: 12px;
+            padding: 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
         }
 
         .prize-card h3 {
-            color: var(--primary-gold); font-size: 1.1rem; margin-bottom: 12px;
-            padding-bottom: 8px; border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+            color: var(--primary-pink-dark); font-size: 1.1rem; margin-bottom: 12px;
+            padding-bottom: 8px; border-bottom: 2px solid var(--primary-pink);
         }
 
         .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
 
         .winner-item {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #0f172a; font-weight: 700; font-size: 0.85rem;
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+            color: #713f12; font-weight: 700; font-size: 0.85rem;
             padding: 8px 12px; border-radius: 6px; text-align: left;
             animation: slideIn 0.4s ease forwards;
         }
@@ -232,10 +238,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Librerías de Firebase (compatibles) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <!-- Librerías de Firebase (compatibles) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
