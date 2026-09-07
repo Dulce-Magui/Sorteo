@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gran Sorteo - 25 Premios</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary-gold: #fbbf24;
+            --primary-gold-glow: rgba(251, 191, 36, 0.6);
+            --text-color: #f8fafc;
+            --cell-default: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        header { text-align: center; margin-bottom: 25px; }
+
+        .logo-container {
+            width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
+            border: 4px solid var(--primary-gold); margin: 0 auto 15px;
+            box-shadow: 0 0 40px var(--primary-gold-glow);
+            background-color: #000; animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 30px var(--primary-gold-glow); }
+            50% { box-shadow: 0 0 60px var(--primary-gold-glow), 0 0 100px rgba(251, 191, 36, 0.4); }
+        }
+
+        .logo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        h1 {
+            font-size: 2.2rem; color: var(--primary-gold); text-transform: uppercase;
+            letter-spacing: 2px; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); margin-bottom: 5px;
+        }
+
+        .subtitle { color: #94a3b8; font-size: 1rem; margin-bottom: 10px; }
+
+        .timer-box {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            background: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .play-button {
+            display: block; margin: 0 auto 30px; padding: 18px 50px; font-size: 1.4rem;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #0f172a;
+            border: none; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 10px 40px var(--primary-gold-glow); transition: all 0.3s;
+            font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .play-button:hover:not(:disabled) { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 60px var(--primary-gold-glow); }
+        .play-button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            max-width: 650px;
+            width: 100%;
+            margin-bottom: 35px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 3px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .cell {
+            width: 100%;
+            height: 50px;
+            background-color: var(--cell-default);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: #ffffff;
+            border: 2px solid #475569;
+            user-select: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .cell.occupied {
+            background-color: #ef4444;
+            border-color: #dc2626;
+            cursor: not-allowed;
+        }
+
+        .cell.chaos {
+            animation: chaosAnim 0.15s infinite;
+            z-index: 5;
+            border-color: white;
+        }
+
+        @keyframes chaosAnim {
+            0% { background-color: #ef4444; transform: scale(1.15); box-shadow: 0 0 15px #ef4444; }
+            33% { background-color: #f59e0b; transform: scale(1.2); box-shadow: 0 0 20px #f59e0b; }
+            66% { background-color: #8b5cf6; transform: scale(0.9); box-shadow: 0 0 15px #8b5cf6; }
+            100% { background-color: #ec4899; transform: scale(1.15); box-shadow: 0 0 15px #ec4899; }
+        }
+
+        .cell.winner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border-color: #34d399;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+            animation: winnerReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes winnerReveal {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .prizes-section { width: 100%; max-width: 900px; }
+        .prizes-title {
+            text-align: center; color: var(--primary-gold); font-size: 1.8rem;
+            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .prizes-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;
+        }
+
+        .prize-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 12px;
+            padding: 15px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .prize-card h3 {
+            color: var(--primary-gold); font-size: 1.1rem; margin-bottom: 12px;
+            padding-bottom: 8px; border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+
+        .winner-item {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #0f172a; font-weight: 700; font-size: 0.85rem;
+            padding: 8px 12px; border-radius: 6px; text-align: left;
+            animation: slideIn 0.4s ease forwards;
+        }
+
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: repeat(5, 1fr); }
+            .play-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://scontent.faep7-1.fna.fbcdn.net/v/t39.30808-6/756044042_122105735325400303_936057262058649175_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x931&ctp=s1024x931&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=AQJ243OrKbYQ7kNvwGi_7mS&_nc_oc=AdoArb8we6cpKMDn6MnsZEWAJfyK2Dsh95OjzZv2e8m-cv-ZGJ6bCyfgKpkYeEEYoq0&_nc_zt=23&_nc_ht=scontent.faep7-1.fna&_nc_gid=Un99QJ3-IPRMGx-_zavE0Q&_nc_ss=7b289&oh=00_AQLwL_dTKFYBqtHNHTrYu34Uha3rnWsGPs6VUPKsMmDt0w&oe=6AA37763" 
+                 alt="Logo" onerror="this.parentElement.innerText='LOGO'">
+        </div>
+        <h1>Gran Sorteo</h1>
+        <p class="subtitle">50 Casillas • 25 Premios</p>
+        <div class="timer-box" id="timer">Cargando cuenta regresiva...</div>
+    </header>
+
+    <button class="play-button" id="playBtn" onclick="iniciarAnimacionSorteo()">▶ INICIAR ANIMACIÓN</button>
+
+    <!-- Casillas -->
+    <div class="grid-container" id="grid"></div>
+
+    <!-- Lista de Ganadores / Premios -->
+    <div class="prizes-section">
+        <h2 class="prizes-title">🏆 25 Premios 🏆</h2>
+        <div class="prizes-grid">
+            <div class="prize-card">
+                <h3>🎂 3 Mini Tortas</h3>
+                <div class="prize-winners" id="prize-1"></div>
+            </div>
+            <div class="prize-card">
+                <h3>🍰 10 Porciones de Torta</h3>
+                <div class="prize-winners" id="prize-2"></div>
+            </div>
+            <div class="prize-card">
+                <h3>🥃 2 Cajas de Shots</h3>
+                <div class="prize-winners" id="prize-3"></div>
+            </div>
+            <div class="prize-card">
+                <h3>🎟️ 10 Cupones 15% OFF</h3>
+                <div class="prize-winners" id="prize-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librerías de Firebase (compatibles) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAaisU4YkdXuy46BcMqazDyK2fx6luazM",
+            authDomain: "sorteo-01.firebaseapp.com",
+            databaseURL: "https://sorteo-01-default-rtdb.firebaseio.com",
+            projectId: "sorteo-01",
+            storageBucket: "sorteo-01.firebasestorage.app",
+            messagingSenderId: "719595477279",
+            appId: "1:719595477279:web:fcb0bebc5965b013f3b82a",
+            measurementId: "G-8ZG47Q7GTL"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const TOTAL_CASILLAS = 50;
+        const grid = document.getElementById('grid');
+        const playBtn = document.getElementById('playBtn');
+
+        const premios = [
+            { catId: 'prize-1', nombre: 'Mini Torta', cantidad: 3 },
+            { catId: 'prize-2', nombre: 'Porción Torta', cantidad: 10 },
+            { catId: 'prize-3', nombre: 'Caja x6 Shots', cantidad: 2 },
+            { catId: 'prize-4', nombre: 'Cupón 15% OFF', cantidad: 10 }
+        ];
+
+        let participantesRegistrados = {};
+        let tokensValidos = {};
+
+        function crearGrid() {
+            grid.innerHTML = '';
+            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.id = `cell-${i}`;
+                cell.innerText = i;
+                cell.onclick = () => seleccionarCasilla(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        // Sincronización en tiempo real de casillas y tokens
+        db.ref('casillas').on('value', (snapshot) => {
+            participantesRegistrados = snapshot.val() || {};
+            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+                const cell = document.getElementById(`cell-${i}`);
+                if (cell) {
+                    if (participantesRegistrados[i]) {
+                        cell.classList.add('occupied');
+                        cell.title = `Reservado por: ${participantesRegistrados[i].nombre}`;
+                    } else {
+                        cell.classList.remove('occupied');
+                        cell.title = '';
+                    }
+                }
+            }
+        });
+
+        db.ref('tokens').on('value', (snapshot) => {
+            tokensValidos = snapshot.val() || {};
+        });
+
+        async function seleccionarCasilla(numero) {
+            if (participantesRegistrados[numero]) {
+                alert(`La casilla #${numero} ya está reservada por ${participantesRegistrados[numero].nombre}`);
+                return;
+            }
+
+            const tokenInput = prompt(`Ingresa tu TOKEN de validación (ej. W2JRY) para marcar la casilla #${numero}:`);
+            if (!tokenInput) return;
+
+            const tokenLimpio = tokenInput.trim().toUpperCase();
+
+            // Verificar si el token existe en Firebase
+            if (!tokensValidos[tokenLimpio]) {
+                alert("Token inválido o no existente. Verifica el código e intenta nuevamente.");
+                return;
+            }
+
+            // Verificar si el token ya fue usado
+            if (tokensValidos[tokenLimpio].usado) {
+                alert(`Este token ya fue utilizado previamente para la casilla #${tokensValidos[tokenLimpio].casilla}.`);
+                return;
+            }
+
+            const nombre = prompt(`Ingresa tu NOMBRE COMPLETO:`);
+            if (!nombre) return;
+
+            const telefono = prompt(`Ingresa tu TELÉFONO de contacto:`);
+            if (!telefono) return;
+
+            const datosReserva = {
+                nombre: nombre.trim(),
+                telefono: telefono.trim(),
+                token: tokenLimpio,
+                fecha: Date.now()
+            };
+
+            // Guardar en la casilla y actualizar el estado del token
+            await db.ref(`casillas/${numero}`).set(datosReserva);
+            await db.ref(`tokens/${tokenLimpio}`).set({
+                usado: true,
+                casilla: numero,
+                nombre: nombre.trim(),
+                telefono: telefono.trim(),
+                fechaUso: Date.now()
+            });
+
+            alert(`¡Casilla #${numero} reservada con éxito mediante el token ${tokenLimpio}!`);
+        }
+
+        // Animación de sorteo ejecutada únicamente sobre casillas ocupadas
+        async function iniciarAnimacionSorteo() {
+            const casillasOcupadas = Object.keys(participantesRegistrados).map(Number);
+
+            if (casillasOcupadas.length === 0) {
+                alert("No hay casillas reservadas para realizar el sorteo.");
+                return;
+            }
+
+            playBtn.disabled = true;
+            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
+
+            let bolsaSorteo = [...casillasOcupadas];
+
+            for (const premio of premios) {
+                for (let i = 1; i <= premio.cantidad; i++) {
+                    if (bolsaSorteo.length === 0) {
+                        alert("Se agotaron los participantes registrados para entregar los premios restantes.");
+                        playBtn.disabled = false;
+                        return;
+                    }
+                    await sortearUnGanador(premio.catId, `${premio.nombre} #${i}`, bolsaSorteo);
+                }
+            }
+
+            playBtn.disabled = false;
+            playBtn.innerText = "🔄 VOLVER A JUGAR";
+        }
+
+        function sortearUnGanador(catId, nombrePremio, bolsaSorteo) {
+            return new Promise((resolve) => {
+                let tiempoRuleta = 1500;
+                let intervalo = 80;
+                let tiempoTranscurrido = 0;
+                let ultimaCasilla = null;
+
+                const timer = setInterval(() => {
+                    if (ultimaCasilla) {
+                        const cellPrev = document.getElementById(`cell-${ultimaCasilla}`);
+                        if (cellPrev && !cellPrev.classList.contains('winner')) {
+                            cellPrev.classList.remove('chaos');
+                        }
+                    }
+
+                    const indexRandom = Math.floor(Math.random() * bolsaSorteo.length);
+                    ultimaCasilla = bolsaSorteo[indexRandom];
+                    
+                    const cell = document.getElementById(`cell-${ultimaCasilla}`);
+                    if (cell) cell.classList.add('chaos');
+
+                    tiempoTranscurrido += intervalo;
+
+                    if (tiempoTranscurrido >= tiempoRuleta) {
+                        clearInterval(timer);
+                        
+                        const ganadorIndex = Math.floor(Math.random() * bolsaSorteo.length);
+                        const numeroGanador = bolsaSorteo.splice(ganadorIndex, 1)[0];
+                        
+                        if (cell) cell.classList.remove('chaos');
+                        
+                        const cellGanador = document.getElementById(`cell-${numeroGanador}`);
+                        if (cellGanador) cellGanador.classList.add('winner');
+
+                        const datosGanador = participantesRegistrados[numeroGanador];
+
+                        const listaPremios = document.getElementById(catId);
+                        const item = document.createElement('div');
+                        item.className = 'winner-item';
+                        item.innerHTML = `<strong>Casilla #${numeroGanador}</strong> (${datosGanador.nombre}) - ${nombrePremio}`;
+                        listaPremios.appendChild(item);
+
+                        // Registrar ganador en la base de datos de Firebase
+                        db.ref(`ganadores/${numeroGanador}`).set({
+                            casilla: numeroGanador,
+                            premio: nombrePremio,
+                            nombre: datosGanador.nombre,
+                            telefono: datosGanador.telefono,
+                            token: datosGanador.token,
+                            fechaSorteo: Date.now()
+                        });
+
+                        setTimeout(resolve, 300);
+                    }
+                }, intervalo);
+            });
+        }
+
+        // Cuenta regresiva ajustada a 5 horas desde este momento
+        const targetDate = new Date().getTime() + (5 * 60 * 60 * 1000);
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if (diff <= 0) {
+                document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
+            } else {
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timer').innerText = `Tiempo restante para prueba: ${h}h ${m}m ${s}s`;
+            }
+        }, 1000);
+
+        crearGrid();
+    </script>
+</body>
+</html>
