@@ -25,11 +25,8 @@
         body {
             background: linear-gradient(135deg, #fdf8f5 0%, #fae8e0 100%);
             color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding: 20px;
         }
 
         header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; }
@@ -108,14 +105,9 @@
             transition: all 0.2s ease; cursor: pointer;
         }
 
-        .cell.occupied {
-            background-color: #fca5a5; border-color: #f87171;
-            color: #7f1d1d; cursor: not-allowed;
-        }
+        .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; cursor: not-allowed; }
 
-        .cell.chaos {
-            animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white;
-        }
+        .cell.chaos { animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white; }
 
         @keyframes chaosAnim {
             0% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
@@ -131,10 +123,7 @@
             animation: winnerReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes winnerReveal {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes winnerReveal { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .prizes-section { width: 100%; max-width: 900px; }
         .prizes-title {
@@ -142,9 +131,7 @@
             margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .prizes-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;
-        }
+        .prizes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
 
         .prize-card {
             background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
@@ -172,10 +159,7 @@
             font-size: 0.75rem; margin-top: 4px; font-weight: bold;
         }
 
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .separator {
             width: 100%; max-width: 650px; height: 3px;
@@ -191,10 +175,7 @@
             margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .ruleta-subtitle {
-            text-align: center; color: var(--subtitle-color);
-            margin-bottom: 25px; font-size: 1rem;
-        }
+        .ruleta-subtitle { text-align: center; color: var(--subtitle-color); margin-bottom: 25px; font-size: 1rem; }
 
         .card {
             background: white; border-radius: 20px; padding: 25px;
@@ -203,11 +184,7 @@
 
         .card h3 { color: var(--primary-pink-dark); margin-bottom: 10px; text-align: center; }
 
-        .help {
-            font-size: 13px; color: #666;
-            text-align: center; margin-bottom: 15px; line-height: 1.5;
-        }
-
+        .help { font-size: 13px; color: #666; text-align: center; margin-bottom: 15px; line-height: 1.5; }
         .help a { color: var(--whatsapp); font-weight: bold; }
 
         input, select {
@@ -229,161 +206,254 @@
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(194,24,91,0.4); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .btn-wa {
-            background: linear-gradient(135deg, #128C7E, #25D366) !important;
-            margin-top: 10px;
-        }
+        .btn-wa { background: linear-gradient(135deg, #128C7E, #25D366) !important; margin-top: 10px; }
+        .btn-copy { background: #3b82f6 !important; margin-top: 10px; }
 
         .btn-secondary {
             width: 100%; background: #f3f4f6; color: var(--text-color);
             padding: 12px; border: 2px solid #e5e7eb; border-radius: 12px;
-            font-size: 15px; font-weight: bold; cursor: pointer;
-            margin-top: 10px; transition: all 0.2s;
+            font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;
         }
 
         .btn-secondary:hover { background: #e5e7eb; }
 
-        .btn-copy {
-            background: #3b82f6 !important;
-            margin-top: 10px;
-        }
-
         .btn-spin {
             background: linear-gradient(135deg, #4a148c, #7b1fa2);
-            margin-top: 15px;
+            margin-top: 15px; font-size: 20px; padding: 18px;
         }
 
-        .error {
-            background: #ffebee; color: #c62828;
-            padding: 10px; border-radius: 8px;
-            margin-top: 10px; text-align: center; font-size: 14px;
-        }
+        .error { background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; font-size: 14px; }
 
         .success {
-            background: #d4edda; color: #155724;
-            padding: 12px; border-radius: 10px;
-            margin-top: 10px; text-align: center; font-size: 14px;
-            border: 2px solid #28a745;
+            background: #d4edda; color: #155724; padding: 12px; border-radius: 10px;
+            margin-top: 10px; text-align: center; font-size: 14px; border: 2px solid #28a745;
         }
 
         .token-display {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 3px dashed #d97706;
-            border-radius: 15px; padding: 20px;
+            border: 3px dashed #d97706; border-radius: 15px; padding: 20px;
             text-align: center; margin-top: 15px;
         }
 
-        .token-display .label {
-            font-size: 14px; color: #92400e;
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
-        }
-
-        .token-display .token-value {
-            font-size: 2.2rem; font-weight: 900; color: #78350f;
-            font-family: 'Courier New', monospace; letter-spacing: 4px;
-        }
+        .token-display .label { font-size: 14px; color: #92400e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .token-display .token-value { font-size: 2.2rem; font-weight: 900; color: #78350f; font-family: 'Courier New', monospace; letter-spacing: 4px; }
 
         .hidden { display: none !important; }
 
-        .wheel-container {
-            position: relative; width: 320px; height: 320px; margin: 0 auto;
-        }
+        /* === RULETA MEJORADA === */
+        .wheel-container { position: relative; width: 340px; height: 340px; margin: 20px auto; }
 
         .pointer {
-            position: absolute; top: -5px; left: 50%;
-            transform: translateX(-50%); font-size: 32px;
-            color: var(--primary-pink-dark); z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            font-size: 40px; color: var(--primary-pink-dark); z-index: 20;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+            animation: pointerPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pointerPulse {
+            from { transform: translateX(-50%) translateY(0); }
+            to { transform: translateX(-50%) translateY(5px); }
+        }
+
+        .pointer.spinning { animation: pointerShake 0.1s infinite; }
+
+        @keyframes pointerShake {
+            0% { transform: translateX(-50%) rotate(-3deg); }
+            50% { transform: translateX(-50%) rotate(3deg); }
+            100% { transform: translateX(-50%) rotate(-3deg); }
+        }
+
+        .wheel-outer {
+            width: 100%; height: 100%; border-radius: 50%;
+            position: relative; padding: 12px;
+            background: conic-gradient(from 0deg, #db2777, #f472b6, #fcd34d, #f472b6, #db2777);
+            box-shadow: 0 0 40px rgba(219, 39, 119, 0.5), inset 0 0 20px rgba(0,0,0,0.2);
         }
 
         .wheel {
             width: 100%; height: 100%; border-radius: 50%;
             position: relative; overflow: hidden;
-            border: 8px solid white;
-            box-shadow: 0 0 0 4px var(--primary-pink-dark), 0 0 30px rgba(0,0,0,0.3);
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.3, 1);
+            border: 6px solid white;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
+            transition: transform 7s cubic-bezier(0.12, 0.85, 0.25, 1);
         }
 
-        .wheel.spinning { transition: transform 5s cubic-bezier(0.15, 0.8, 0.25, 1); }
+        .wheel.spinning { transition: transform 7.5s cubic-bezier(0.08, 0.9, 0.2, 1); }
+
+        .wheel-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; border-radius: 50%;
+            background: linear-gradient(135deg, #fff, #f3f4f6);
+            border: 4px solid var(--primary-pink-dark);
+            z-index: 15; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
         .segment {
             position: absolute; width: 50%; height: 50%;
             top: 0; left: 50%; transform-origin: 0% 100%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold; font-size: 13px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             clip-path: polygon(0 0, 100% 0, 100% 100%);
+            display: flex; align-items: flex-start; justify-content: center;
+            padding-top: 25px;
         }
 
         .segment-label {
-            transform: rotate(11deg);
-            margin-top: -40px; margin-left: 40px; white-space: nowrap;
+            transform: rotate(25deg);
+            font-weight: 900; font-size: 13px;
+            color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            white-space: nowrap; text-align: center;
+            background: rgba(0,0,0,0.25);
+            padding: 4px 8px; border-radius: 6px;
+            line-height: 1.2;
+        }
+
+        .segment-label .emoji { font-size: 18px; display: block; margin-bottom: 2px; }
+
+        .wheel-lights {
+            position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%; pointer-events: none; z-index: 10;
+        }
+
+        .light-dot {
+            position: absolute; width: 12px; height: 12px; border-radius: 50%;
+            background: #fde047; box-shadow: 0 0 10px #fde047;
+        }
+
+        .light-dot.on { background: #fff; box-shadow: 0 0 20px #fff, 0 0 30px #fde047; }
+
+        .spinning-text {
+            text-align: center; font-size: 1.5rem; font-weight: 900;
+            color: var(--primary-pink-dark); margin-top: 15px;
+            animation: blinkText 0.3s infinite;
+            display: none;
+        }
+
+        .spinning-text.active { display: block; }
+
+        @keyframes blinkText {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+        }
+
+        /* === CUADRO DE RESULTADOS === */
+        .results-board {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border-radius: 15px; padding: 20px; margin-top: 20px;
+            border: 3px solid #fbbf24; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .results-board h3 {
+            color: #fbbf24; text-align: center; margin-bottom: 15px;
+            font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .results-list { max-height: 250px; overflow-y: auto; }
+
+        .result-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255,255,255,0.1); padding: 10px 15px;
+            border-radius: 10px; margin-bottom: 8px;
+            border-left: 4px solid #fbbf24;
+            animation: resultSlideIn 0.5s ease forwards;
+        }
+
+        @keyframes resultSlideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .result-item .r-name { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        .result-item .r-prize { color: #fbbf24; font-weight: 900; font-size: 1rem; }
+        .result-item .r-time { color: #a5b4fc; font-size: 0.8rem; }
+
+        .result-item.highlight {
+            background: rgba(251, 191, 36, 0.2);
+            border-left-color: #fff;
+            animation: resultHighlight 1s ease;
+        }
+
+        @keyframes resultHighlight {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* === RESULTADO POPUP === */
+        .result-popup {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .result-popup-content {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 25px; padding: 40px; text-align: center;
+            max-width: 400px; width: 90%;
+            border: 5px solid var(--primary-pink-dark);
+            box-shadow: 0 0 60px rgba(219, 39, 119, 0.8);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .result-popup-content .congrats { font-size: 1.2rem; color: #92400e; margin-bottom: 10px; }
+        .result-popup-content .winner-name { font-size: 1.8rem; font-weight: 900; color: var(--primary-pink-dark); margin-bottom: 5px; }
+        .result-popup-content .prize-won { font-size: 3rem; font-weight: 900; color: #b45309; margin: 15px 0; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
+        .result-popup-content .prize-time { font-size: 1rem; color: #78350f; margin-bottom: 20px; }
+        .result-popup-content .coupon-code {
+            background: white; padding: 15px; border-radius: 10px;
+            font-family: 'Courier New', monospace; font-size: 1.4rem;
+            font-weight: 900; color: var(--primary-pink-dark);
+            border: 3px dashed var(--primary-pink); margin: 15px 0;
+        }
+
+        .confetti {
+            position: absolute; width: 10px; height: 10px;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
         .info-bar {
-            display: flex; justify-content: space-between;
-            font-size: 13px; color: #666; margin-top: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 14px; color: #666; margin-bottom: 15px;
+            background: #fef3c7; padding: 10px 15px; border-radius: 10px;
         }
 
-        .result {
-            margin-top: 20px; padding: 20px;
-            background: linear-gradient(135deg, #fff59d, #ffd54f);
-            border-radius: 15px; text-align: center;
-            font-size: 20px; font-weight: bold; color: #5d4037;
-            box-shadow: 0 4px 15px rgba(255,213,79,0.5);
-        }
+        .info-bar .user-name { font-weight: 700; color: var(--primary-pink-dark); }
 
-        .result .big {
-            display: block; font-size: 32px; margin: 10px 0;
-            color: var(--primary-pink-dark);
-        }
-
-        footer {
-            text-align: center; color: #5d4037;
-            font-size: 13px; margin-top: 20px;
-        }
-
+        footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; }
         footer a { color: var(--primary-pink-dark); font-weight: bold; text-decoration: none; }
 
         /* === ADMIN === */
         #admin-panel {
-            position: fixed; top: 0; right: 0;
-            width: 380px; max-width: 95vw; height: 100vh;
+            position: fixed; top: 0; right: 0; width: 380px; max-width: 95vw; height: 100vh;
             background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
             padding: 20px; overflow-y: auto; z-index: 1000;
         }
 
-        #admin-panel h3 {
-            color: var(--primary-pink-dark); margin-bottom: 15px;
-            border-bottom: 2px solid var(--primary-pink); padding-bottom: 8px;
-        }
-
-        #admin-panel .admin-section {
-            margin-bottom: 20px; padding: 12px;
-            background: #f9fafb; border-radius: 8px;
-        }
-
-        #admin-panel .admin-section h4 {
-            color: var(--primary-pink-dark); margin-bottom: 10px; font-size: 1rem;
-        }
-
-        #admin-panel .close-btn {
-            float: right; background: #ef4444; color: white;
-            border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;
-        }
+        #admin-panel h3 { color: var(--primary-pink-dark); margin-bottom: 15px; border-bottom: 2px solid var(--primary-pink); padding-bottom: 8px; }
+        #admin-panel .admin-section { margin-bottom: 20px; padding: 12px; background: #f9fafb; border-radius: 8px; }
+        #admin-panel .admin-section h4 { color: var(--primary-pink-dark); margin-bottom: 10px; font-size: 1rem; }
+        #admin-panel .close-btn { float: right; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
 
         .admin-item {
-            background: white; padding: 8px; margin: 5px 0;
-            border-radius: 5px; border-left: 3px solid var(--primary-pink);
-            font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 8px; margin: 5px 0; border-radius: 5px;
+            border-left: 3px solid var(--primary-pink); font-size: 0.85rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .admin-item strong { color: var(--primary-pink-dark); }
-
-        .admin-item button {
-            background: #ef4444; color: white; border: none;
-            padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;
-        }
+        .admin-item button { background: #ef4444; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
 
         .admin-trigger {
             position: fixed; bottom: 15px; right: 15px;
@@ -394,9 +464,7 @@
 
         .admin-trigger:hover { opacity: 1; }
 
-        .tabs {
-            display: flex; gap: 5px; margin-bottom: 15px;
-        }
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
 
         .tab {
             flex: 1; padding: 10px; background: #f3f4f6;
@@ -405,19 +473,15 @@
             font-size: 13px; transition: all 0.2s;
         }
 
-        .tab.active {
-            background: var(--primary-pink-dark); color: white;
-            border-color: var(--primary-pink-dark);
-        }
+        .tab.active { background: var(--primary-pink-dark); color: white; border-color: var(--primary-pink-dark); }
 
-        .ruleta-users-list {
-            max-height: 250px; overflow-y: auto;
-            background: white; border-radius: 8px; padding: 8px;
-        }
+        .ruleta-users-list { max-height: 250px; overflow-y: auto; background: white; border-radius: 8px; padding: 8px; }
 
         @media (max-width: 768px) {
             .grid-container { grid-template-columns: repeat(5, 1fr); }
             #admin-panel { width: 100vw; max-width: 100vw; }
+            .wheel-container { width: 300px; height: 300px; }
+            .segment-label { font-size: 11px; padding: 3px 6px; }
         }
     </style>
 </head>
@@ -469,7 +533,7 @@
 
     <div class="separator"></div>
 
-    <!-- ===================== RULETA DE DESCUENTOS (GRATIS) ===================== -->
+    <!-- ===================== RULETA DE DESCUENTOS ===================== -->
     <section class="ruleta-section">
         <h2>🎡 Ruleta de Descuentos</h2>
         <p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y girá cada 24hs</p>
@@ -486,8 +550,9 @@
         <!-- VISTA 2: Registro nuevo usuario -->
         <div id="ruleta-register" class="card hidden">
             <h3>🆕 Registrate (Gratis)</h3>
-            <p class="help">Ingresá tu número de WhatsApp. El sistema te dará un token único y permanente para girar cada 24hs. 🎁</p>
+            <p class="help">Ingresá tu nombre y WhatsApp. El sistema te dará un token único y permanente para girar cada 24hs. 🎁</p>
             <form id="register-form">
+                <input type="text" id="reg-name" placeholder="Tu nombre (ej: Daniel)" required>
                 <input type="tel" id="reg-phone" placeholder="Tu número de WhatsApp (ej: 1123456789)" required>
                 <button type="submit" class="btn-primary">✨ Obtener mi token</button>
             </form>
@@ -498,7 +563,7 @@
         <!-- VISTA 3: Login usuario existente -->
         <div id="ruleta-login" class="card hidden">
             <h3>🔑 Ingresar a la Ruleta</h3>
-            <p class="help">Usá tu número + el token que guardaste. ¿Lo perdiste? Escribinos por WhatsApp.</p>
+            <p class="help">Usá tu número + el token que guardaste. ¿Lo perdiste? Tocá "Soy nuevo" con tu número y te lo mostramos.</p>
             <form id="login-form">
                 <input type="tel" id="login-phone" placeholder="Tu número de WhatsApp" required>
                 <input type="text" id="login-token" placeholder="Tu token (ej: A7K2M9)" required>
@@ -511,15 +576,31 @@
         <!-- VISTA 4: Ruleta activa -->
         <div id="wheel-section" class="card hidden">
             <div class="info-bar">
-                <span id="user-greeting"></span>
+                <span>👋 <span class="user-name" id="user-greeting"></span></span>
                 <span id="next-spin"></span>
             </div>
+
             <div class="wheel-container">
-                <div class="pointer">▼</div>
-                <div class="wheel" id="wheel"></div>
+                <div class="pointer" id="pointer">▼</div>
+                <div class="wheel-outer">
+                    <div class="wheel" id="wheel"></div>
+                    <div class="wheel-center">🎂</div>
+                </div>
+                <div class="wheel-lights" id="wheel-lights"></div>
             </div>
-            <button id="spin-btn" class="btn-primary btn-spin">🎲 ¡GIRAR!</button>
-            <div id="result" class="result hidden"></div>
+
+            <div class="spinning-text" id="spinning-text">🎰 GIRANDO... 🎰</div>
+
+            <button id="spin-btn" class="btn-primary btn-spin">🎲 ¡GIRAR AHORA!</button>
+
+            <!-- CUADRO DE RESULTADOS -->
+            <div class="results-board">
+                <h3>🏆 Últimos Ganadores</h3>
+                <div class="results-list" id="results-list">
+                    <p style="color:#a5b4fc;text-align:center;font-size:14px;">Todavía nadie giró... ¡Sé el primero!</p>
+                </div>
+            </div>
+
             <button class="btn-secondary" onclick="logoutRuleta()">🚪 Salir</button>
         </div>
     </section>
@@ -545,7 +626,7 @@
         </div>
 
         <div class="admin-section">
-            <h4>🎡 Usuarios Ruleta (registrados)</h4>
+            <h4>🎡 Usuarios Ruleta</h4>
             <p style="font-size:12px;color:#666;">Total: <span id="admin-ruleta-count">0</span></p>
             <div class="ruleta-users-list" id="admin-ruleta-users">Cargando...</div>
         </div>
@@ -592,14 +673,12 @@
             });
             const target = view === 'wheel-section' ? 'wheel-section' : 'ruleta-' + view;
             document.getElementById(target).classList.remove('hidden');
-
-            // actualizar tabs
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             if (view === 'register') document.querySelectorAll('.tab')[0].classList.add('active');
             if (view === 'login') document.querySelectorAll('.tab')[1].classList.add('active');
         }
 
-        // ============ SORTEO PRINCIPAL (no tocado, vos das los tokens) ============
+        // ============ SORTEO PRINCIPAL ============
         const TOTAL_CASILLAS = 50;
         const grid = document.getElementById('grid');
         const premios = [
@@ -781,23 +860,24 @@
             });
         }
 
-        // ============ RULETA DE DESCUENTOS (AUTOMÁTICA) ============
+        // ============ RULETA DE DESCUENTOS ============
         const PRIZES = [
-            { label: "5% OFF",  discount: "5%",  prob: 0.1875, color: "#ff6b6b" },
-            { label: "10% OFF", discount: "10%", prob: 0.1875, color: "#4ecdc4" },
-            { label: "15% OFF", discount: "15%", prob: 0.1875, color: "#45b7d1" },
-            { label: "20% OFF", discount: "20%", prob: 0.1875, color: "#96ceb4" },
-            { label: "25% OFF", discount: "25%", prob: 0.05,   color: "#ffeaa7" },
-            { label: "50% OFF", discount: "50%", prob: 0.05,   color: "#fd79a8" },
-            { label: "🍸 SHOT GRATIS", discount: "SHOT", prob: 0.15, color: "#6c5ce7" }
+            { label: "5% OFF", emoji: "🎂", discount: "5%", prob: 0.1875, color: "#ff6b6b" },
+            { label: "10% OFF", emoji: "🍰", discount: "10%", prob: 0.1875, color: "#4ecdc4" },
+            { label: "15% OFF", emoji: "🧁", discount: "15%", prob: 0.1875, color: "#45b7d1" },
+            { label: "20% OFF", emoji: "🍩", discount: "20%", prob: 0.1875, color: "#96ceb4" },
+            { label: "25% OFF", emoji: "🎁", discount: "25%", prob: 0.05, color: "#e17055" },
+            { label: "50% OFF", emoji: "💎", discount: "50%", prob: 0.05, color: "#fd79a8" },
+            { label: "SHOT GRATIS", emoji: "🍸", discount: "SHOT", prob: 0.15, color: "#6c5ce7" }
         ];
+
         const COOLDOWN_MS = 24 * 60 * 60 * 1000;
         let currentPhone = null;
+        let currentName = null;
         let canSpin = false;
         let spinning = false;
         let allRuletaUsers = {};
 
-        // Generador de token único alfanumérico
         function generateToken() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let t = '';
@@ -805,49 +885,81 @@
             return t;
         }
 
-        // Sincronizar usuarios ruleta para admin
         db.ref('ruletaUsuarios').on('value', (snap) => {
             allRuletaUsers = snap.val() || {};
             actualizarAdminPanel();
         });
 
-        // === REGISTRO AUTOMÁTICO ===
+        // Cargar últimos resultados de la ruleta
+        db.ref('ruletaSpins').orderByChild('timestamp').limitToLast(10).on('value', (snap) => {
+            const spins = [];
+            snap.forEach(child => { spins.push(child.val()); });
+            spins.sort((a, b) => b.timestamp - a.timestamp);
+            renderResultsBoard(spins);
+        });
+
+        function renderResultsBoard(spins) {
+            const list = document.getElementById('results-list');
+            if (!spins.length) {
+                list.innerHTML = '<p style="color:#a5b4fc;text-align:center;font-size:14px;">Todavía nadie giró... ¡Sé el primero!</p>';
+                return;
+            }
+            list.innerHTML = spins.map((s, i) => {
+                const time = new Date(s.timestamp);
+                const hh = String(time.getHours()).padStart(2, '0');
+                const mm = String(time.getMinutes()).padStart(2, '0');
+                return `
+                    <div class="result-item ${i === 0 ? 'highlight' : ''}">
+                        <div>
+                            <div class="r-name">🎉 ${s.name || 'Anónimo'}</div>
+                            <div class="r-time">${hh}:${mm} hs</div>
+                        </div>
+                        <div class="r-prize">${s.prize}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // === REGISTRO ===
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
             const phone = cleanPhone(document.getElementById('reg-phone').value);
+
             if (phone.length < 8) {
-                showMsg('register-msg', '❌ Número inválido. Ingresá tu WhatsApp sin el +.', 'error');
+                showMsg('register-msg', '❌ Número inválido.', 'error');
+                return;
+            }
+            if (name.length < 2) {
+                showMsg('register-msg', '❌ Ingresá tu nombre.', 'error');
                 return;
             }
 
             const userRef = db.ref(`ruletaUsuarios/${phone}`);
             const snap = await userRef.once('value');
 
-            // Si ya existe, mostrarle su token
             if (snap.exists()) {
                 const data = snap.val();
                 if (data.bloqueado) {
-                    showMsg('register-msg', '⛔ Este número fue bloqueado. Contactanos por WhatsApp.', 'error');
+                    showMsg('register-msg', '⛔ Número bloqueado.', 'error');
                     return;
                 }
                 showMsg('register-msg', `
                     <div class="success">
-                        ✅ ¡Ya estabas registrado!<br>
+                        ✅ ¡Ya estabas registrado, ${data.name || name}!<br>
                         <small>Tu token es:</small>
                         <div class="token-display">
                             <div class="label">Tu Token</div>
                             <div class="token-value">${data.token}</div>
                         </div>
                         <button class="btn-primary btn-copy" onclick="copiarToken('${data.token}')">📋 Copiar token</button>
-                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${data.token}')">📱 Guardar en mi WhatsApp</button>
+                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${data.token}','${name}')">📱 Guardar en mi WhatsApp</button>
                     </div>
                 `, 'success');
                 return;
             }
 
-            // NUEVO USUARIO: generar token único y registrar
             let token = generateToken();
-            // Verificar que el token no exista ya (colisión)
             let tokenExiste = true;
             while (tokenExiste) {
                 const tSnap = await db.ref('ruletaUsuarios').orderByChild('token').equalTo(token).once('value');
@@ -857,8 +969,7 @@
 
             try {
                 await userRef.set({
-                    phone: phone,
-                    token: token,
+                    phone, token, name,
                     registrado: Date.now(),
                     lastSpin: null,
                     bloqueado: false
@@ -866,14 +977,14 @@
 
                 showMsg('register-msg', `
                     <div class="success">
-                        🎉 <strong>¡Registro exitoso!</strong><br>
+                        🎉 <strong>¡Bienvenido ${name}!</strong><br>
                         <small>Guardá tu token, es permanente:</small>
                         <div class="token-display">
                             <div class="label">Tu Token Personal</div>
                             <div class="token-value">${token}</div>
                         </div>
                         <button class="btn-primary btn-copy" onclick="copiarToken('${token}')">📋 Copiar token</button>
-                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${token}')">📱 Enviármelo a mi WhatsApp</button>
+                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${token}','${name}')">📱 Enviármelo a mi WhatsApp</button>
                         <p style="margin-top:15px;font-size:13px;">👇 Después tocá "Ya tengo token" para entrar a girar</p>
                     </div>
                 `, 'success');
@@ -882,19 +993,15 @@
             }
         });
 
-        // === COPIAR TOKEN AL CLIPBOARD ===
         function copiarToken(token) {
-            navigator.clipboard.writeText(token).then(() => {
-                alert('✅ Token copiado: ' + token);
-            }).catch(() => {
-                prompt('Copiá este token:', token);
-            });
+            navigator.clipboard.writeText(token).then(() => alert('✅ Token copiado: ' + token))
+                .catch(() => prompt('Copiá este token:', token));
         }
 
-        // === ENVIAR TOKEN A SU PROPIO WHATSAPP ===
-        function enviarTokenWA(phone, token) {
+        function enviarTokenWA(phone, token, name) {
             const msg = encodeURIComponent(
                 `🎂 *MI TOKEN DE LA RULETA* 🎂\n\n` +
+                `👤 Nombre: ${name}\n` +
                 `🔑 Token: *${token}*\n` +
                 `📱 Mi número: ${phone}\n\n` +
                 `_Lo guardo para usarlo cada vez que quiera girar (1 vez cada 24hs)_ 🎰`
@@ -902,7 +1009,7 @@
             window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
 
-        // === LOGIN CON TOKEN ===
+        // === LOGIN ===
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = cleanPhone(document.getElementById('login-phone').value);
@@ -924,16 +1031,15 @@
             const data = snap.val();
 
             if (data.bloqueado) {
-                showMsg('login-msg', '⛔ Usuario bloqueado. Contactanos.', 'error');
+                showMsg('login-msg', '⛔ Usuario bloqueado.', 'error');
                 return;
             }
 
             if (data.token !== token) {
-                showMsg('login-msg', '❌ Token incorrecto. Si lo perdiste escribinos por WhatsApp.', 'error');
+                showMsg('login-msg', '❌ Token incorrecto.', 'error');
                 return;
             }
 
-            // Verificar cooldown 24hs
             if (data.lastSpin) {
                 const elapsed = Date.now() - data.lastSpin;
                 if (elapsed < COOLDOWN_MS) {
@@ -945,19 +1051,20 @@
                 }
             }
 
-            // Login exitoso
             currentPhone = phone;
+            currentName = data.name || 'Cliente';
             canSpin = true;
             showRuletaView('wheel-section');
-            document.getElementById('user-greeting').textContent = `👋 Hola ${phone.slice(-4)}`;
+            document.getElementById('user-greeting').textContent = currentName;
             document.getElementById('spin-btn').disabled = false;
-            document.getElementById('spin-btn').textContent = '🎲 ¡GIRAR!';
-            document.getElementById('result').classList.add('hidden');
+            document.getElementById('spin-btn').textContent = '🎲 ¡GIRAR AHORA!';
             drawWheel();
+            createLights();
         });
 
         function logoutRuleta() {
             currentPhone = null;
+            currentName = null;
             canSpin = false;
             showRuletaView('menu');
             document.getElementById('register-form').reset();
@@ -976,63 +1083,171 @@
             return PRIZES.length - 1;
         }
 
+        // === RULETA MEJORADA (premios visibles) ===
         function drawWheel() {
             const wheel = document.getElementById('wheel');
             wheel.innerHTML = '';
             const segAngle = 360 / PRIZES.length;
+
             PRIZES.forEach((prize, i) => {
                 const seg = document.createElement('div');
                 seg.className = 'segment';
-                seg.style.background = prize.color;
+                seg.style.background = `linear-gradient(135deg, ${prize.color}, ${adjustColor(prize.color, -30)})`;
                 seg.style.transform = `rotate(${i * segAngle}deg) skewY(${-(90 - segAngle)}deg)`;
-                seg.innerHTML = `<div class="segment-label">${prize.label}</div>`;
+                seg.innerHTML = `
+                    <div class="segment-label">
+                        <span class="emoji">${prize.emoji}</span>
+                        ${prize.label}
+                    </div>
+                `;
                 wheel.appendChild(seg);
             });
         }
 
+        function adjustColor(hex, amount) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+        }
+
+        function createLights() {
+            const container = document.getElementById('wheel-lights');
+            container.innerHTML = '';
+            const numLights = 12;
+            for (let i = 0; i < numLights; i++) {
+                const angle = (i / numLights) * 360;
+                const rad = angle * Math.PI / 180;
+                const radius = 50;
+                const x = 50 + radius * Math.cos(rad);
+                const y = 50 + radius * Math.sin(rad);
+                const dot = document.createElement('div');
+                dot.className = 'light-dot';
+                dot.style.left = `calc(${x}% - 6px)`;
+                dot.style.top = `calc(${y}% - 6px)`;
+                container.appendChild(dot);
+            }
+        }
+
+        function animateLights(active) {
+            const dots = document.querySelectorAll('.light-dot');
+            if (active) {
+                let idx = 0;
+                window.lightInterval = setInterval(() => {
+                    dots.forEach(d => d.classList.remove('on'));
+                    dots[idx].classList.add('on');
+                    idx = (idx + 1) % dots.length;
+                }, 100);
+            } else {
+                clearInterval(window.lightInterval);
+                dots.forEach(d => d.classList.remove('on'));
+            }
+        }
+
+        // === GIRAR CON TENSIÓN ===
         document.getElementById('spin-btn').addEventListener('click', async () => {
             if (spinning || !canSpin || !currentPhone) return;
             spinning = true;
-            const spinBtn = document.getElementById('spin-btn');
-            spinBtn.disabled = true;
-            document.getElementById('result').classList.add('hidden');
 
+            const spinBtn = document.getElementById('spin-btn');
+            const pointer = document.getElementById('pointer');
+            const spinningText = document.getElementById('spinning-text');
             const wheel = document.getElementById('wheel');
+
+            spinBtn.disabled = true;
+            spinBtn.textContent = '🎰 GIRANDO...';
+            pointer.classList.add('spinning');
+            spinningText.classList.add('active');
+            animateLights(true);
+
             const pIdx = pickPrize();
             const prize = PRIZES[pIdx];
             const segAngle = 360 / PRIZES.length;
-            const target = 360 - (pIdx * segAngle + segAngle / 2);
-            const final = 5 * 360 + target;
+
+            // Cálculo: el puntero está arriba (0°). El centro del segmento i está en i*segAngle + segAngle/2
+            // Queremos que ese punto quede en 0° (arriba)
+            const targetAngle = 360 - (pIdx * segAngle + segAngle / 2);
+
+            // MÁS TENSIÓN: 8 vueltas completas + ángulo final + pequeño overshoot
+            const fullSpins = 8;
+            const overshoot = 15; // se pasa un poquito y "vuelve"
+            const finalRotation = fullSpins * 360 + targetAngle + overshoot;
+
             wheel.classList.add('spinning');
-            wheel.style.transform = `rotate(${final}deg)`;
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
 
-            await new Promise(r => setTimeout(r, 5100));
+            // Esperar 7 segundos de tensión
+            await new Promise(r => setTimeout(r, 7000));
 
+            // Pequeño "ajuste final" para que parezca que se asienta
+            wheel.style.transition = 'transform 0.5s ease-out';
+            wheel.style.transform = `rotate(${finalRotation - overshoot}deg)`;
+
+            await new Promise(r => setTimeout(r, 600));
+
+            pointer.classList.remove('spinning');
+            spinningText.classList.remove('active');
+            animateLights(false);
+
+            // Guardar resultado
             try {
-                await db.ref(`ruletaUsuarios/${currentPhone}/lastSpin`).set(Date.now());
+                const now = Date.now();
+                await db.ref(`ruletaUsuarios/${currentPhone}/lastSpin`).set(now);
+
                 await db.ref('ruletaSpins').push({
-                    phone: currentPhone, prize: prize.label,
-                    discount: prize.discount, timestamp: Date.now()
+                    phone: currentPhone,
+                    name: currentName,
+                    prize: prize.label,
+                    discount: prize.discount,
+                    timestamp: now
                 });
 
+                const time = new Date(now);
+                const hh = String(time.getHours()).padStart(2, '0');
+                const mm = String(time.getMinutes()).padStart(2, '0');
                 const codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
-                document.getElementById('result').innerHTML = `
-                    🎉 ¡Ganaste! 🎉
-                    <span class="big">${prize.label}</span>
-                    Mostrá este código al pedir:<br>
-                    <code style="background:#fff;padding:8px 15px;border-radius:5px;font-size:18px;display:inline-block;margin-top:10px;font-family:monospace;">
-                        ${codigo}
-                    </code>
-                `;
-                document.getElementById('result').classList.remove('hidden');
+
+                // Mostrar POPUP de resultado
+                showResultPopup(currentName, prize, hh, mm, codigo);
+
                 canSpin = false;
                 spinBtn.textContent = "Volvé mañana 🌙";
             } catch (e) {
-                document.getElementById('result').innerHTML = "Error guardando. Contactanos.";
-                document.getElementById('result').classList.remove('hidden');
+                alert("Error guardando tu premio. Contactanos por WhatsApp.");
             }
+
             spinning = false;
         });
+
+        function showResultPopup(name, prize, hh, mm, codigo) {
+            const popup = document.createElement('div');
+            popup.className = 'result-popup';
+            popup.innerHTML = `
+                <div class="result-popup-content">
+                    <div class="congrats">🎉 ¡FELICITACIONES! 🎉</div>
+                    <div class="winner-name">${name}</div>
+                    <div style="color:#92400e;">obtuvo</div>
+                    <div class="prize-won">${prize.emoji} ${prize.label}</div>
+                    <div class="prize-time">🕐 ${hh}:${mm} hs</div>
+                    <div class="coupon-code">${codigo}</div>
+                    <p style="font-size:13px;color:#78350f;margin-bottom:15px;">Mostrá este código al hacer tu pedido</p>
+                    <button class="btn-primary" onclick="this.closest('.result-popup').remove()">✅ ¡Genial!</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            // Confetti
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = ['#f472b6', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'][Math.floor(Math.random() * 5)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                popup.appendChild(confetti);
+            }
+        }
 
         // ============ PANEL ADMIN ============
         function toggleAdmin() {
@@ -1056,7 +1271,6 @@
                 }
             }
 
-            // Usuarios ruleta
             const rc = document.getElementById('admin-ruleta-count');
             const ru = document.getElementById('admin-ruleta-users');
             if (rc && ru) {
@@ -1068,7 +1282,7 @@
                     ru.innerHTML = users.map(([phone, data]) => `
                         <div class="admin-item">
                             <span>
-                                <strong>+${phone}</strong><br>
+                                <strong>${data.name || 'Sin nombre'}</strong> (+${phone})<br>
                                 <small>Token: <code>${data.token}</code></small><br>
                                 <small>${data.bloqueado ? '⛔ Bloqueado' : '✅ Activo'}</small>
                             </span>
@@ -1092,7 +1306,7 @@
         }
 
         async function resetSorteo() {
-            if (!confirm("⚠️ BORRAR TODO (ganadores, casillas, tokens)?")) return;
+            if (!confirm("⚠️ BORRAR TODO?")) return;
             if (!confirm("¿Estás 100% seguro?")) return;
             await db.ref('ganadores').remove();
             await db.ref('configuracion/fechaSorteo').remove();
