@@ -17,22 +17,22 @@
             --subtitle-color: #8c7a78;
             --cell-default: #fce7f3;
             --cell-border: #fbcfe8;
+            --whatsapp: #25D366;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #fdf8f5 0%, #fae8e0 100%);
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(135deg, #fdf8f5 0%, #fae8e0 100%);
         }
 
-        header { text-align: center; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; }
 
         .logo-container {
             width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
@@ -56,80 +56,65 @@
         .subtitle { color: var(--subtitle-color); font-size: 1rem; margin-bottom: 10px; }
 
         .timer-box {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--primary-pink-dark);
-            background: var(--card-bg);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--primary-pink);
-            margin-bottom: 20px;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15);
+            font-size: 1.2rem; font-weight: bold; color: var(--primary-pink-dark);
+            background: var(--card-bg); padding: 10px 20px; border-radius: 20px;
+            border: 1px solid var(--primary-pink); margin-bottom: 20px;
+            display: inline-block; box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15);
         }
 
         .info-bubble {
-            max-width: 650px;
-            width: 100%;
+            max-width: 650px; width: 100%;
             background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--primary-pink);
-            border-left: 4px solid var(--primary-pink-dark);
-            border-radius: 10px;
-            padding: 12px 18px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            line-height: 1.4;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--primary-pink); border-left: 4px solid var(--primary-pink-dark);
+            border-radius: 10px; padding: 12px 18px; margin-bottom: 25px;
+            font-size: 0.9rem; display: flex; align-items: flex-start; gap: 12px;
         }
 
         .info-bubble span.icon { font-size: 1.5rem; }
 
+        .counter-badge {
+            background: var(--primary-pink-dark); color: white;
+            padding: 5px 15px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: bold;
+            display: inline-block; margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%; max-width: 650px; height: 20px;
+            background: #e5e7eb; border-radius: 10px; overflow: hidden; margin: 10px auto 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
+            transition: width 0.5s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 12px; font-weight: bold;
+        }
+
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 8px;
-            max-width: 650px;
-            width: 100%;
-            margin-bottom: 35px;
-            padding: 15px;
-            background: var(--card-bg);
-            border-radius: 15px;
+            display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px;
+            max-width: 650px; width: 100%; margin-bottom: 35px; padding: 15px;
+            background: var(--card-bg); border-radius: 15px;
             box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
             border: 3px solid var(--primary-beige-border);
         }
 
         .cell {
-            width: 100%;
-            height: 50px;
-            background-color: var(--cell-default);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.1rem;
-            color: var(--primary-pink-dark);
-            border: 2px solid var(--cell-border);
-            user-select: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
+            width: 100%; height: 50px; background-color: var(--cell-default);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.1rem; color: var(--primary-pink-dark);
+            border: 2px solid var(--cell-border); user-select: none;
+            transition: all 0.2s ease; cursor: pointer;
         }
 
         .cell.occupied {
-            background-color: #fca5a5;
-            border-color: #f87171;
-            color: #7f1d1d;
-            cursor: not-allowed;
+            background-color: #fca5a5; border-color: #f87171;
+            color: #7f1d1d; cursor: not-allowed;
         }
 
         .cell.chaos {
-            animation: chaosAnim 0.15s infinite;
-            z-index: 5;
-            border-color: white;
+            animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white;
         }
 
         @keyframes chaosAnim {
@@ -141,8 +126,7 @@
 
         .cell.winner {
             background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-            color: #ffffff;
-            border-color: #6ee7b7;
+            color: #ffffff; border-color: #6ee7b7;
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
             animation: winnerReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -183,19 +167,9 @@
         }
 
         .winner-item .wa-btn {
-            display: inline-block;
-            background: #25D366;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.75rem;
-            margin-top: 4px;
-            font-weight: bold;
-        }
-
-        .winner-item .wa-btn:hover {
-            background: #128C7E;
+            display: inline-block; background: var(--whatsapp); color: white;
+            padding: 4px 8px; border-radius: 4px; text-decoration: none;
+            font-size: 0.75rem; margin-top: 4px; font-weight: bold;
         }
 
         @keyframes slideIn { 
@@ -204,146 +178,127 @@
         }
 
         .separator {
-            width: 100%;
-            max-width: 650px;
-            height: 3px;
+            width: 100%; max-width: 650px; height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
-            margin: 40px 0;
-            border-radius: 2px;
+            margin: 40px 0; border-radius: 2px;
         }
 
-        .ruleta-section {
-            width: 100%;
-            max-width: 650px;
-            margin-top: 40px;
-        }
+        /* === RULETA === */
+        .ruleta-section { width: 100%; max-width: 650px; margin-top: 20px; }
 
-        .ruleta-section h2 {
-            text-align: center;
-            color: var(--primary-pink-dark);
-            font-size: 2rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .ruleta-section > h2 {
+            text-align: center; color: var(--primary-pink-dark); font-size: 2rem;
+            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
         }
 
         .ruleta-subtitle {
-            text-align: center;
-            color: var(--subtitle-color);
-            margin-bottom: 25px;
-            font-size: 1rem;
+            text-align: center; color: var(--subtitle-color);
+            margin-bottom: 25px; font-size: 1rem;
         }
 
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            margin-bottom: 20px;
+            background: white; border-radius: 20px; padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 20px;
         }
 
         .card h3 { color: var(--primary-pink-dark); margin-bottom: 10px; text-align: center; }
 
         .help {
-            font-size: 13px;
-            color: #666;
-            text-align: center;
-            margin-bottom: 15px;
+            font-size: 13px; color: #666;
+            text-align: center; margin-bottom: 15px; line-height: 1.5;
         }
 
-        .help a { color: #25D366; font-weight: bold; }
+        .help a { color: var(--whatsapp); font-weight: bold; }
 
         input, select {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-            border: 2px solid #ffe0b2;
-            border-radius: 12px;
-            font-size: 16px;
-            outline: none;
-            transition: border 0.2s;
+            width: 100%; padding: 14px; margin-bottom: 12px;
+            border: 2px solid #ffe0b2; border-radius: 12px;
+            font-size: 16px; outline: none; transition: border 0.2s;
         }
 
         input:focus, select:focus { border-color: var(--primary-pink); }
 
         .btn-primary {
-            width: 100%;
-            padding: 14px;
+            width: 100%; padding: 14px;
             background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
+            color: white; border: none; border-radius: 12px;
+            font-size: 17px; font-weight: bold; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(194,24,91,0.4); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+        .btn-wa {
+            background: linear-gradient(135deg, #128C7E, #25D366) !important;
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            width: 100%; background: #f3f4f6; color: var(--text-color);
+            padding: 12px; border: 2px solid #e5e7eb; border-radius: 12px;
+            font-size: 15px; font-weight: bold; cursor: pointer;
+            margin-top: 10px; transition: all 0.2s;
+        }
+
+        .btn-secondary:hover { background: #e5e7eb; }
+
+        .btn-copy {
+            background: #3b82f6 !important;
+            margin-top: 10px;
+        }
+
         .btn-spin {
             background: linear-gradient(135deg, #4a148c, #7b1fa2);
             margin-top: 15px;
         }
 
-        .btn-secondary {
-            background: #6b7280;
-            padding: 10px 15px;
-            border-radius: 8px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
         .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: center;
-            font-size: 14px;
+            background: #ffebee; color: #c62828;
+            padding: 10px; border-radius: 8px;
+            margin-top: 10px; text-align: center; font-size: 14px;
         }
 
         .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: center;
-            font-size: 14px;
+            background: #d4edda; color: #155724;
+            padding: 12px; border-radius: 10px;
+            margin-top: 10px; text-align: center; font-size: 14px;
+            border: 2px solid #28a745;
+        }
+
+        .token-display {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px dashed #d97706;
+            border-radius: 15px; padding: 20px;
+            text-align: center; margin-top: 15px;
+        }
+
+        .token-display .label {
+            font-size: 14px; color: #92400e;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+        }
+
+        .token-display .token-value {
+            font-size: 2.2rem; font-weight: 900; color: #78350f;
+            font-family: 'Courier New', monospace; letter-spacing: 4px;
         }
 
         .hidden { display: none !important; }
 
         .wheel-container {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 0 auto;
+            position: relative; width: 320px; height: 320px; margin: 0 auto;
         }
 
         .pointer {
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 32px;
-            color: var(--primary-pink-dark);
-            z-index: 10;
+            position: absolute; top: -5px; left: 50%;
+            transform: translateX(-50%); font-size: 32px;
+            color: var(--primary-pink-dark); z-index: 10;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
+            width: 100%; height: 100%; border-radius: 50%;
+            position: relative; overflow: hidden;
             border: 8px solid white;
             box-shadow: 0 0 0 4px var(--primary-pink-dark), 0 0 30px rgba(0,0,0,0.3);
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.3, 1);
@@ -352,163 +307,112 @@
         .wheel.spinning { transition: transform 5s cubic-bezier(0.15, 0.8, 0.25, 1); }
 
         .segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            top: 0;
-            left: 50%;
-            transform-origin: 0% 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 13px;
+            position: absolute; width: 50%; height: 50%;
+            top: 0; left: 50%; transform-origin: 0% 100%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 13px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             clip-path: polygon(0 0, 100% 0, 100% 100%);
         }
 
         .segment-label {
             transform: rotate(11deg);
-            margin-top: -40px;
-            margin-left: 40px;
-            white-space: nowrap;
+            margin-top: -40px; margin-left: 40px; white-space: nowrap;
         }
 
         .info-bar {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #666;
-            margin-top: 15px;
+            display: flex; justify-content: space-between;
+            font-size: 13px; color: #666; margin-top: 15px;
         }
 
         .result {
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 20px; padding: 20px;
             background: linear-gradient(135deg, #fff59d, #ffd54f);
-            border-radius: 15px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #5d4037;
+            border-radius: 15px; text-align: center;
+            font-size: 20px; font-weight: bold; color: #5d4037;
             box-shadow: 0 4px 15px rgba(255,213,79,0.5);
         }
 
         .result .big {
-            display: block;
-            font-size: 32px;
-            margin: 10px 0;
+            display: block; font-size: 32px; margin: 10px 0;
             color: var(--primary-pink-dark);
         }
 
         footer {
-            text-align: center;
-            color: #5d4037;
-            font-size: 13px;
-            margin-top: 20px;
+            text-align: center; color: #5d4037;
+            font-size: 13px; margin-top: 20px;
         }
 
         footer a { color: var(--primary-pink-dark); font-weight: bold; text-decoration: none; }
 
-        .counter-badge {
-            background: var(--primary-pink-dark);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        /* PANEL ADMIN */
+        /* === ADMIN === */
         #admin-panel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 350px;
-            max-width: 90vw;
-            height: 100vh;
-            background: white;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 1000;
+            position: fixed; top: 0; right: 0;
+            width: 380px; max-width: 95vw; height: 100vh;
+            background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            padding: 20px; overflow-y: auto; z-index: 1000;
         }
 
         #admin-panel h3 {
-            color: var(--primary-pink-dark);
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--primary-pink);
-            padding-bottom: 8px;
+            color: var(--primary-pink-dark); margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-pink); padding-bottom: 8px;
         }
 
         #admin-panel .admin-section {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
+            margin-bottom: 20px; padding: 12px;
+            background: #f9fafb; border-radius: 8px;
+        }
+
+        #admin-panel .admin-section h4 {
+            color: var(--primary-pink-dark); margin-bottom: 10px; font-size: 1rem;
         }
 
         #admin-panel .close-btn {
-            float: right;
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
+            float: right; background: #ef4444; color: white;
+            border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;
         }
 
         .admin-item {
-            background: white;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
-            border-left: 3px solid var(--primary-pink);
-            font-size: 0.85rem;
+            background: white; padding: 8px; margin: 5px 0;
+            border-radius: 5px; border-left: 3px solid var(--primary-pink);
+            font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;
         }
 
         .admin-item strong { color: var(--primary-pink-dark); }
 
+        .admin-item button {
+            background: #ef4444; color: white; border: none;
+            padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;
+        }
+
         .admin-trigger {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.3);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            z-index: 999;
-            opacity: 0.5;
+            position: fixed; bottom: 15px; right: 15px;
+            background: rgba(0,0,0,0.4); color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%;
+            font-size: 20px; cursor: pointer; z-index: 999; opacity: 0.6;
         }
 
         .admin-trigger:hover { opacity: 1; }
 
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
+        .tabs {
+            display: flex; gap: 5px; margin-bottom: 15px;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
+        .tab {
+            flex: 1; padding: 10px; background: #f3f4f6;
+            border: 2px solid #e5e7eb; border-radius: 10px;
+            cursor: pointer; text-align: center; font-weight: bold;
+            font-size: 13px; transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary-pink-dark); color: white;
+            border-color: var(--primary-pink-dark);
+        }
+
+        .ruleta-users-list {
+            max-height: 250px; overflow-y: auto;
+            background: white; border-radius: 8px; padding: 8px;
         }
 
         @media (max-width: 768px) {
@@ -519,28 +423,34 @@
 </head>
 <body>
 
+    <!-- ===================== SORTEO PRINCIPAL ===================== -->
     <header>
         <div class="logo-container">
-            <img src="https://scontent.faep7-1.fna.fbcdn.net/v/t39.30808-6/756044042_122105735325400303_936057262058649175_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x931&ctp=s1024x931&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=AQJ243OrKbYQ7kNvwGi_7mS&_nc_oc=AdoArb8we6cpKMDn6MnsZEWAJfyK2Dsh95OjzZv2e8m-cv-ZGJ6bCyfgKpkYeEEYoq0&_nc_zt=23&_nc_ht=scontent.faep7-1.fna&_nc_gid=Un99QJ3-IPRMGx-_zavE0Q&_nc_ss=7b289&oh=00_AQLwL_dTKFYBqtHNHTrYu34Uha3rnWsGPs6VUPKsMmDt0w&oe=6AA37763" 
+            <img src="https://scontent.faep7-1.fna.fbcdn.net/v/t39.30808-6/756044042_122105735325400303_936057262058649175_n.jpg" 
                  alt="Logo" onerror="this.parentElement.innerText='LOGO'">
         </div>
         <h1>Gran Sorteo</h1>
         <p class="subtitle">50 Casillas • 25 Premios</p>
-        <div class="timer-box" id="timer">Cargando cuenta regresiva...</div>
+        <div class="timer-box" id="timer">Cargando...</div>
     </header>
 
     <div class="info-bubble">
         <span class="icon">🎯</span>
         <div>
             <strong>🔥 ¿Cómo funciona el sorteo?</strong><br>
-            ✅ Reservá tu casilla con tu token único.<br>
-            ⏰ Una vez completadas las <strong>50 casillas</strong>, se activa automáticamente una cuenta regresiva de <strong>1 hora</strong>.<br>
-            🏆 Al finalizar, el sistema seleccionará <strong>25 ganadores</strong> de forma 100% aleatoria y transparente.<br>
-            📱 Los ganadores serán notificados por WhatsApp con su premio. ¡Preparate!
+            🎟️ <strong>Pedí tu boleto</strong> por WhatsApp y recibí tu token único.<br>
+            ⏰ Una vez completadas las <strong>50 casillas</strong>, se activa cuenta regresiva de <strong>1 hora</strong>.<br>
+            🏆 Al finalizar, se sortean <strong>25 ganadores</strong> de forma 100% aleatoria.
         </div>
     </div>
 
-    <div class="counter-badge" id="casillas-counter">Casillas: 0 / 50</div>
+    <div style="text-align:center;">
+        <a href="https://wa.me/541168911377/?text=Hola!%20Quiero%20comprar%20un%20boleto%20para%20el%20sorteo%20de%2025%20premios%20%F0%9F%8E%82" 
+           target="_blank" class="btn-primary" style="max-width:400px;margin:0 auto 15px;display:inline-block;text-decoration:none;">
+            🎟️ COMPRAR BOLETO POR WHATSAPP
+        </a>
+        <div class="counter-badge" id="casillas-counter">Casillas: 0 / 50</div>
+    </div>
     <div class="progress-bar">
         <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
     </div>
@@ -550,62 +460,76 @@
     <div class="prizes-section">
         <h2 class="prizes-title">🏆 25 Premios 🏆</h2>
         <div class="prizes-grid">
-            <div class="prize-card">
-                <h3>🎂 3 Mini Tortas</h3>
-                <div class="prize-winners" id="prize-1"></div>
-            </div>
-            <div class="prize-card">
-                <h3>🍰 10 Porciones de Torta</h3>
-                <div class="prize-winners" id="prize-2"></div>
-            </div>
-            <div class="prize-card">
-                <h3>🥃 2 Cajas de Shots</h3>
-                <div class="prize-winners" id="prize-3"></div>
-            </div>
-            <div class="prize-card">
-                <h3>🎟️ 10 Cupones 15% OFF</h3>
-                <div class="prize-winners" id="prize-4"></div>
-            </div>
+            <div class="prize-card"><h3>🎂 3 Mini Tortas</h3><div class="prize-winners" id="prize-1"></div></div>
+            <div class="prize-card"><h3>🍰 10 Porciones</h3><div class="prize-winners" id="prize-2"></div></div>
+            <div class="prize-card"><h3>🥃 2 Cajas Shots</h3><div class="prize-winners" id="prize-3"></div></div>
+            <div class="prize-card"><h3>🎟️ 10 Cupones 15% OFF</h3><div class="prize-winners" id="prize-4"></div></div>
         </div>
     </div>
 
     <div class="separator"></div>
 
+    <!-- ===================== RULETA DE DESCUENTOS (GRATIS) ===================== -->
     <section class="ruleta-section">
         <h2>🎡 Ruleta de Descuentos</h2>
-        <p class="ruleta-subtitle">¡Girá la ruleta y ganá descuentos exclusivos!</p>
+        <p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y girá cada 24hs</p>
 
-        <div id="login-section" class="card">
-            <h3>Ingresá tus datos</h3>
-            <p class="help">Si todavía no tenés tu token de ruleta, te lo envíamos por WhatsApp al instante <a href="https://wa.me/541168911377/?text=Obtener+token+ruleta" target="_blank">+54 11 6891-1377</a>. 📱</p>
-            <form id="login-form">
-                <input type="tel" id="phone" placeholder="Tu número (ej: 1123456789)" required>
-                <input type="text" id="token" placeholder="Tu token de ruleta" required>
-                <button type="submit" class="btn-primary">🎰 Girar la ruleta</button>
-            </form>
-            <div id="login-error" class="error hidden"></div>
+        <!-- VISTA 1: Menú principal -->
+        <div id="ruleta-menu" class="card">
+            <h3>¿Ya tenés tu token?</h3>
+            <div class="tabs">
+                <div class="tab active" onclick="showRuletaView('register')">🆕 Soy nuevo</div>
+                <div class="tab" onclick="showRuletaView('login')">🔑 Ya tengo token</div>
+            </div>
         </div>
 
+        <!-- VISTA 2: Registro nuevo usuario -->
+        <div id="ruleta-register" class="card hidden">
+            <h3>🆕 Registrate (Gratis)</h3>
+            <p class="help">Ingresá tu número de WhatsApp. El sistema te dará un token único y permanente para girar cada 24hs. 🎁</p>
+            <form id="register-form">
+                <input type="tel" id="reg-phone" placeholder="Tu número de WhatsApp (ej: 1123456789)" required>
+                <button type="submit" class="btn-primary">✨ Obtener mi token</button>
+            </form>
+            <button class="btn-secondary" onclick="showRuletaView('menu')">← Volver</button>
+            <div id="register-msg"></div>
+        </div>
+
+        <!-- VISTA 3: Login usuario existente -->
+        <div id="ruleta-login" class="card hidden">
+            <h3>🔑 Ingresar a la Ruleta</h3>
+            <p class="help">Usá tu número + el token que guardaste. ¿Lo perdiste? Escribinos por WhatsApp.</p>
+            <form id="login-form">
+                <input type="tel" id="login-phone" placeholder="Tu número de WhatsApp" required>
+                <input type="text" id="login-token" placeholder="Tu token (ej: A7K2M9)" required>
+                <button type="submit" class="btn-primary">🎰 Entrar a girar</button>
+            </form>
+            <button class="btn-secondary" onclick="showRuletaView('menu')">← Volver</button>
+            <div id="login-msg"></div>
+        </div>
+
+        <!-- VISTA 4: Ruleta activa -->
         <div id="wheel-section" class="card hidden">
-            <div class="wheel-container">
-                <div class="pointer">▼</div>
-                <div class="wheel" id="wheel"></div>
-            </div>
             <div class="info-bar">
                 <span id="user-greeting"></span>
                 <span id="next-spin"></span>
             </div>
+            <div class="wheel-container">
+                <div class="pointer">▼</div>
+                <div class="wheel" id="wheel"></div>
+            </div>
             <button id="spin-btn" class="btn-primary btn-spin">🎲 ¡GIRAR!</button>
             <div id="result" class="result hidden"></div>
+            <button class="btn-secondary" onclick="logoutRuleta()">🚪 Salir</button>
         </div>
-
-        <footer>
-            <p>📞 OBTENE TU TIRO GRATIS 🏹: <a href="https://wa.me/541168911377/?text=Obtener+token+ruleta">WhatsApp</a></p>
-            <p>Un giro cada 24 hs por usuario ✨</p>
-        </footer>
     </section>
 
-    <!-- Botón Admin (secreto) -->
+    <footer>
+        <p>📞 Pedidos: <a href="https://wa.me/541168911377">WhatsApp</a></p>
+        <p>✨ Ruleta: 1 giro cada 24 hs por teléfono</p>
+    </footer>
+
+    <!-- Botón Admin -->
     <button class="admin-trigger" onclick="toggleAdmin()" title="Panel Admin">⚙️</button>
 
     <!-- Panel Admin -->
@@ -614,29 +538,22 @@
         <h3>🔐 Panel Admin</h3>
         
         <div class="admin-section">
-            <h4>📊 Estado del Sorteo</h4>
+            <h4>📊 Sorteo Principal</h4>
             <p id="admin-status">Cargando...</p>
-            <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo Ahora</button>
-            <button class="btn-secondary" onclick="resetSorteo()">🔄 Resetear Sorteo</button>
+            <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
+            <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
         </div>
 
         <div class="admin-section">
-            <h4>🏆 Ganadores</h4>
-            <div id="admin-ganadores">Cargando...</div>
-            <button class="btn-secondary" onclick="exportarGanadoresWA()">📱 Exportar lista WhatsApp</button>
+            <h4>🎡 Usuarios Ruleta (registrados)</h4>
+            <p style="font-size:12px;color:#666;">Total: <span id="admin-ruleta-count">0</span></p>
+            <div class="ruleta-users-list" id="admin-ruleta-users">Cargando...</div>
         </div>
 
         <div class="admin-section">
-            <h4>🎡 Ruleta - Generar Token</h4>
-            <input type="tel" id="admin-ruleta-phone" placeholder="Número cliente">
-            <button class="btn-secondary" onclick="generarTokenRuleta()">🎟️ Generar Token</button>
-            <div id="admin-ruleta-result"></div>
-        </div>
-
-        <div class="admin-section">
-            <h4>📲 Telegram Bot</h4>
-            <p id="admin-telegram-status">Estado: No configurado</p>
-            <button class="btn-secondary" onclick="testTelegram()">🧪 Probar envío</button>
+            <h4>🏆 Ganadores del Sorteo</h4>
+            <div id="admin-ganadores" style="max-height:200px;overflow-y:auto;">Cargando...</div>
+            <button class="btn-secondary" onclick="exportarGanadoresWA()">📱 Exportar a WhatsApp</button>
         </div>
     </div>
 
@@ -658,21 +575,32 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ============================================
-        // CONFIGURACIÓN GLOBAL
-        // ============================================
-        const TOTAL_CASILLAS = 50;
-        const ADMIN_PHONE = "541168911377"; // Teléfono del dueño para notificaciones
-        
-        let configGlobal = {
-            telegramBotToken: "",
-            telegramChatId: "",
-            horasEspera: 1
-        };
+        // ============ UTILIDADES ============
+        function cleanPhone(p) { return (p || '').replace(/\D/g, '').trim(); }
 
-        // ============================================
-        // SECCIÓN 1: SORTEO PRINCIPAL
-        // ============================================
+        function showMsg(elementId, msg, type) {
+            const el = document.getElementById(elementId);
+            el.className = type;
+            el.innerHTML = msg;
+            el.classList.remove('hidden');
+        }
+
+        function showRuletaView(view) {
+            ['menu', 'register', 'login', 'wheel-section'].forEach(v => {
+                document.getElementById(v === 'wheel-section' ? 'wheel-section' : 'ruleta-' + v)
+                    .classList.add('hidden');
+            });
+            const target = view === 'wheel-section' ? 'wheel-section' : 'ruleta-' + view;
+            document.getElementById(target).classList.remove('hidden');
+
+            // actualizar tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (view === 'register') document.querySelectorAll('.tab')[0].classList.add('active');
+            if (view === 'login') document.querySelectorAll('.tab')[1].classList.add('active');
+        }
+
+        // ============ SORTEO PRINCIPAL (no tocado, vos das los tokens) ============
+        const TOTAL_CASILLAS = 50;
         const grid = document.getElementById('grid');
         const premios = [
             { catId: 'prize-1', nombre: 'Mini Torta', cantidad: 3 },
@@ -682,7 +610,6 @@
         ];
 
         let participantesRegistrados = {};
-        let tokensValidos = {};
         let sorteoEjecutado = false;
         let timerInterval = null;
         let ganadoresLista = {};
@@ -698,31 +625,17 @@
                 grid.appendChild(cell);
             }
         }
-
         crearGrid();
 
-        // Cargar configuración global
-        db.ref('configuracion').on('value', (snap) => {
-            const config = snap.val() || {};
-            configGlobal.telegramBotToken = config.telegramBotToken || "";
-            configGlobal.telegramChatId = config.telegramChatId || "";
-            configGlobal.horasEspera = config.horasEspera || 1;
-            actualizarAdminPanel();
-        });
-
-        // Sincronizar casillas
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
             const ocupadas = Object.keys(participantesRegistrados).length;
-            
-            // Actualizar contador y progreso
             document.getElementById('casillas-counter').innerText = `Casillas: ${ocupadas} / ${TOTAL_CASILLAS}`;
             const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
-            const progressFill = document.getElementById('progress-fill');
-            progressFill.style.width = porcentaje + '%';
-            progressFill.innerText = Math.round(porcentaje) + '%';
+            const pf = document.getElementById('progress-fill');
+            pf.style.width = porcentaje + '%';
+            pf.innerText = Math.round(porcentaje) + '%';
 
-            // Actualizar grid visual
             for (let i = 1; i <= TOTAL_CASILLAS; i++) {
                 const cell = document.getElementById(`cell-${i}`);
                 if (cell) {
@@ -731,312 +644,144 @@
                         cell.title = `Reservado por: ${participantesRegistrados[i].nombre}`;
                     } else {
                         cell.classList.remove('occupied');
-                        cell.title = '';
                     }
                 }
             }
-
-            // ⭐ NUEVO: Verificar si se completaron las 50 casillas
             verificarActivarSorteo();
             actualizarAdminPanel();
         });
 
-        // NUEVA FUNCIÓN: Activar cuenta regresiva cuando se llenan las casillas
         async function verificarActivarSorteo() {
             const ocupadas = Object.keys(participantesRegistrados).length;
-            
             if (ocupadas >= TOTAL_CASILLAS) {
-                const configSnap = await db.ref('configuracion/fechaSorteo').once('value');
-                
-                // Si no hay fecha de sorteo establecida, establecerla
-                if (!configSnap.exists() || !configSnap.val()) {
-                    const fechaSorteo = new Date(Date.now() + configGlobal.horasEspera * 60 * 60 * 1000).toISOString();
-                    await db.ref('configuracion/fechaSorteo').set(fechaSorteo);
-                    
-                    enviarNotificacionTelegram(
-                        "🎉 ¡SORTEO ACTIVADO!",
-                        `Se completaron las ${TOTAL_CASILLAS} casillas. El sorteo será en ${configGlobal.horasEspera} hora(s).\nFecha: ${new Date(fechaSorteo).toLocaleString('es-AR')}`
-                    );
-                    
-                    alert(`🎉 ¡Se completaron las ${TOTAL_CASILLAS} casillas! El sorteo será en ${configGlobal.horasEspera} hora(s).`);
+                const snap = await db.ref('configuracion/fechaSorteo').once('value');
+                if (!snap.exists() || !snap.val()) {
+                    const fecha = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+                    await db.ref('configuracion/fechaSorteo').set(fecha);
                 }
             }
         }
 
-        // Sincronizar tokens
-        db.ref('tokens').on('value', (snapshot) => {
-            tokensValidos = snapshot.val() || {};
-        });
-
-        // Sincronizar ganadores
-        db.ref('ganadores').on('value', (snapshot) => {
-            ganadoresLista = snapshot.val() || {};
+        db.ref('ganadores').on('value', (snap) => {
+            ganadoresLista = snap.val() || {};
             renderizarGanadores();
             actualizarAdminPanel();
         });
 
         function renderizarGanadores() {
-            // Limpiar todas las listas
             document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
-            
-            // Agrupar ganadores por premio
             const agrupado = {};
             Object.values(ganadoresLista).forEach(g => {
                 if (!agrupado[g.premio]) agrupado[g.premio] = [];
                 agrupado[g.premio].push(g);
             });
-
-            Object.entries(agrupado).forEach(([premio, ganadores]) => {
-                // Determinar qué catId pertenece
+            Object.entries(agrupado).forEach(([premio, gs]) => {
                 let catId = null;
-                premios.forEach(p => {
-                    if (premio.startsWith(p.nombre)) catId = p.catId;
-                });
-                
+                premios.forEach(p => { if (premio.startsWith(p.nombre)) catId = p.catId; });
                 if (catId) {
                     const lista = document.getElementById(catId);
-                    ganadores.forEach(g => {
+                    gs.forEach(g => {
                         const item = document.createElement('div');
                         item.className = 'winner-item';
-                        
-                        // Botón WhatsApp para notificar
-                        const waMsg = encodeURIComponent(`🎉 ¡Felicitaciones ${g.nombre}! 🎉\n\nGanaste en nuestro Gran Sorteo:\n🏆 *${g.premio}*\n\nCasilla #${g.casilla}\n\nContactanos para coordinar la entrega de tu premio 🎂`);
+                        const waMsg = encodeURIComponent(`🎉 ¡Felicitaciones ${g.nombre}! 🎉\nGanaste: *${g.premio}*\nCasilla #${g.casilla}`);
                         const waLink = `https://wa.me/${g.telefono.replace(/\D/g,'')}?text=${waMsg}`;
-                        
-                        item.innerHTML = `
-                            <strong>Casilla #${g.casilla}</strong> - ${g.nombre}<br>
-                            <small>${premio}</small><br>
-                            <a href="${waLink}" target="_blank" class="wa-btn">📱 Notificar por WhatsApp</a>
-                        `;
+                        item.innerHTML = `<strong>#${g.casilla}</strong> ${g.nombre}<br><a href="${waLink}" target="_blank" class="wa-btn">📱 Notificar</a>`;
                         lista.appendChild(item);
                     });
                 }
             });
         }
 
-        // Timer cuenta regresiva
-        db.ref('configuracion/fechaSorteo').on('value', (snapshot) => {
-            const fechaString = snapshot.val();
-
+        db.ref('configuracion/fechaSorteo').on('value', (snap) => {
+            const f = snap.val();
             if (timerInterval) clearInterval(timerInterval);
-
-            if (!fechaString) {
-                document.getElementById('timer').innerText = "Esperando que se completen las casillas...";
-                return;
-            }
-
-            const targetDate = new Date(fechaString).getTime();
-
+            if (!f) { document.getElementById('timer').innerText = "Esperando completar casillas..."; return; }
+            const target = new Date(f).getTime();
             timerInterval = setInterval(() => {
-                const now = Date.now();
-                const diff = targetDate - now;
-
+                const diff = target - Date.now();
                 if (diff <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
                     iniciarAnimacionSorteo();
                 } else {
-                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const h = Math.floor(diff / (1000 * 60 * 60));
                     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    let textoTiempo = "";
-                    if (d > 0) textoTiempo += `${d}d `;
-                    if (h > 0 || d > 0) textoTiempo += `${h}h `;
-                    textoTiempo += `${m}m ${s}s`;
-
-                    document.getElementById('timer').innerText = `Sorteo en: ${textoTiempo}`;
+                    document.getElementById('timer').innerText = `Sorteo en: ${h}h ${m}m ${s}s`;
                 }
             }, 1000);
         });
 
         async function seleccionarCasilla(numero) {
             if (participantesRegistrados[numero]) {
-                alert(`La casilla #${numero} ya está reservada por ${participantesRegistrados[numero].nombre}`);
+                alert(`Casilla #${numero} ocupada por ${participantesRegistrados[numero].nombre}`);
                 return;
             }
-
-            const tokenInput = prompt("Coloca el token de seguridad de 5 dígitos:");
+            const tokenInput = prompt("Token de 5 dígitos (el que te enviamos):");
             if (!tokenInput) return;
             const tokenLimpio = tokenInput.trim().toUpperCase();
-
             const tokenRef = db.ref(`tokens/${tokenLimpio}`);
-
             try {
-                const { committed } = await tokenRef.transaction((currentData) => {
-                    if (currentData === null) return;
-                    if (currentData.usado === true) return;
-
-                    return {
-                        ...currentData,
-                        usado: true,
-                        casilla: numero
-                    };
+                const { committed } = await tokenRef.transaction(c => {
+                    if (c === null || c.usado === true) return;
+                    return { ...c, usado: true, casilla: numero };
                 });
-
-                if (!committed) {
-                    alert("Token inválido, no existente o ya utilizado por otra persona.");
-                    return;
-                }
-
-                const nombre = prompt(`Ingresa tu NOMBRE COMPLETO:`);
+                if (!committed) { alert("Token inválido o ya usado."); return; }
+                const nombre = prompt("Tu NOMBRE COMPLETO:");
                 if (!nombre) return;
-
-                const telefono = prompt(`Ingresa tu TELÉFONO (con código de país, ej: 541123456789):`);
+                const telefono = prompt("Tu TELÉFONO (con código país, ej: 541123456789):");
                 if (!telefono) return;
-
-                const datosReserva = {
-                    nombre: nombre.trim(),
-                    telefono: telefono.trim(),
-                    token: tokenLimpio,
-                    fecha: firebase.database.ServerValue.TIMESTAMP
-                };
-
-                await db.ref(`casillas/${numero}`).set(datosReserva);
-                await tokenRef.update({
-                    nombre: nombre.trim(),
-                    telefono: telefono.trim(),
-                    fechaUso: firebase.database.ServerValue.TIMESTAMP
-                });
-
-                // ⭐ Notificar al dueño
-                enviarNotificacionTelegram(
-                    "🎟️ Nueva reserva",
-                    `Casilla #${numero}\n👤 ${nombre.trim()}\n📞 ${telefono.trim()}\n🔑 Token: ${tokenLimpio}`
-                );
-
-                alert(`¡Casilla #${numero} reservada con éxito!`);
-
-            } catch (error) {
-                console.error("Error al procesar la reserva:", error);
-                alert("Ocurrió un error al intentar reservar. Inténtalo nuevamente.");
-            }
+                const datos = { nombre: nombre.trim(), telefono: telefono.trim(), token: tokenLimpio, fecha: firebase.database.ServerValue.TIMESTAMP };
+                await db.ref(`casillas/${numero}`).set(datos);
+                await tokenRef.update({ nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP });
+                alert(`¡Casilla #${numero} reservada!`);
+            } catch (e) { alert("Error: " + e.message); }
         }
 
         async function iniciarAnimacionSorteo() {
             if (sorteoEjecutado) return;
-            
-            // Verificar si ya hay ganadores guardados
             const snap = await db.ref('ganadores').once('value');
-            if (snap.exists() && Object.keys(snap.val()).length > 0) {
-                sorteoEjecutado = true;
-                return;
-            }
-
+            if (snap.exists() && Object.keys(snap.val()).length > 0) { sorteoEjecutado = true; return; }
             sorteoEjecutado = true;
-
-            const casillasOcupadas = Object.keys(participantesRegistrados).map(Number);
-
-            if (casillasOcupadas.length === 0) {
-                alert("No hay casillas reservadas para realizar el sorteo.");
-                return;
-            }
-
-            let bolsaSorteo = [...casillasOcupadas];
-
-            enviarNotificacionTelegram(
-                "🎲 SORTEO EN CURSO",
-                `Iniciando selección de 25 ganadores entre ${casillasOcupadas.length} casillas...`
-            );
-
-            for (const premio of premios) {
-                for (let i = 1; i <= premio.cantidad; i++) {
-                    if (bolsaSorteo.length === 0) return;
-                    await sortearUnGanador(premio.catId, `${premio.nombre} #${i}`, bolsaSorteo);
+            const casillas = Object.keys(participantesRegistrados).map(Number);
+            if (!casillas.length) return;
+            let bolsa = [...casillas];
+            for (const p of premios) {
+                for (let i = 1; i <= p.cantidad; i++) {
+                    if (!bolsa.length) return;
+                    await sortearUnGanador(p.catId, `${p.nombre} #${i}`, bolsa);
                 }
             }
-
-            enviarNotificacionTelegram(
-                "🏆 SORTEO FINALIZADO",
-                `Se han seleccionado todos los ganadores. Revisá el panel admin para notificarlos.`
-            );
         }
 
-        function sortearUnGanador(catId, nombrePremio, bolsaSorteo) {
+        function sortearUnGanador(catId, nombrePremio, bolsa) {
             return new Promise((resolve) => {
-                let tiempoRuleta = 1500;
-                let intervalo = 80;
-                let tiempoTranscurrido = 0;
-                let ultimaCasilla = null;
-
+                let tiempo = 1500, intervalo = 80, transcurrido = 0, ultima = null;
                 const timer = setInterval(() => {
-                    if (ultimaCasilla) {
-                        const cellPrev = document.getElementById(`cell-${ultimaCasilla}`);
-                        if (cellPrev && !cellPrev.classList.contains('winner')) {
-                            cellPrev.classList.remove('chaos');
-                        }
+                    if (ultima) {
+                        const c = document.getElementById(`cell-${ultima}`);
+                        if (c && !c.classList.contains('winner')) c.classList.remove('chaos');
                     }
-
-                    const indexRandom = Math.floor(Math.random() * bolsaSorteo.length);
-                    ultimaCasilla = bolsaSorteo[indexRandom];
-                    
-                    const cell = document.getElementById(`cell-${ultimaCasilla}`);
-                    if (cell) cell.classList.add('chaos');
-
-                    tiempoTranscurrido += intervalo;
-
-                    if (tiempoTranscurrido >= tiempoRuleta) {
+                    ultima = bolsa[Math.floor(Math.random() * bolsa.length)];
+                    const c = document.getElementById(`cell-${ultima}`);
+                    if (c) c.classList.add('chaos');
+                    transcurrido += intervalo;
+                    if (transcurrido >= tiempo) {
                         clearInterval(timer);
-                        
-                        const ganadorIndex = Math.floor(Math.random() * bolsaSorteo.length);
-                        const numeroGanador = bolsaSorteo.splice(ganadorIndex, 1)[0];
-                        
-                        if (cell) cell.classList.remove('chaos');
-                        
-                        const cellGanador = document.getElementById(`cell-${numeroGanador}`);
-                        if (cellGanador) cellGanador.classList.add('winner');
-
-                        const datosGanador = participantesRegistrados[numeroGanador];
-
-                        db.ref(`ganadores/${numeroGanador}`).set({
-                            casilla: numeroGanador,
-                            premio: nombrePremio,
-                            nombre: datosGanador.nombre,
-                            telefono: datosGanador.telefono,
-                            token: datosGanador.token,
-                            fechaSorteo: Date.now()
-                        });
-
+                        const gIdx = Math.floor(Math.random() * bolsa.length);
+                        const num = bolsa.splice(gIdx, 1)[0];
+                        if (c) c.classList.remove('chaos');
+                        const cg = document.getElementById(`cell-${num}`);
+                        if (cg) cg.classList.add('winner');
+                        const d = participantesRegistrados[num];
+                        db.ref(`ganadores/${num}`).set({ casilla: num, premio: nombrePremio, nombre: d.nombre, telefono: d.telefono, token: d.token, fechaSorteo: Date.now() });
                         setTimeout(resolve, 300);
                     }
                 }, intervalo);
             });
         }
 
-        // ============================================
-        // SISTEMA DE NOTIFICACIONES
-        // ============================================
-        async function enviarNotificacionTelegram(titulo, mensaje) {
-            if (!configGlobal.telegramBotToken || !configGlobal.telegramChatId) {
-                console.log("Telegram no configurado, mensaje:", titulo, mensaje);
-                return false;
-            }
-
-            try {
-                const texto = `🎂 *${titulo}*\n\n${mensaje}\n\n_Hora: ${new Date().toLocaleString('es-AR')}_`;
-                const url = `https://api.telegram.org/bot${configGlobal.telegramBotToken}/sendMessage`;
-                
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: configGlobal.telegramChatId,
-                        text: texto,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                
-                return true;
-            } catch (err) {
-                console.error("Error Telegram:", err);
-                return false;
-            }
-        }
-
-        // ============================================
-        // SECCIÓN 2: RULETA DE DESCUENTOS
-        // ============================================
+        // ============ RULETA DE DESCUENTOS (AUTOMÁTICA) ============
         const PRIZES = [
             { label: "5% OFF",  discount: "5%",  prob: 0.1875, color: "#ff6b6b" },
             { label: "10% OFF", discount: "10%", prob: 0.1875, color: "#4ecdc4" },
@@ -1046,61 +791,187 @@
             { label: "50% OFF", discount: "50%", prob: 0.05,   color: "#fd79a8" },
             { label: "🍸 SHOT GRATIS", discount: "SHOT", prob: 0.15, color: "#6c5ce7" }
         ];
-
         const COOLDOWN_MS = 24 * 60 * 60 * 1000;
         let currentPhone = null;
         let canSpin = false;
         let spinning = false;
+        let allRuletaUsers = {};
 
-        const loginSection = document.getElementById('login-section');
-        const wheelSection = document.getElementById('wheel-section');
-        const loginForm = document.getElementById('login-form');
-        const loginError = document.getElementById('login-error');
-        const spinBtn = document.getElementById('spin-btn');
-        const result = document.getElementById('result');
-
-        function showError(msg) {
-            loginError.textContent = msg;
-            loginError.classList.remove('hidden');
+        // Generador de token único alfanumérico
+        function generateToken() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let t = '';
+            for (let i = 0; i < 6; i++) t += chars[Math.floor(Math.random() * chars.length)];
+            return t;
         }
 
-        function cleanPhone(p) {
-            return p.replace(/\D/g, '').trim();
+        // Sincronizar usuarios ruleta para admin
+        db.ref('ruletaUsuarios').on('value', (snap) => {
+            allRuletaUsers = snap.val() || {};
+            actualizarAdminPanel();
+        });
+
+        // === REGISTRO AUTOMÁTICO ===
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = cleanPhone(document.getElementById('reg-phone').value);
+            if (phone.length < 8) {
+                showMsg('register-msg', '❌ Número inválido. Ingresá tu WhatsApp sin el +.', 'error');
+                return;
+            }
+
+            const userRef = db.ref(`ruletaUsuarios/${phone}`);
+            const snap = await userRef.once('value');
+
+            // Si ya existe, mostrarle su token
+            if (snap.exists()) {
+                const data = snap.val();
+                if (data.bloqueado) {
+                    showMsg('register-msg', '⛔ Este número fue bloqueado. Contactanos por WhatsApp.', 'error');
+                    return;
+                }
+                showMsg('register-msg', `
+                    <div class="success">
+                        ✅ ¡Ya estabas registrado!<br>
+                        <small>Tu token es:</small>
+                        <div class="token-display">
+                            <div class="label">Tu Token</div>
+                            <div class="token-value">${data.token}</div>
+                        </div>
+                        <button class="btn-primary btn-copy" onclick="copiarToken('${data.token}')">📋 Copiar token</button>
+                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${data.token}')">📱 Guardar en mi WhatsApp</button>
+                    </div>
+                `, 'success');
+                return;
+            }
+
+            // NUEVO USUARIO: generar token único y registrar
+            let token = generateToken();
+            // Verificar que el token no exista ya (colisión)
+            let tokenExiste = true;
+            while (tokenExiste) {
+                const tSnap = await db.ref('ruletaUsuarios').orderByChild('token').equalTo(token).once('value');
+                tokenExiste = tSnap.exists();
+                if (tokenExiste) token = generateToken();
+            }
+
+            try {
+                await userRef.set({
+                    phone: phone,
+                    token: token,
+                    registrado: Date.now(),
+                    lastSpin: null,
+                    bloqueado: false
+                });
+
+                showMsg('register-msg', `
+                    <div class="success">
+                        🎉 <strong>¡Registro exitoso!</strong><br>
+                        <small>Guardá tu token, es permanente:</small>
+                        <div class="token-display">
+                            <div class="label">Tu Token Personal</div>
+                            <div class="token-value">${token}</div>
+                        </div>
+                        <button class="btn-primary btn-copy" onclick="copiarToken('${token}')">📋 Copiar token</button>
+                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${token}')">📱 Enviármelo a mi WhatsApp</button>
+                        <p style="margin-top:15px;font-size:13px;">👇 Después tocá "Ya tengo token" para entrar a girar</p>
+                    </div>
+                `, 'success');
+            } catch (err) {
+                showMsg('register-msg', '❌ Error: ' + err.message, 'error');
+            }
+        });
+
+        // === COPIAR TOKEN AL CLIPBOARD ===
+        function copiarToken(token) {
+            navigator.clipboard.writeText(token).then(() => {
+                alert('✅ Token copiado: ' + token);
+            }).catch(() => {
+                prompt('Copiá este token:', token);
+            });
         }
 
-        async function verifyUser(phone, token) {
-            const userRef = db.ref(`ruletaTokens/${phone}`);
+        // === ENVIAR TOKEN A SU PROPIO WHATSAPP ===
+        function enviarTokenWA(phone, token) {
+            const msg = encodeURIComponent(
+                `🎂 *MI TOKEN DE LA RULETA* 🎂\n\n` +
+                `🔑 Token: *${token}*\n` +
+                `📱 Mi número: ${phone}\n\n` +
+                `_Lo guardo para usarlo cada vez que quiera girar (1 vez cada 24hs)_ 🎰`
+            );
+            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+        }
+
+        // === LOGIN CON TOKEN ===
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = cleanPhone(document.getElementById('login-phone').value);
+            const token = document.getElementById('login-token').value.trim().toUpperCase();
+
+            if (phone.length < 8) {
+                showMsg('login-msg', '❌ Número inválido.', 'error');
+                return;
+            }
+
+            const userRef = db.ref(`ruletaUsuarios/${phone}`);
             const snap = await userRef.once('value');
 
             if (!snap.exists()) {
-                throw new Error("Número no registrado. Pedí tu token por WhatsApp: wa.me/541168911377");
+                showMsg('login-msg', '❌ Número no registrado. Tocá "Soy nuevo" primero.', 'error');
+                return;
             }
 
-            const userData = snap.val();
+            const data = snap.val();
 
-            if (userData.token !== token.trim()) {
-                throw new Error("Token incorrecto. Verificá el token que te enviamos.");
+            if (data.bloqueado) {
+                showMsg('login-msg', '⛔ Usuario bloqueado. Contactanos.', 'error');
+                return;
             }
 
-            if (userData.lastSpin) {
-                const elapsed = Date.now() - userData.lastSpin;
+            if (data.token !== token) {
+                showMsg('login-msg', '❌ Token incorrecto. Si lo perdiste escribinos por WhatsApp.', 'error');
+                return;
+            }
+
+            // Verificar cooldown 24hs
+            if (data.lastSpin) {
+                const elapsed = Date.now() - data.lastSpin;
                 if (elapsed < COOLDOWN_MS) {
                     const remaining = COOLDOWN_MS - elapsed;
                     const hours = Math.floor(remaining / (1000 * 60 * 60));
                     const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                    throw new Error(`Ya giraste hoy. Vuelve en ${hours}h ${mins}m ⏰`);
+                    showMsg('login-msg', `⏰ Ya giraste hoy. Volvé en ${hours}h ${mins}m`, 'error');
+                    return;
                 }
             }
 
-            return userData;
+            // Login exitoso
+            currentPhone = phone;
+            canSpin = true;
+            showRuletaView('wheel-section');
+            document.getElementById('user-greeting').textContent = `👋 Hola ${phone.slice(-4)}`;
+            document.getElementById('spin-btn').disabled = false;
+            document.getElementById('spin-btn').textContent = '🎲 ¡GIRAR!';
+            document.getElementById('result').classList.add('hidden');
+            drawWheel();
+        });
+
+        function logoutRuleta() {
+            currentPhone = null;
+            canSpin = false;
+            showRuletaView('menu');
+            document.getElementById('register-form').reset();
+            document.getElementById('login-form').reset();
+            document.getElementById('register-msg').innerHTML = '';
+            document.getElementById('login-msg').innerHTML = '';
         }
 
         function pickPrize() {
             const rand = Math.random();
-            let cumulative = 0;
+            let cum = 0;
             for (let i = 0; i < PRIZES.length; i++) {
-                cumulative += PRIZES[i].prob;
-                if (rand <= cumulative) return i;
+                cum += PRIZES[i].prob;
+                if (rand <= cum) return i;
             }
             return PRIZES.length - 1;
         }
@@ -1109,7 +980,6 @@
             const wheel = document.getElementById('wheel');
             wheel.innerHTML = '';
             const segAngle = 360 / PRIZES.length;
-
             PRIZES.forEach((prize, i) => {
                 const seg = document.createElement('div');
                 seg.className = 'segment';
@@ -1120,95 +990,51 @@
             });
         }
 
-        async function spinWheel() {
-            if (spinning || !canSpin) return;
+        document.getElementById('spin-btn').addEventListener('click', async () => {
+            if (spinning || !canSpin || !currentPhone) return;
             spinning = true;
+            const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
-            result.classList.add('hidden');
+            document.getElementById('result').classList.add('hidden');
 
             const wheel = document.getElementById('wheel');
-            const prizeIndex = pickPrize();
-            const prize = PRIZES[prizeIndex];
-
+            const pIdx = pickPrize();
+            const prize = PRIZES[pIdx];
             const segAngle = 360 / PRIZES.length;
-            const targetAngle = 360 - (prizeIndex * segAngle + segAngle / 2);
-            const spins = 5;
-            const finalRotation = spins * 360 + targetAngle;
-
+            const target = 360 - (pIdx * segAngle + segAngle / 2);
+            const final = 5 * 360 + target;
             wheel.classList.add('spinning');
-            wheel.style.transform = `rotate(${finalRotation}deg)`;
+            wheel.style.transform = `rotate(${final}deg)`;
 
-            await new Promise(resolve => setTimeout(resolve, 5100));
+            await new Promise(r => setTimeout(r, 5100));
 
             try {
-                await db.ref(`ruletaTokens/${currentPhone}/lastSpin`).set(Date.now());
-
+                await db.ref(`ruletaUsuarios/${currentPhone}/lastSpin`).set(Date.now());
                 await db.ref('ruletaSpins').push({
-                    phone: currentPhone,
-                    prize: prize.label,
-                    discount: prize.discount,
-                    timestamp: Date.now()
+                    phone: currentPhone, prize: prize.label,
+                    discount: prize.discount, timestamp: Date.now()
                 });
 
-                // Notificar al dueño del premio ganado
-                enviarNotificacionTelegram(
-                    "🎡 Ganador Ruleta",
-                    `📱 ${currentPhone}\n🏆 ${prize.label}\n🎟️ Código: ${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`
-                );
-
-                result.innerHTML = `
-                    🎉 ¡Felicitaciones! 🎉
+                const codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
+                document.getElementById('result').innerHTML = `
+                    🎉 ¡Ganaste! 🎉
                     <span class="big">${prize.label}</span>
-                    Mostrá este código al hacer tu pedido:<br>
-                    <code style="background:#fff;padding:5px 10px;border-radius:5px;font-size:16px;display:inline-block;margin-top:10px;">
-                        ${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}
+                    Mostrá este código al pedir:<br>
+                    <code style="background:#fff;padding:8px 15px;border-radius:5px;font-size:18px;display:inline-block;margin-top:10px;font-family:monospace;">
+                        ${codigo}
                     </code>
                 `;
-                result.classList.remove('hidden');
-
+                document.getElementById('result').classList.remove('hidden');
                 canSpin = false;
                 spinBtn.textContent = "Volvé mañana 🌙";
-            } catch (err) {
-                console.error(err);
-                result.innerHTML = "Error guardando tu premio. Contactanos por WhatsApp.";
-                result.classList.remove('hidden');
+            } catch (e) {
+                document.getElementById('result').innerHTML = "Error guardando. Contactanos.";
+                document.getElementById('result').classList.remove('hidden');
             }
-
             spinning = false;
-        }
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            loginError.classList.add('hidden');
-
-            const phone = cleanPhone(document.getElementById('phone').value);
-            const token = document.getElementById('token').value.trim();
-
-            if (phone.length < 8) {
-                showError("Ingresá un número válido.");
-                return;
-            }
-
-            try {
-                await verifyUser(phone, token);
-                currentPhone = phone;
-                canSpin = true;
-
-                loginSection.classList.add('hidden');
-                wheelSection.classList.remove('hidden');
-                document.getElementById('user-greeting').textContent = `👋 Hola ${phone.slice(-4)}`;
-
-                drawWheel();
-            } catch (err) {
-                showError(err.message);
-            }
         });
 
-        spinBtn.addEventListener('click', spinWheel);
-
-        // ============================================
-        // PANEL ADMIN
-        // ============================================
+        // ============ PANEL ADMIN ============
         function toggleAdmin() {
             document.getElementById('admin-panel').classList.toggle('hidden');
             actualizarAdminPanel();
@@ -1216,117 +1042,82 @@
 
         function actualizarAdminPanel() {
             const ocupadas = Object.keys(participantesRegistrados).length;
-            const statusEl = document.getElementById('admin-status');
-            if (statusEl) {
-                statusEl.innerHTML = `
-                    <strong>Casillas ocupadas:</strong> ${ocupadas}/${TOTAL_CASILLAS}<br>
-                    <strong>Ganadores sorteados:</strong> ${Object.keys(ganadoresLista).length}<br>
-                    <strong>Estado:</strong> ${ocupadas >= TOTAL_CASILLAS ? '✅ Listo para sortear' : '⏳ Esperando casillas'}
-                `;
-            }
+            const s = document.getElementById('admin-status');
+            if (s) s.innerHTML = `<strong>Casillas:</strong> ${ocupadas}/${TOTAL_CASILLAS}<br><strong>Ganadores:</strong> ${Object.keys(ganadoresLista).length}`;
 
-            const ganadoresEl = document.getElementById('admin-ganadores');
-            if (ganadoresEl) {
-                if (Object.keys(ganadoresLista).length === 0) {
-                    ganadoresEl.innerHTML = '<p>Sin ganadores aún</p>';
+            const g = document.getElementById('admin-ganadores');
+            if (g) {
+                if (!Object.keys(ganadoresLista).length) {
+                    g.innerHTML = '<p style="color:#666;font-size:13px;">Sin ganadores</p>';
                 } else {
-                    ganadoresEl.innerHTML = Object.entries(ganadoresLista).map(([num, g]) => 
-                        `<div class="admin-item"><strong>#${num}</strong> ${g.nombre} - ${g.premio}</div>`
+                    g.innerHTML = Object.entries(ganadoresLista).map(([n, d]) =>
+                        `<div class="admin-item"><span><strong>#${n}</strong> ${d.nombre} - ${d.premio}</span></div>`
                     ).join('');
                 }
             }
 
-            const tlgStatus = document.getElementById('admin-telegram-status');
-            if (tlgStatus) {
-                if (configGlobal.telegramBotToken && configGlobal.telegramChatId) {
-                    tlgStatus.innerHTML = '<span style="color:green">✅ Configurado</span>';
+            // Usuarios ruleta
+            const rc = document.getElementById('admin-ruleta-count');
+            const ru = document.getElementById('admin-ruleta-users');
+            if (rc && ru) {
+                const users = Object.entries(allRuletaUsers);
+                rc.textContent = users.length;
+                if (!users.length) {
+                    ru.innerHTML = '<p style="color:#666;font-size:13px;">Sin usuarios</p>';
                 } else {
-                    tlgStatus.innerHTML = '<span style="color:orange">⚠️ No configurado (agregá telegramBotToken y telegramChatId en Firebase)</span>';
+                    ru.innerHTML = users.map(([phone, data]) => `
+                        <div class="admin-item">
+                            <span>
+                                <strong>+${phone}</strong><br>
+                                <small>Token: <code>${data.token}</code></small><br>
+                                <small>${data.bloqueado ? '⛔ Bloqueado' : '✅ Activo'}</small>
+                            </span>
+                            <button onclick="bloquearUsuario('${phone}', ${!data.bloqueado})">${data.bloqueado ? '✓ Desbloq' : '⛔ Bloq'}</button>
+                        </div>
+                    `).join('');
                 }
             }
         }
 
+        async function bloquearUsuario(phone, bloquear) {
+            if (!confirm(`${bloquear ? 'Bloquear' : 'Desbloquear'} al usuario ${phone}?`)) return;
+            await db.ref(`ruletaUsuarios/${phone}/bloqueado`).set(bloquear);
+            alert('✅ Actualizado');
+        }
+
         async function forceSorteo() {
-            if (!confirm("¿Forzar el sorteo AHORA? Esto iniciará la animación de selección.")) return;
+            if (!confirm("¿Forzar sorteo AHORA?")) return;
             await db.ref('configuracion/fechaSorteo').set(new Date(Date.now() + 5000).toISOString());
-            alert("Sorteo forzado. Comenzará en 5 segundos.");
+            alert("Sorteo en 5 segundos");
         }
 
         async function resetSorteo() {
-            if (!confirm("⚠️ ¿RESETEAR todo el sorteo? Esto borrará ganadores y fechas.")) return;
-            if (!confirm("¿Estás 100% seguro? Esta acción es irreversible.")) return;
-            
+            if (!confirm("⚠️ BORRAR TODO (ganadores, casillas, tokens)?")) return;
+            if (!confirm("¿Estás 100% seguro?")) return;
             await db.ref('ganadores').remove();
             await db.ref('configuracion/fechaSorteo').remove();
-            sorteoEjecutado = false;
-            
-            // Resetear tokens
-            const tokens = await db.ref('tokens').once('value');
-            if (tokens.exists()) {
-                const data = tokens.val();
-                Object.keys(data).forEach(k => {
+            await db.ref('casillas').remove();
+            const t = await db.ref('tokens').once('value');
+            if (t.exists()) {
+                Object.keys(t.val()).forEach(k => {
                     db.ref(`tokens/${k}`).update({ usado: false, casilla: null, nombre: null, telefono: null, fechaUso: null });
                 });
             }
-            
-            await db.ref('casillas').remove();
-            alert("Sorteo reseteado ✅");
+            sorteoEjecutado = false;
+            alert("✅ Reseteado");
             location.reload();
         }
 
-        async function generarTokenRuleta() {
-            const phone = document.getElementById('admin-ruleta-phone').value.replace(/\D/g, '');
-            if (phone.length < 8) {
-                alert("Número inválido");
-                return;
-            }
-
-            const token = Math.random().toString(36).substring(2, 8).toUpperCase();
-            await db.ref(`ruletaTokens/${phone}`).set({
-                token: token,
-                lastSpin: null,
-                createdAt: Date.now()
-            });
-
-            const waMsg = encodeURIComponent(`🎂 ¡Hola! Tu token para la ruleta de Pasteles Felices es: *${token}*\nGuardalo, lo usás cada vez que quieras girar (1 vez cada 24hs) 🎉`);
-            const waLink = `https://wa.me/${phone}?text=${waMsg}`;
-
-            document.getElementById('admin-ruleta-result').innerHTML = `
-                <div class="success">
-                    ✅ Token: <strong>${token}</strong><br>
-                    <a href="${waLink}" target="_blank" style="color:#25D366;font-weight:bold;">📱 Enviar por WhatsApp →</a>
-                </div>
-            `;
-        }
-
-        async function exportarGanadoresWA() {
-            if (Object.keys(ganadoresLista).length === 0) {
-                alert("No hay ganadores para exportar");
-                return;
-            }
-
-            let texto = "🏆 *GANADORES DEL GRAN SORTEO* 🏆\n\n";
+        function exportarGanadoresWA() {
+            if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
+            let txt = "🏆 *GANADORES DEL SORTEO* 🏆\n\n";
             Object.values(ganadoresLista).forEach(g => {
-                texto += `🎁 *${g.premio}*\n👤 ${g.nombre}\n📞 ${g.telefono}\n🔢 Casilla #${g.casilla}\n\n`;
+                txt += `🎁 *${g.premio}*\n👤 ${g.nombre}\n📞 ${g.telefono}\n🔢 #${g.casilla}\n\n`;
             });
-
-            const waLink = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-            window.open(waLink, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
         }
 
-        async function testTelegram() {
-            const ok = await enviarNotificacionTelegram("🧪 Test", "Mensaje de prueba del sistema de notificaciones");
-            if (ok) {
-                alert("✅ Mensaje enviado a Telegram");
-            } else {
-                alert("❌ Error: Configurá telegramBotToken y telegramChatId en Firebase");
-            }
-        }
-
-        // Auto-mostrar admin si está en URL
-        if (window.location.hash === '#admin') {
-            toggleAdmin();
-        }
+        if (location.hash === '#admin') toggleAdmin();
     </script>
 </body>
 </html>
