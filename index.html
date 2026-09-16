@@ -3,82 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gran Sorteo + Ruleta de Descuentos</title>
+    <title>💐 Sorteo Día de la Madre + Ruleta de Descuentos</title>
     <style>
         :root {
-            --bg-color: #fdf8f5;
+            --bg-color: #fff5f7;
             --card-bg: #ffffff;
-            --primary-pink: #f472b6;
-            --primary-pink-glow: rgba(244, 114, 182, 0.4);
-            --primary-pink-dark: #db2777;
+            --primary-pink: #ec4899;
+            --primary-pink-glow: rgba(236, 72, 153, 0.4);
+            --primary-pink-dark: #be185d;
+            --primary-rose: #fb7185;
             --primary-beige: #fef3c7;
             --primary-beige-border: #fcd34d;
-            --text-color: #4a3e3d;
-            --subtitle-color: #8c7a78;
+            --text-color: #4a3038;
+            --subtitle-color: #8b5a6b;
             --cell-default: #fce7f3;
             --cell-border: #fbcfe8;
             --whatsapp: #25D366;
+            --gold: #d97706;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            background: linear-gradient(135deg, #fdf8f5 0%, #fae8e0 100%);
+            background: linear-gradient(135deg, #fff5f7 0%, #fce7f3 50%, #fbcfe8 100%);
             color: var(--text-color);
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; }
+        /* Flores decorativas flotantes */
+        body::before {
+            content: '🌸 💐 🌷 🌺 💮 🌹';
+            position: fixed;
+            top: 10%;
+            left: -50px;
+            font-size: 30px;
+            opacity: 0.15;
+            transform: rotate(-15deg);
+            letter-spacing: 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '🌸 💐 🌷 🌺 💮 🌹';
+            position: fixed;
+            bottom: 10%;
+            right: -50px;
+            font-size: 30px;
+            opacity: 0.15;
+            transform: rotate(15deg);
+            letter-spacing: 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; position: relative; z-index: 1; }
 
         .logo-container {
-            width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-            border: 4px solid var(--primary-pink); margin: 0 auto 15px;
+            width: 150px; height: 150px; border-radius: 50%; overflow: hidden;
+            border: 5px solid var(--primary-pink); margin: 0 auto 15px;
             box-shadow: 0 0 30px var(--primary-pink-glow);
             background-color: #fff; animation: logoGlow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .logo-container::after {
+            content: '💐';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            font-size: 40px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         @keyframes logoGlow {
             0%, 100% { box-shadow: 0 0 20px var(--primary-pink-glow); }
-            50% { box-shadow: 0 0 40px var(--primary-pink-glow), 0 0 60px rgba(244, 114, 182, 0.3); }
+            50% { box-shadow: 0 0 40px var(--primary-pink-glow), 0 0 60px rgba(236, 72, 153, 0.4); }
         }
 
         .logo-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        h1 {
-            font-size: 2.2rem; color: var(--primary-pink-dark); text-transform: uppercase;
-            letter-spacing: 2px; text-shadow: 0 0 10px rgba(244, 114, 182, 0.3); margin-bottom: 5px;
+        .pretitle {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-rose));
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
         }
 
-        .subtitle { color: var(--subtitle-color); font-size: 1rem; margin-bottom: 10px; }
+        h1 {
+            font-size: 2.5rem; color: var(--primary-pink-dark); text-transform: uppercase;
+            letter-spacing: 2px; text-shadow: 0 0 15px rgba(236, 72, 153, 0.4); margin-bottom: 5px;
+            line-height: 1.1;
+        }
+
+        .subtitle { color: var(--subtitle-color); font-size: 1.1rem; margin-bottom: 15px; font-weight: 500; }
 
         .timer-box {
-            font-size: 1.2rem; font-weight: bold; color: var(--primary-pink-dark);
-            background: var(--card-bg); padding: 10px 20px; border-radius: 20px;
-            border: 1px solid var(--primary-pink); margin-bottom: 20px;
-            display: inline-block; box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15);
+            font-size: 1.3rem; font-weight: 900; color: var(--primary-pink-dark);
+            background: white; padding: 12px 25px; border-radius: 25px;
+            border: 3px solid var(--primary-pink); margin-bottom: 20px;
+            display: inline-block; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25);
+            letter-spacing: 1px;
         }
 
         .info-bubble {
             max-width: 650px; width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--primary-pink); border-left: 4px solid var(--primary-pink-dark);
-            border-radius: 10px; padding: 12px 18px; margin-bottom: 25px;
-            font-size: 0.9rem; display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--primary-pink); border-left: 6px solid var(--primary-pink-dark);
+            border-radius: 12px; padding: 15px 20px; margin-bottom: 25px;
+            font-size: 0.95rem; display: flex; align-items: flex-start; gap: 12px;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.15);
+            position: relative;
+            z-index: 1;
         }
 
-        .info-bubble span.icon { font-size: 1.5rem; }
+        .info-bubble span.icon { font-size: 1.8rem; }
 
         .counter-badge {
-            background: var(--primary-pink-dark); color: white;
-            padding: 5px 15px; border-radius: 20px;
-            font-size: 0.9rem; font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white; padding: 8px 20px; border-radius: 25px;
+            font-size: 1rem; font-weight: bold;
             display: inline-block; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
         }
 
         .progress-bar {
-            width: 100%; max-width: 650px; height: 20px;
-            background: #e5e7eb; border-radius: 10px; overflow: hidden; margin: 10px auto 20px;
+            width: 100%; max-width: 650px; height: 25px;
+            background: #f3e8ff; border-radius: 15px; overflow: hidden; margin: 10px auto 20px;
+            border: 2px solid var(--primary-pink);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .progress-fill {
@@ -86,23 +149,116 @@
             background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
             transition: width 0.5s ease;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 12px; font-weight: bold;
+            color: white; font-size: 13px; font-weight: bold;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
         }
 
+        /* BOTÓN GIGANTE */
+        .cta-button-container {
+            width: 100%; max-width: 650px;
+            text-align: center; margin: 20px auto 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            display: inline-block;
+            width: 100%;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: ctaPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes ctaPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.7), 0 0 0 8px rgba(37, 211, 102, 0.3); }
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -100%;
+            width: 100%; height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .cta-button .btn-emoji {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .cta-button .btn-sub {
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.9;
+            letter-spacing: 0;
+            text-transform: none;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* GRID 10x10 */
         .grid-container {
-            display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px;
-            max-width: 650px; width: 100%; margin-bottom: 35px; padding: 15px;
-            background: var(--card-bg); border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
-            border: 3px solid var(--primary-beige-border);
+            display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px;
+            max-width: 700px; width: 100%; margin-bottom: 35px; padding: 15px;
+            background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
+            border: 4px solid var(--primary-pink);
+            position: relative;
+            z-index: 1;
+        }
+
+        .grid-container::before {
+            content: '🌸 100 NÚMEROS • 3 GANADORES 🌸';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white;
+            padding: 5px 20px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
         }
 
         .cell {
-            width: 100%; height: 50px; background-color: var(--cell-default);
+            width: 100%; aspect-ratio: 1; background-color: var(--cell-default);
             border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 1.1rem; color: var(--primary-pink-dark);
+            font-weight: 900; font-size: 1rem; color: var(--primary-pink-dark);
             border: 2px solid var(--cell-border); user-select: none;
             transition: all 0.2s ease; cursor: pointer;
+        }
+
+        .cell:hover:not(.occupied):not(.winner) {
+            transform: scale(1.08);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            z-index: 2;
         }
 
         .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; cursor: not-allowed; }
@@ -117,46 +273,94 @@
         }
 
         .cell.winner {
-            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-            color: #ffffff; border-color: #6ee7b7;
-            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
-            animation: winnerReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: #ffffff; border-color: #fde68a;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+            animation: winnerReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes winnerReveal { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        .prizes-section { width: 100%; max-width: 900px; }
+        /* PREMIOS */
+        .prizes-section { width: 100%; max-width: 900px; position: relative; z-index: 1; }
         .prizes-title {
-            text-align: center; color: var(--primary-pink-dark); font-size: 1.8rem;
-            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
+            text-align: center; color: var(--primary-pink-dark); font-size: 2rem;
+            margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
         }
 
-        .prizes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .prizes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
 
         .prize-card {
-            background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
-            border: 2px solid var(--primary-beige-border); border-radius: 12px;
-            padding: 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+            border: 3px solid var(--primary-pink); border-radius: 20px;
+            padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .prize-card:hover { transform: translateY(-5px); }
+
+        .prize-card.gold {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            box-shadow: 0 15px 40px rgba(217, 119, 6, 0.3);
+        }
+
+        .prize-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+
+        .prize-card.gold .prize-badge {
+            background: linear-gradient(135deg, #92400e, var(--gold));
+        }
+
+        .prize-emoji {
+            font-size: 4rem;
+            margin: 15px 0 10px;
+            display: block;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
         }
 
         .prize-card h3 {
-            color: var(--primary-pink-dark); font-size: 1.1rem; margin-bottom: 12px;
-            padding-bottom: 8px; border-bottom: 2px solid var(--primary-pink);
+            color: var(--primary-pink-dark); font-size: 1.2rem; margin-bottom: 10px;
+            font-weight: 900;
         }
 
-        .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+        .prize-card.gold h3 { color: #92400e; }
+
+        .prize-description {
+            font-size: 0.9rem;
+            color: var(--subtitle-color);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 30px; }
 
         .winner-item {
             background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
-            color: #713f12; font-weight: 700; font-size: 0.85rem;
-            padding: 8px 12px; border-radius: 6px; text-align: left;
+            color: #713f12; font-weight: 700; font-size: 0.9rem;
+            padding: 10px 14px; border-radius: 10px; text-align: left;
             animation: slideIn 0.4s ease forwards;
+            border: 2px solid #fbbf24;
         }
 
         .winner-item .wa-btn {
             display: inline-block; background: var(--whatsapp); color: white;
-            padding: 4px 8px; border-radius: 4px; text-decoration: none;
-            font-size: 0.75rem; margin-top: 4px; font-weight: bold;
+            padding: 5px 10px; border-radius: 5px; text-decoration: none;
+            font-size: 0.8rem; margin-top: 5px; font-weight: bold;
         }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -164,11 +368,13 @@
         .separator {
             width: 100%; max-width: 650px; height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
-            margin: 40px 0; border-radius: 2px;
+            margin: 50px 0; border-radius: 2px;
+            position: relative;
+            z-index: 1;
         }
 
         /* === RULETA === */
-        .ruleta-section { width: 100%; max-width: 650px; margin-top: 20px; }
+        .ruleta-section { width: 100%; max-width: 650px; margin-top: 20px; position: relative; z-index: 1; }
 
         .ruleta-section > h2 {
             text-align: center; color: var(--primary-pink-dark); font-size: 2rem;
@@ -240,7 +446,7 @@
 
         .hidden { display: none !important; }
 
-        /* === RULETA MEJORADA === */
+        /* === RULETA === */
         .wheel-container { position: relative; width: 340px; height: 340px; margin: 20px auto; }
 
         .pointer {
@@ -335,7 +541,6 @@
             50% { opacity: 0.5; transform: scale(1.05); }
         }
 
-        /* === CUADRO DE RESULTADOS === */
         .results-board {
             background: linear-gradient(135deg, #1e1b4b, #312e81);
             border-radius: 15px; padding: 20px; margin-top: 20px;
@@ -378,7 +583,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* === RESULTADO POPUP === */
         .result-popup {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.85); z-index: 2000;
@@ -431,10 +635,9 @@
 
         .info-bar .user-name { font-weight: 700; color: var(--primary-pink-dark); }
 
-        footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; }
+        footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; position: relative; z-index: 1; }
         footer a { color: var(--primary-pink-dark); font-weight: bold; text-decoration: none; }
 
-        /* === ADMIN === */
         #admin-panel {
             position: fixed; top: 0; right: 0; width: 380px; max-width: 95vw; height: 100vh;
             background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
@@ -455,15 +658,6 @@
         .admin-item strong { color: var(--primary-pink-dark); }
         .admin-item button { background: #ef4444; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
 
-        .admin-trigger {
-            position: fixed; bottom: 15px; right: 15px;
-            background: rgba(0,0,0,0.4); color: white; border: none;
-            width: 45px; height: 45px; border-radius: 50%;
-            font-size: 20px; cursor: pointer; z-index: 999; opacity: 0.6;
-        }
-
-        .admin-trigger:hover { opacity: 1; }
-
         .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
 
         .tab {
@@ -478,42 +672,51 @@
         .ruleta-users-list { max-height: 250px; overflow-y: auto; background: white; border-radius: 8px; padding: 8px; }
 
         @media (max-width: 768px) {
-            .grid-container { grid-template-columns: repeat(5, 1fr); }
+            .grid-container { grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 10px; }
+            .cell { font-size: 0.7rem; }
+            .grid-container::before { font-size: 0.7rem; padding: 4px 12px; }
             #admin-panel { width: 100vw; max-width: 100vw; }
             .wheel-container { width: 300px; height: 300px; }
             .segment-label { font-size: 11px; padding: 3px 6px; }
+            h1 { font-size: 2rem; }
+            .cta-button { font-size: 1.2rem; padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===================== SORTEO PRINCIPAL ===================== -->
+    <!-- ===================== SORTEO DÍA DE LA MADRE ===================== -->
     <header>
-        <div class="logo-container">
-            <img src="logo.png"
-                 alt="Logo" onerror="this.parentElement.innerText='LOGO'">
+        <div class="logo-container" id="admin-trigger">
+            <img src="logo.png" alt="Logo" onerror="this.parentElement.innerText='LOGO'">
         </div>
-        <h1>Gran Sorteo</h1>
-        <p class="subtitle">50 Casillas • 25 Premios</p>
-        <div class="timer-box" id="timer">Cargando...</div>
+        <span class="pretitle">💐 Edición Especial 💐</span>
+        <h1>Sorteo Día de<br>la Madre</h1>
+        <p class="subtitle">100 Números • 3 Premios Increíbles</p>
+        <div class="timer-box" id="timer">⏳ Cargando...</div>
     </header>
 
     <div class="info-bubble">
-        <span class="icon">🎯</span>
+        <span class="icon">💝</span>
         <div>
-            <strong>🔥 ¿Cómo funciona el sorteo?</strong><br>
-            🎟️ <strong>Pedí tu boleto</strong> por WhatsApp y recibí tu token único.<br>
-            ⏰ Una vez completadas las <strong>50 casillas</strong>, se activa cuenta regresiva de <strong>1 hora</strong>.<br>
-            🏆 Al finalizar, se sortean <strong>25 ganadores</strong> de forma 100% aleatoria.
+            <strong>🌸 ¡Regalale algo único a mamá!</strong><br>
+            🎟️ Conseguí tu número por WhatsApp (¡quedan pocos!).<br>
+            📅 El <strong>18 de octubre a las 20hs</strong> sorteamos <strong>3 premios increíbles</strong> en vivo.<br>
+            🏆 Cada número tiene oportunidad de ganar. ¡No te quedes sin el tuyo!
         </div>
     </div>
 
-    <div style="text-align:center;">
-        <a href="https://wa.me/541168911377/?text=Hola!%20Quiero%20comprar%20un%20boleto%20para%20el%20sorteo%20de%2025%20premios%20%F0%9F%8E%82" 
-           target="_blank" class="btn-primary" style="max-width:400px;margin:0 auto 15px;display:inline-block;text-decoration:none;">
-            🎟️ OBTENE TU BOLETO PARA EL SORTEO
+    <div class="cta-button-container">
+        <a href="https://wa.me/541168911377/?text=%F0%9F%8C%B8%20Hola!%20Quiero%20mi%20n%C3%BAmero%20para%20el%20Sorteo%20del%20D%C3%ADa%20de%20la%20Madre%20%F0%9F%92%90" 
+           target="_blank" class="cta-button">
+            <span class="btn-emoji">💐🎟️💝</span>
+            CONSEGUÍ TU NÚMERO AHORA
+            <span class="btn-sub">Hacé click y escribinos por WhatsApp</span>
         </a>
-        <div class="counter-badge" id="casillas-counter">Casillas: 0 / 50</div>
+    </div>
+
+    <div style="text-align:center;">
+        <div class="counter-badge" id="casillas-counter">Números: 0 / 100</div>
     </div>
     <div class="progress-bar">
         <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
@@ -522,12 +725,29 @@
     <div class="grid-container" id="grid"></div>
 
     <div class="prizes-section">
-        <h2 class="prizes-title">🏆 25 Premios 🏆</h2>
+        <h2 class="prizes-title">🏆 3 Premios Gigantes 🏆</h2>
         <div class="prizes-grid">
-            <div class="prize-card"><h3>🎂 3 Mini Tortas</h3><div class="prize-winners" id="prize-1"></div></div>
-            <div class="prize-card"><h3>🍰 10 Porciones</h3><div class="prize-winners" id="prize-2"></div></div>
-            <div class="prize-card"><h3>🥃 2 Cajas Shots</h3><div class="prize-winners" id="prize-3"></div></div>
-            <div class="prize-card"><h3>🎟️ 10 Cupones 15% OFF</h3><div class="prize-winners" id="prize-4"></div></div>
+            <div class="prize-card gold">
+                <span class="prize-badge">🥇 1er PREMIO</span>
+                <span class="prize-emoji">🎂💐</span>
+                <h3>Torta Especial + Ramo de Flores</h3>
+                <p class="prize-description">Torta personalizada para mamá + hermoso ramo de flores a domicilio</p>
+                <div class="prize-winners" id="prize-1"></div>
+            </div>
+            <div class="prize-card">
+                <span class="prize-badge">🥈 2do PREMIO</span>
+                <span class="prize-emoji">🍰🥃</span>
+                <h3>Combo Mamá Feliz</h3>
+                <p class="prize-description">6 porciones de torta a elección + caja con 6 shots para festejar</p>
+                <div class="prize-winners" id="prize-2"></div>
+            </div>
+            <div class="prize-card">
+                <span class="prize-badge">🥉 3er PREMIO</span>
+                <span class="prize-emoji">🧁💝</span>
+                <h3>Caja de Mini Tortas + 50% OFF</h3>
+                <p class="prize-description">Caja con 12 mini tortas surtidas + cupón de 50% para tu próxima compra</p>
+                <div class="prize-winners" id="prize-3"></div>
+            </div>
         </div>
     </div>
 
@@ -538,7 +758,6 @@
         <h2>🎡 Ruleta de Descuentos</h2>
         <p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y girá cada 24hs</p>
 
-        <!-- VISTA 1: Menú principal -->
         <div id="ruleta-menu" class="card">
             <h3>¿Ya tenés tu token?</h3>
             <div class="tabs">
@@ -547,7 +766,6 @@
             </div>
         </div>
 
-        <!-- VISTA 2: Registro nuevo usuario -->
         <div id="ruleta-register" class="card hidden">
             <h3>🆕 Registrate (Gratis)</h3>
             <p class="help">Ingresá tu nombre y WhatsApp. El sistema te dará un token único y permanente para girar cada 24hs. 🎁</p>
@@ -560,7 +778,6 @@
             <div id="register-msg"></div>
         </div>
 
-        <!-- VISTA 3: Login usuario existente -->
         <div id="ruleta-login" class="card hidden">
             <h3>🔑 Ingresar a la Ruleta</h3>
             <p class="help">Usá tu número + el token que guardaste. ¿Lo perdiste? Tocá "Soy nuevo" con tu número y te lo mostramos.</p>
@@ -573,7 +790,6 @@
             <div id="login-msg"></div>
         </div>
 
-        <!-- VISTA 4: Ruleta activa -->
         <div id="wheel-section" class="card hidden">
             <div class="info-bar">
                 <span>👋 <span class="user-name" id="user-greeting"></span></span>
@@ -593,7 +809,6 @@
 
             <button id="spin-btn" class="btn-primary btn-spin">🎲 ¡GIRAR AHORA!</button>
 
-            <!-- CUADRO DE RESULTADOS -->
             <div class="results-board">
                 <h3>🏆 Últimos Ganadores</h3>
                 <div class="results-list" id="results-list">
@@ -610,16 +825,12 @@
         <p>✨ Ruleta: 1 giro cada 24 hs por teléfono</p>
     </footer>
 
-    <!-- Botón Admin -->
-    <button class="admin-trigger" onclick="toggleAdmin()" title="Panel Admin">⚙️</button>
-
-    <!-- Panel Admin -->
     <div id="admin-panel" class="hidden">
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
         
         <div class="admin-section">
-            <h4>📊 Sorteo Principal</h4>
+            <h4>📊 Sorteo Día de la Madre</h4>
             <p id="admin-status">Cargando...</p>
             <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
             <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
@@ -656,7 +867,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ============ UTILIDADES ============
         function cleanPhone(p) { return (p || '').replace(/\D/g, '').trim(); }
 
         function showMsg(elementId, msg, type) {
@@ -678,15 +888,19 @@
             if (view === 'login') document.querySelectorAll('.tab')[1].classList.add('active');
         }
 
-        // ============ SORTEO PRINCIPAL ============
-        const TOTAL_CASILLAS = 50;
+        // ============ SORTEO DÍA DE LA MADRE ============
+        const TOTAL_CASILLAS = 100;
         const grid = document.getElementById('grid');
+        
+        // 3 premios grandes
         const premios = [
-            { catId: 'prize-1', nombre: 'Mini Torta', cantidad: 3 },
-            { catId: 'prize-2', nombre: 'Porción Torta', cantidad: 10 },
-            { catId: 'prize-3', nombre: 'Caja x6 Shots', cantidad: 2 },
-            { catId: 'prize-4', nombre: 'Cupón 15% OFF', cantidad: 10 }
+            { catId: 'prize-1', nombre: 'Torta + Ramo', cantidad: 1 },
+            { catId: 'prize-2', nombre: 'Combo Mamá', cantidad: 1 },
+            { catId: 'prize-3', nombre: 'Mini Tortas + 50%', cantidad: 1 }
         ];
+
+        // Fecha del sorteo: 18 de octubre de 2026, 20:00 ARG (UTC-3) = 23:00 UTC
+        const FECHA_SORTEO_FIJA = "2026-10-18T23:00:00Z";
 
         let participantesRegistrados = {};
         let sorteoEjecutado = false;
@@ -699,7 +913,7 @@
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.id = `cell-${i}`;
-                cell.innerText = i;
+                cell.innerText = String(i).padStart(2, '0');
                 cell.onclick = () => seleccionarCasilla(i);
                 grid.appendChild(cell);
             }
@@ -709,7 +923,7 @@
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
             const ocupadas = Object.keys(participantesRegistrados).length;
-            document.getElementById('casillas-counter').innerText = `Casillas: ${ocupadas} / ${TOTAL_CASILLAS}`;
+            document.getElementById('casillas-counter').innerText = `Números: ${ocupadas} / ${TOTAL_CASILLAS}`;
             const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
             const pf = document.getElementById('progress-fill');
             pf.style.width = porcentaje + '%';
@@ -726,20 +940,8 @@
                     }
                 }
             }
-            verificarActivarSorteo();
             actualizarAdminPanel();
         });
-
-        async function verificarActivarSorteo() {
-            const ocupadas = Object.keys(participantesRegistrados).length;
-            if (ocupadas >= TOTAL_CASILLAS) {
-                const snap = await db.ref('configuracion/fechaSorteo').once('value');
-                if (!snap.exists() || !snap.val()) {
-                    const fecha = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-                    await db.ref('configuracion/fechaSorteo').set(fecha);
-                }
-            }
-        }
 
         db.ref('ganadores').on('value', (snap) => {
             ganadoresLista = snap.val() || {};
@@ -762,41 +964,57 @@
                     gs.forEach(g => {
                         const item = document.createElement('div');
                         item.className = 'winner-item';
-                        const waMsg = encodeURIComponent(`🎉 ¡Felicitaciones ${g.nombre}! 🎉\nGanaste: *${g.premio}*\nCasilla #${g.casilla}`);
+                        const waMsg = encodeURIComponent(`🎉 ¡Felicitaciones ${g.nombre}! 🎉\nGanaste: *${g.premio}*\nNúmero #${g.casilla}`);
                         const waLink = `https://wa.me/${g.telefono.replace(/\D/g,'')}?text=${waMsg}`;
-                        item.innerHTML = `<strong>#${g.casilla}</strong> ${g.nombre}<br><a href="${waLink}" target="_blank" class="wa-btn">📱 Notificar</a>`;
+                        item.innerHTML = `<strong>#${String(g.casilla).padStart(2,'0')}</strong> ${g.nombre}<br><a href="${waLink}" target="_blank" class="wa-btn">📱 Notificar</a>`;
                         lista.appendChild(item);
                     });
                 }
             });
         }
 
-        db.ref('configuracion/fechaSorteo').on('value', (snap) => {
-            const f = snap.val();
+        // Timer FIJO al día de la madre (o fecha de Firebase si la establecés)
+        async function initTimer() {
+            const snap = await db.ref('configuracion/fechaSorteo').once('value');
+            let fechaObjetivo = snap.val() || FECHA_SORTEO_FIJA;
+            
+            // Si no está seteada en Firebase, la guardamos
+            if (!snap.val()) {
+                await db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA);
+            }
+
             if (timerInterval) clearInterval(timerInterval);
-            if (!f) { document.getElementById('timer').innerText = "Esperando completar casillas..."; return; }
-            const target = new Date(f).getTime();
+
+            const target = new Date(fechaObjetivo).getTime();
+            
             timerInterval = setInterval(() => {
                 const diff = target - Date.now();
                 if (diff <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('timer').innerText = "¡EL SORTEO HA COMENZADO!";
+                    document.getElementById('timer').innerText = "🎉 ¡SORTEO EN VIVO! 🎉";
                     iniciarAnimacionSorteo();
                 } else {
-                    const h = Math.floor(diff / (1000 * 60 * 60));
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const s = Math.floor((diff % (1000 * 60)) / 1000);
-                    document.getElementById('timer').innerText = `Sorteo en: ${h}h ${m}m ${s}s`;
+                    
+                    let texto = '';
+                    if (d > 0) texto += `${d}d `;
+                    texto += `${h}h ${m}m ${s}s`;
+                    
+                    document.getElementById('timer').innerText = `💐 ${texto}`;
                 }
             }, 1000);
-        });
+        }
+        initTimer();
 
         async function seleccionarCasilla(numero) {
             if (participantesRegistrados[numero]) {
-                alert(`Casilla #${numero} ocupada por ${participantesRegistrados[numero].nombre}`);
+                alert(`Número #${String(numero).padStart(2,'0')} ocupado por ${participantesRegistrados[numero].nombre}`);
                 return;
             }
-            const tokenInput = prompt("Token de 5 dígitos (el que te enviamos):");
+            const tokenInput = prompt(`Token del boleto #${String(numero).padStart(2,'0')} (te lo enviamos por WhatsApp):`);
             if (!tokenInput) return;
             const tokenLimpio = tokenInput.trim().toUpperCase();
             const tokenRef = db.ref(`tokens/${tokenLimpio}`);
@@ -813,7 +1031,7 @@
                 const datos = { nombre: nombre.trim(), telefono: telefono.trim(), token: tokenLimpio, fecha: firebase.database.ServerValue.TIMESTAMP };
                 await db.ref(`casillas/${numero}`).set(datos);
                 await tokenRef.update({ nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP });
-                alert(`¡Casilla #${numero} reservada!`);
+                alert(`¡Número #${String(numero).padStart(2,'0')} reservado! 🌸`);
             } catch (e) { alert("Error: " + e.message); }
         }
 
@@ -835,7 +1053,7 @@
 
         function sortearUnGanador(catId, nombrePremio, bolsa) {
             return new Promise((resolve) => {
-                let tiempo = 1500, intervalo = 80, transcurrido = 0, ultima = null;
+                let tiempo = 2500, intervalo = 80, transcurrido = 0, ultima = null;
                 const timer = setInterval(() => {
                     if (ultima) {
                         const c = document.getElementById(`cell-${ultima}`);
@@ -854,13 +1072,13 @@
                         if (cg) cg.classList.add('winner');
                         const d = participantesRegistrados[num];
                         db.ref(`ganadores/${num}`).set({ casilla: num, premio: nombrePremio, nombre: d.nombre, telefono: d.telefono, token: d.token, fechaSorteo: Date.now() });
-                        setTimeout(resolve, 300);
+                        setTimeout(resolve, 500);
                     }
                 }, intervalo);
             });
         }
 
-        // ============ RULETA DE DESCUENTOS ============
+        // ============ RULETA (sin cambios) ============
         const PRIZES = [
             { label: "5% OFF", emoji: "🎂", discount: "5%", prob: 0.1875, color: "#ff6b6b" },
             { label: "10% OFF", emoji: "🍰", discount: "10%", prob: 0.1875, color: "#4ecdc4" },
@@ -890,7 +1108,6 @@
             actualizarAdminPanel();
         });
 
-        // Cargar últimos resultados de la ruleta
         db.ref('ruletaSpins').orderByChild('timestamp').limitToLast(10).on('value', (snap) => {
             const spins = [];
             snap.forEach(child => { spins.push(child.val()); });
@@ -920,7 +1137,6 @@
             }).join('');
         }
 
-        // === REGISTRO ===
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -1009,7 +1225,6 @@
             window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
 
-        // === LOGIN ===
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = cleanPhone(document.getElementById('login-phone').value);
@@ -1083,7 +1298,6 @@
             return PRIZES.length - 1;
         }
 
-        // === RULETA MEJORADA (premios visibles) ===
         function drawWheel() {
             const wheel = document.getElementById('wheel');
             wheel.innerHTML = '';
@@ -1145,7 +1359,6 @@
             }
         }
 
-        // === GIRAR CON TENSIÓN ===
         document.getElementById('spin-btn').addEventListener('click', async () => {
             if (spinning || !canSpin || !currentPhone) return;
             spinning = true;
@@ -1165,22 +1378,17 @@
             const prize = PRIZES[pIdx];
             const segAngle = 360 / PRIZES.length;
 
-            // Cálculo: el puntero está arriba (0°). El centro del segmento i está en i*segAngle + segAngle/2
-            // Queremos que ese punto quede en 0° (arriba)
             const targetAngle = 360 - (pIdx * segAngle + segAngle / 2);
 
-            // MÁS TENSIÓN: 8 vueltas completas + ángulo final + pequeño overshoot
             const fullSpins = 8;
-            const overshoot = 15; // se pasa un poquito y "vuelve"
+            const overshoot = 15;
             const finalRotation = fullSpins * 360 + targetAngle + overshoot;
 
             wheel.classList.add('spinning');
             wheel.style.transform = `rotate(${finalRotation}deg)`;
 
-            // Esperar 7 segundos de tensión
             await new Promise(r => setTimeout(r, 7000));
 
-            // Pequeño "ajuste final" para que parezca que se asienta
             wheel.style.transition = 'transform 0.5s ease-out';
             wheel.style.transform = `rotate(${finalRotation - overshoot}deg)`;
 
@@ -1190,7 +1398,6 @@
             spinningText.classList.remove('active');
             animateLights(false);
 
-            // Guardar resultado
             try {
                 const now = Date.now();
                 await db.ref(`ruletaUsuarios/${currentPhone}/lastSpin`).set(now);
@@ -1208,7 +1415,6 @@
                 const mm = String(time.getMinutes()).padStart(2, '0');
                 const codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
 
-                // Mostrar POPUP de resultado
                 showResultPopup(currentName, prize, hh, mm, codigo);
 
                 canSpin = false;
@@ -1237,7 +1443,6 @@
             `;
             document.body.appendChild(popup);
 
-            // Confetti
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -1249,223 +1454,220 @@
             }
         }
 
-// ============ PANEL ADMIN - TOKEN FIREBASE ============
+        // ============ PANEL ADMIN ============
+        let adminSessionExpires = 0;
+        let sessionCheckInterval = null;
+        let logoTapCount = 0;
+        let logoTapTimer = null;
 
-let adminSessionExpires = 0;
-let sessionCheckInterval = null;
-let logoTapCount = 0;
-let logoTapTimer = null;
+        function showAdminLoginModal() {
+            if (document.getElementById('admin-login-modal')) return;
 
-function showAdminLoginModal() {
-    if (document.getElementById('admin-login-modal')) return;
-
-    const modal = document.createElement('div');
-    modal.id = 'admin-login-modal';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.85); z-index: 9999;
-        display: flex; align-items: center; justify-content: center;
-    `;
-    modal.innerHTML = `
-        <div style="
-            background: white; border-radius: 20px; padding: 30px;
-            max-width: 350px; width: 90%; text-align: center;
-            border: 3px solid #db2777; box-shadow: 0 0 40px rgba(219,39,119,0.5);
-        ">
-            <h3 style="color:#db2777;margin-bottom:15px;">🔐 Acceso Admin</h3>
-            <p style="font-size:13px;color:#666;margin-bottom:20px;">Ingresá tu token de administrador</p>
-            <input type="password" id="admin-token-input" placeholder="Token admin" 
-                   style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-bottom:15px;">
-            <div id="admin-login-error" style="color:#dc2626;font-size:13px;margin-bottom:10px;display:none;"></div>
-            <button onclick="submitAdminToken()" style="
-                width:100%;padding:12px;background:linear-gradient(135deg,#db2777,#f472b6);
-                color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer;
-            ">Ingresar</button>
-            <button onclick="closeAdminLoginModal()" style="
-                width:100%;padding:10px;background:#f3f4f6;color:#666;
-                border:none;border-radius:10px;margin-top:10px;cursor:pointer;
-            ">Cancelar</button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    
-    const input = document.getElementById('admin-token-input');
-    input.focus();
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') submitAdminToken();
-    });
-}
-
-function closeAdminLoginModal() {
-    const modal = document.getElementById('admin-login-modal');
-    if (modal) modal.remove();
-}
-
-async function submitAdminToken() {
-    const inputToken = document.getElementById('admin-token-input').value.trim();
-    const errorEl = document.getElementById('admin-login-error');
-    
-    if (!inputToken) {
-        errorEl.textContent = 'Ingresá un token';
-        errorEl.style.display = 'block';
-        return;
-    }
-
-    try {
-        const snap = await db.ref('admin').once('value');
-        const adminData = snap.val();
-        
-        if (!adminData || !adminData.token) {
-            errorEl.textContent = '❌ Token admin no configurado en Firebase';
-            errorEl.style.display = 'block';
-            return;
-        }
-
-        if (inputToken === adminData.token) {
-            closeAdminLoginModal();
-            openAdminPanel(adminData.sessionMinutes || 15);
-        } else {
-            errorEl.textContent = '❌ Token incorrecto';
-            errorEl.style.display = 'block';
-            document.getElementById('admin-token-input').value = '';
+            const modal = document.createElement('div');
+            modal.id = 'admin-login-modal';
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.85); z-index: 9999;
+                display: flex; align-items: center; justify-content: center;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: white; border-radius: 20px; padding: 30px;
+                    max-width: 350px; width: 90%; text-align: center;
+                    border: 3px solid #db2777; box-shadow: 0 0 40px rgba(219,39,119,0.5);
+                ">
+                    <h3 style="color:#db2777;margin-bottom:15px;">🔐 Acceso Admin</h3>
+                    <p style="font-size:13px;color:#666;margin-bottom:20px;">Ingresá tu token de administrador</p>
+                    <input type="password" id="admin-token-input" placeholder="Token admin" 
+                           style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-bottom:15px;">
+                    <div id="admin-login-error" style="color:#dc2626;font-size:13px;margin-bottom:10px;display:none;"></div>
+                    <button onclick="submitAdminToken()" style="
+                        width:100%;padding:12px;background:linear-gradient(135deg,#db2777,#f472b6);
+                        color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer;
+                    ">Ingresar</button>
+                    <button onclick="closeAdminLoginModal()" style="
+                        width:100%;padding:10px;background:#f3f4f6;color:#666;
+                        border:none;border-radius:10px;margin-top:10px;cursor:pointer;
+                    ">Cancelar</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
             
-            // Log intento fallido
-            db.ref('adminIntentosFallidos').push({
-                fecha: Date.now(),
-                tokenUsado: inputToken.substring(0, 3) + '***'
+            const input = document.getElementById('admin-token-input');
+            input.focus();
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') submitAdminToken();
             });
         }
-    } catch (err) {
-        errorEl.textContent = '❌ Error: ' + err.message;
-        errorEl.style.display = 'block';
-    }
-}
 
-function openAdminPanel(sessionMinutes) {
-    adminSessionExpires = Date.now() + (sessionMinutes * 60 * 1000);
-    document.getElementById('admin-panel').classList.remove('hidden');
-    actualizarAdminPanel();
-    
-    if (sessionCheckInterval) clearInterval(sessionCheckInterval);
-    sessionCheckInterval = setInterval(() => {
-        if (Date.now() > adminSessionExpires) {
-            closeAdminPanel();
-            alert('⏰ Sesión expirada');
+        function closeAdminLoginModal() {
+            const modal = document.getElementById('admin-login-modal');
+            if (modal) modal.remove();
         }
-    }, 5000);
-}
 
-function closeAdminPanel() {
-    document.getElementById('admin-panel').classList.add('hidden');
-    adminSessionExpires = 0;
-    if (sessionCheckInterval) {
-        clearInterval(sessionCheckInterval);
-        sessionCheckInterval = null;
-    }
-}
+        async function submitAdminToken() {
+            const inputToken = document.getElementById('admin-token-input').value.trim();
+            const errorEl = document.getElementById('admin-login-error');
+            
+            if (!inputToken) {
+                errorEl.textContent = 'Ingresá un token';
+                errorEl.style.display = 'block';
+                return;
+            }
 
-function toggleAdmin() {
-    if (!document.getElementById('admin-panel').classList.contains('hidden')) {
-        closeAdminPanel();
-        return;
-    }
-    if (adminSessionExpires > Date.now()) {
-        openAdminPanel(15);
-        return;
-    }
-    showAdminLoginModal();
-}
+            try {
+                const snap = await db.ref('admin').once('value');
+                const adminData = snap.val();
+                
+                if (!adminData || !adminData.token) {
+                    errorEl.textContent = '❌ Token admin no configurado';
+                    errorEl.style.display = 'block';
+                    return;
+                }
 
-// Trigger secreto: 5 toques en el logo
-const logoTrigger = document.getElementById('admin-trigger');
-if (logoTrigger) {
-    logoTrigger.addEventListener('click', () => {
-        logoTapCount++;
-        if (logoTapTimer) clearTimeout(logoTapTimer);
-        logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
-        if (logoTapCount >= 5) {
-            logoTapCount = 0;
-            toggleAdmin();
+                if (inputToken === adminData.token) {
+                    closeAdminLoginModal();
+                    openAdminPanel(adminData.sessionMinutes || 15);
+                } else {
+                    errorEl.textContent = '❌ Token incorrecto';
+                    errorEl.style.display = 'block';
+                    document.getElementById('admin-token-input').value = '';
+                    db.ref('adminIntentosFallidos').push({
+                        fecha: Date.now(),
+                        tokenUsado: inputToken.substring(0, 3) + '***'
+                    });
+                }
+            } catch (err) {
+                errorEl.textContent = '❌ Error: ' + err.message;
+                errorEl.style.display = 'block';
+            }
         }
-    });
-}
 
-// Funciones auxiliares del panel (mantener las que ya tenías)
-function actualizarAdminPanel() {
-    const ocupadas = Object.keys(participantesRegistrados).length;
-    const s = document.getElementById('admin-status');
-    if (s) s.innerHTML = `<strong>Casillas:</strong> ${ocupadas}/${TOTAL_CASILLAS}<br><strong>Ganadores:</strong> ${Object.keys(ganadoresLista).length}`;
-
-    const g = document.getElementById('admin-ganadores');
-    if (g) {
-        if (!Object.keys(ganadoresLista).length) {
-            g.innerHTML = '<p style="color:#666;font-size:13px;">Sin ganadores</p>';
-        } else {
-            g.innerHTML = Object.entries(ganadoresLista).map(([n, d]) =>
-                `<div class="admin-item"><span><strong>#${n}</strong> ${d.nombre} - ${d.premio}</span></div>`
-            ).join('');
+        function openAdminPanel(sessionMinutes) {
+            adminSessionExpires = Date.now() + (sessionMinutes * 60 * 1000);
+            document.getElementById('admin-panel').classList.remove('hidden');
+            actualizarAdminPanel();
+            
+            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
+            sessionCheckInterval = setInterval(() => {
+                if (Date.now() > adminSessionExpires) {
+                    closeAdminPanel();
+                    alert('⏰ Sesión expirada');
+                }
+            }, 5000);
         }
-    }
 
-    const rc = document.getElementById('admin-ruleta-count');
-    const ru = document.getElementById('admin-ruleta-users');
-    if (rc && ru) {
-        const users = Object.entries(allRuletaUsers);
-        rc.textContent = users.length;
-        if (!users.length) {
-            ru.innerHTML = '<p style="color:#666;font-size:13px;">Sin usuarios</p>';
-        } else {
-            ru.innerHTML = users.map(([phone, data]) => `
-                <div class="admin-item">
-                    <span>
-                        <strong>${data.name || 'Sin nombre'}</strong> (+${phone})<br>
-                        <small>Token: <code>${data.token}</code></small><br>
-                        <small>${data.bloqueado ? '⛔ Bloqueado' : '✅ Activo'}</small>
-                    </span>
-                    <button onclick="bloquearUsuario('${phone}', ${!data.bloqueado})">${data.bloqueado ? '✓' : '⛔'}</button>
-                </div>
-            `).join('');
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').classList.add('hidden');
+            adminSessionExpires = 0;
+            if (sessionCheckInterval) {
+                clearInterval(sessionCheckInterval);
+                sessionCheckInterval = null;
+            }
         }
-    }
-}
 
-async function bloquearUsuario(phone, bloquear) {
-    if (!confirm(`${bloquear ? 'Bloquear' : 'Desbloquear'} a ${phone}?`)) return;
-    await db.ref(`ruletaUsuarios/${phone}/bloqueado`).set(bloquear);
-    alert('✅ Listo');
-}
+        function toggleAdmin() {
+            if (!document.getElementById('admin-panel').classList.contains('hidden')) {
+                closeAdminPanel();
+                return;
+            }
+            if (adminSessionExpires > Date.now()) {
+                openAdminPanel(15);
+                return;
+            }
+            showAdminLoginModal();
+        }
 
-async function forceSorteo() {
-    if (!confirm("¿Forzar sorteo?")) return;
-    await db.ref('configuracion/fechaSorteo').set(new Date(Date.now() + 5000).toISOString());
-    alert("Sorteo en 5 segundos");
-}
+        const logoTrigger = document.getElementById('admin-trigger');
+        if (logoTrigger) {
+            logoTrigger.addEventListener('click', () => {
+                logoTapCount++;
+                if (logoTapTimer) clearTimeout(logoTapTimer);
+                logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
+                if (logoTapCount >= 5) {
+                    logoTapCount = 0;
+                    toggleAdmin();
+                }
+            });
+        }
 
-async function resetSorteo() {
-    if (!confirm("⚠️ BORRAR TODO?")) return;
-    if (!confirm("¿100% seguro?")) return;
-    await db.ref('ganadores').remove();
-    await db.ref('configuracion/fechaSorteo').remove();
-    await db.ref('casillas').remove();
-    const t = await db.ref('tokens').once('value');
-    if (t.exists()) {
-        Object.keys(t.val()).forEach(k => {
-            db.ref(`tokens/${k}`).update({ usado: false, casilla: null, nombre: null, telefono: null, fechaUso: null });
-        });
-    }
-    sorteoEjecutado = false;
-    alert("✅ Reseteado");
-    location.reload();
-}
+        function actualizarAdminPanel() {
+            const ocupadas = Object.keys(participantesRegistrados).length;
+            const s = document.getElementById('admin-status');
+            if (s) s.innerHTML = `<strong>Números vendidos:</strong> ${ocupadas}/${TOTAL_CASILLAS}<br><strong>Ganadores:</strong> ${Object.keys(ganadoresLista).length}/3`;
 
-function exportarGanadoresWA() {
-    if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
-    let txt = "🏆 *GANADORES DEL SORTEO* 🏆\n\n";
-    Object.values(ganadoresLista).forEach(g => {
-        txt += `🎁 *${g.premio}*\n👤 ${g.nombre}\n📞 ${g.telefono}\n🔢 #${g.casilla}\n\n`;
-    });
-    window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
-}
+            const g = document.getElementById('admin-ganadores');
+            if (g) {
+                if (!Object.keys(ganadoresLista).length) {
+                    g.innerHTML = '<p style="color:#666;font-size:13px;">Sin ganadores aún</p>';
+                } else {
+                    g.innerHTML = Object.entries(ganadoresLista).map(([n, d]) =>
+                        `<div class="admin-item"><span><strong>#${String(n).padStart(2,'0')}</strong> ${d.nombre} - ${d.premio}</span></div>`
+                    ).join('');
+                }
+            }
+
+            const rc = document.getElementById('admin-ruleta-count');
+            const ru = document.getElementById('admin-ruleta-users');
+            if (rc && ru) {
+                const users = Object.entries(allRuletaUsers);
+                rc.textContent = users.length;
+                if (!users.length) {
+                    ru.innerHTML = '<p style="color:#666;font-size:13px;">Sin usuarios</p>';
+                } else {
+                    ru.innerHTML = users.map(([phone, data]) => `
+                        <div class="admin-item">
+                            <span>
+                                <strong>${data.name || 'Sin nombre'}</strong> (+${phone})<br>
+                                <small>Token: <code>${data.token}</code></small><br>
+                                <small>${data.bloqueado ? '⛔ Bloqueado' : '✅ Activo'}</small>
+                            </span>
+                            <button onclick="bloquearUsuario('${phone}', ${!data.bloqueado})">${data.bloqueado ? '✓' : '⛔'}</button>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        async function bloquearUsuario(phone, bloquear) {
+            if (!confirm(`${bloquear ? 'Bloquear' : 'Desbloquear'} a ${phone}?`)) return;
+            await db.ref(`ruletaUsuarios/${phone}/bloqueado`).set(bloquear);
+            alert('✅ Listo');
+        }
+
+        async function forceSorteo() {
+            if (!confirm("¿Forzar sorteo AHORA?")) return;
+            await db.ref('configuracion/fechaSorteo').set(new Date(Date.now() + 5000).toISOString());
+            alert("Sorteo en 5 segundos");
+            initTimer();
+        }
+
+        async function resetSorteo() {
+            if (!confirm("⚠️ BORRAR TODO?")) return;
+            if (!confirm("¿100% seguro?")) return;
+            await db.ref('ganadores').remove();
+            await db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA);
+            await db.ref('casillas').remove();
+            const t = await db.ref('tokens').once('value');
+            if (t.exists()) {
+                Object.keys(t.val()).forEach(k => {
+                    db.ref(`tokens/${k}`).update({ usado: false, casilla: null, nombre: null, telefono: null, fechaUso: null });
+                });
+            }
+            sorteoEjecutado = false;
+            alert("✅ Reseteado");
+            location.reload();
+        }
+
+        function exportarGanadoresWA() {
+            if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
+            let txt = "🏆 *GANADORES SORTEO DÍA DE LA MADRE* 🏆\n\n";
+            Object.values(ganadoresLista).forEach(g => {
+                txt += `🎁 *${g.premio}*\n👤 ${g.nombre}\n📞 ${g.telefono}\n🔢 #${String(g.casilla).padStart(2,'0')}\n\n`;
+            });
+            window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+        }
+
         if (location.hash === '#admin') toggleAdmin();
     </script>
 </body>
