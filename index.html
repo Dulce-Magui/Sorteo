@@ -143,18 +143,201 @@
             letter-spacing: 1px;
         }
 
-        .info-bubble {
-            max-width: 650px; width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid var(--primary-pink); border-left: 6px solid var(--primary-pink-dark);
-            border-radius: 12px; padding: 15px 20px; margin-bottom: 25px;
-            font-size: 0.95rem; display: flex; align-items: flex-start; gap: 12px;
-            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.15);
-            position: relative;
-            z-index: 1;
-        }
+.info-bubble {
+    max-width: 700px; width: 100%;
+    background: rgba(255, 255, 255, 0.97);
+    border: 3px solid var(--primary-pink);
+    border-radius: 20px; padding: 25px; margin-bottom: 30px;
+    font-size: 0.95rem;
+    box-shadow: 0 10px 35px rgba(236, 72, 153, 0.2);
+    position: relative;
+    z-index: 1;
+}
 
-        .info-bubble span.icon { font-size: 1.8rem; }
+.bubble-header { text-align: center; margin-bottom: 20px; }
+
+.bubble-title {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 18px rgba(236, 72, 153, 0.4);
+}
+
+.bubble-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.bubble-info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff5f7;
+    border: 2px solid var(--cell-border);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: left;
+}
+
+.bubble-info-item .info-icon { font-size: 1.8rem; }
+
+.bubble-info-item strong {
+    display: block;
+    color: var(--primary-pink-dark);
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.bubble-info-item small {
+    color: var(--subtitle-color);
+    font-size: 0.75rem;
+}
+
+.packs-divider {
+    text-align: center;
+    margin: 20px 0 15px;
+    position: relative;
+}
+
+.packs-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
+}
+
+.packs-divider span {
+    position: relative;
+    background: white;
+    padding: 5px 18px;
+    color: var(--primary-pink-dark);
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    border-radius: 20px;
+    border: 2px solid var(--primary-pink);
+}
+
+.packs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pack-card {
+    background: linear-gradient(135deg, #ffffff, #fff5f7);
+    border: 3px solid var(--cell-border);
+    border-radius: 16px;
+    padding: 18px 10px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pack-card:hover { transform: translateY(-5px); }
+
+.pack-card.featured {
+    border-color: var(--primary-pink);
+    background: linear-gradient(135deg, #fff, #fce7f3);
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.25);
+    transform: scale(1.03);
+}
+
+.pack-card.best {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, #fff, #fef3c7);
+    box-shadow: 0 8px 25px rgba(217, 119, 6, 0.25);
+    transform: scale(1.03);
+}
+
+.pack-badge {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(236, 72, 153, 0.4);
+}
+
+.pack-badge.gold {
+    background: linear-gradient(135deg, #92400e, var(--gold));
+    box-shadow: 0 3px 10px rgba(217, 119, 6, 0.4);
+}
+
+.pack-emojis { font-size: 1.6rem; margin-bottom: 5px; }
+
+.pack-count {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--primary-pink-dark);
+    line-height: 1;
+}
+
+.pack-card.best .pack-count { color: #92400e; }
+
+.pack-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--subtitle-color);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.pack-price {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary-pink-dark);
+}
+
+.pack-card.best .pack-price { color: #92400e; }
+
+.pack-save {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #16a34a;
+    background: #dcfce7;
+    border-radius: 10px;
+    padding: 3px 8px;
+    margin-top: 6px;
+    display: inline-block;
+    min-height: 18px;
+}
+
+.bubble-footer {
+    text-align: center;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 2px dashed var(--gold);
+    border-radius: 12px;
+    padding: 12px;
+    color: #78350f;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+    .packs-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pack-card { padding: 14px 6px; }
+    .pack-count { font-size: 1.7rem; }
+    .pack-price { font-size: 1.15rem; }
+    .pack-emojis { font-size: 1.2rem; }
+    .pack-badge { font-size: 0.55rem; padding: 3px 8px; }
+    .pack-save { font-size: 0.6rem; }
+    .bubble-info-grid { grid-template-columns: 1fr; }
+}
 
         .counter-badge {
             background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
@@ -723,15 +906,69 @@
         <div class="timer-box" id="timer">⏳ Cargando...</div>
     </header>
 
-    <div class="info-bubble">
-        <span class="icon">💝</span>
-        <div>
-            <strong>🌸 ¡Regalale algo único a mamá!</strong><br>
-            🎟️ Conseguí tu número por WhatsApp (¡quedan pocos!).<br>
-            📅 El <strong>18 de octubre a las 20hs</strong> sorteamos <strong>3 premios increíbles</strong> en vivo.<br>
-            🏆 Cada número tiene oportunidad de ganar. ¡No te quedes sin el tuyo!
+<div class="info-bubble">
+    <div class="bubble-header">
+        <span class="bubble-title">🌸 ¡Regalale algo único a mamá! 🌸</span>
+    </div>
+
+    <div class="bubble-info-grid">
+        <div class="bubble-info-item">
+            <span class="info-icon">📅</span>
+            <div>
+                <strong>SÁBADO 17 DE OCTUBRE</strong>
+                <small>20:00 hs en punto</small>
+            </div>
+        </div>
+        <div class="bubble-info-item">
+            <span class="info-icon">📺</span>
+            <div>
+                <strong>SORTEO EN VIVO</strong>
+                <small>Por esta misma página</small>
+            </div>
+        </div>
+        <div class="bubble-info-item">
+            <span class="info-icon">🎲</span>
+            <div>
+                <strong>100% TRANSPARENTE</strong>
+                <small>Selección aleatoria auditada</small>
+            </div>
         </div>
     </div>
+
+    <div class="packs-divider">
+        <span>🎟️ ELEGÍ TU PACK DE BOLETOS 🎟️</span>
+    </div>
+
+    <div class="packs-grid">
+        <div class="pack-card">
+            <div class="pack-emojis">🎫</div>
+            <div class="pack-count">1</div>
+            <div class="pack-label">BOLETO</div>
+            <div class="pack-price">$2.500</div>
+            <div class="pack-save"> </div>
+        </div>
+        <div class="pack-card featured">
+            <div class="pack-badge">⭐ MÁS ELEGIDO</div>
+            <div class="pack-emojis">🎫🎫</div>
+            <div class="pack-count">2</div>
+            <div class="pack-label">BOLETOS</div>
+            <div class="pack-price">$4.000</div>
+            <div class="pack-save">Ahorrás $1.000</div>
+        </div>
+        <div class="pack-card best">
+            <div class="pack-badge gold">💎 MEJOR PRECIO</div>
+            <div class="pack-emojis">🎫🎫</div>
+            <div class="pack-count">3</div>
+            <div class="pack-label">BOLETOS</div>
+            <div class="pack-price">$5.000</div>
+            <div class="pack-save">Ahorrás $2.500</div>
+        </div>
+    </div>
+
+    <div class="bubble-footer">
+        🏆 <strong>Cada número tiene oportunidad de ganar.</strong> ¡No te quedes sin el tuyo!
+    </div>
+</div>
 
     <div class="cta-button-container">
         <a href="https://wa.me/541168911377/?text=%F0%9F%8C%B8%20Hola!%20Quiero%20mi%20n%C3%BAmero%20para%20el%20Sorteo%20del%20D%C3%ADa%20de%20la%20Madre%20%F0%9F%92%90" 
