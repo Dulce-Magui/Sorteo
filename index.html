@@ -756,35 +756,35 @@
 <div class="prizes-grid">
     <div class="prize-card gold">
         <span class="prize-badge">🥇 1er PREMIO</span>
-        <span class="prize-emoji">🎂💐🍧🎁</span>
+        <span class="prize-emoji">🎁🎂🍰</span>
         <h3>BOX 1</h3>
         <p class="prize-description">
-            ✨ TORTA EXCLUSIVA Día de la Madre<br>
+            ✨ MINI TORTA FLAN 🎂<br>
             + 12 SHOTS sabores surtidos<br>
-            + MINI BOX MESA DULCE artesanal<br>
-            + RAMO de flores
+            + 3 Porciones a elección<br>
+            + CAJA DE BOMBONES
         </p>
         <div class="prize-winners" id="prize-1"></div>
     </div>
     <div class="prize-card">
         <span class="prize-badge">🥈 2do PREMIO</span>
-        <span class="prize-emoji">🍰🍧🎁</span>
+        <span class="prize-emoji">🎁🍰🍧</span>
         <h3>BOX 2</h3>
         <p class="prize-description">
-            ✨ 3 PORCIONES a elección<br>
-            + 6 SHOTS sabores surtidos<br>
-            + MINI BOX MESA DULCE artesanal
+            ✨ 6 SHOTS sabores surtidos 🍧<br>
+            + 2 PORCIONES a elección<br>
+            + CAJA DE BOMBONES
         </p>
         <div class="prize-winners" id="prize-2"></div>
     </div>
     <div class="prize-card">
         <span class="prize-badge">🥉 3er PREMIO</span>
-        <span class="prize-emoji">🍰🍧🎁</span>
+        <span class="prize-emoji">🎁🍰🍧</span>
         <h3>BOX 3</h3>
         <p class="prize-description">
-            ✨ 1 PORCIÓN a elección<br>
+            ✨ 1 PORCIÓN a elección 🍰<br>
             + 3 SHOTS sabores surtidos<br>
-            + MINI BOX MESA DULCE artesanal
+            + CAJA BOMBONES
         </p>
         <div class="prize-winners" id="prize-3"></div>
     </div>
@@ -795,7 +795,10 @@
     <!-- ===================== RULETA DE DESCUENTOS ===================== -->
     <section class="ruleta-section">
         <h2>🎡 Ruleta de Descuentos</h2>
-        <p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y girá cada 24hs</p>
+<p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y girá cada 24hs</p>
+<p class="ruleta-subtitle" style="margin-top:-15px;font-size:0.85rem;color:#db2777;font-weight:600;">
+    ⚠️ Válido en compras superiores a <strong>$10.000</strong>
+</p>
 
         <div id="ruleta-menu" class="card">
             <h3>¿Ya tenés tu token?</h3>
@@ -1119,14 +1122,15 @@
 
         // ============ RULETA (sin cambios) ============
         const PRIZES = [
-            { label: "5% OFF", emoji: "🎂", discount: "5%", prob: 0.1875, color: "#ff6b6b" },
-            { label: "10% OFF", emoji: "🍰", discount: "10%", prob: 0.1875, color: "#4ecdc4" },
-            { label: "15% OFF", emoji: "🧁", discount: "15%", prob: 0.1875, color: "#45b7d1" },
-            { label: "20% OFF", emoji: "🍩", discount: "20%", prob: 0.1875, color: "#96ceb4" },
-            { label: "25% OFF", emoji: "🎁", discount: "25%", prob: 0.05, color: "#e17055" },
-            { label: "50% OFF", emoji: "💎", discount: "50%", prob: 0.05, color: "#fd79a8" },
-            { label: "SHOT GRATIS", emoji: "🍸", discount: "SHOT", prob: 0.15, color: "#6c5ce7" }
-        ];
+    { label: "5% OFF",        emoji: "🎂", discount: "5%",    prob: 0.35,  color: "#ff6b6b" },
+    { label: "10% OFF",       emoji: "🍰", discount: "10%",   prob: 0.35,  color: "#4ecdc4" },
+    { label: "15% OFF",       emoji: "🧁", discount: "15%",   prob: 0.10,  color: "#45b7d1" },
+    { label: "2 SHOTS",       emoji: "🍸", discount: "2SHOTS", prob: 0.10,  color: "#6c5ce7", condicional: true },
+    { label: "1 PORCIÓN",     emoji: "🍰", discount: "PORCION", prob: 0.06, color: "#fd79a8", condicional: true },
+    { label: "20% OFF",       emoji: "🍩", discount: "20%",   prob: 0.015, color: "#96ceb4" },
+    { label: "25% OFF",       emoji: "🎁", discount: "25%",   prob: 0.015, color: "#e17055" },
+    { label: "50% OFF",       emoji: "💎", discount: "50%",   prob: 0.01,  color: "#fbbf24" }
+];
 
         const COOLDOWN_MS = 24 * 60 * 60 * 1000;
         let currentPhone = null;
@@ -1452,7 +1456,14 @@
                 const time = new Date(now);
                 const hh = String(time.getHours()).padStart(2, '0');
                 const mm = String(time.getMinutes()).padStart(2, '0');
-                const codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
+let codigo;
+if (prize.discount === '2SHOTS') {
+    codigo = `${currentPhone.slice(-4)}-2SH`;
+} else if (prize.discount === 'PORCION') {
+    codigo = `${currentPhone.slice(-4)}-1P`;
+} else {
+    codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
+}
 
                 showResultPopup(currentName, prize, hh, mm, codigo);
 
@@ -1466,32 +1477,40 @@
         });
 
         function showResultPopup(name, prize, hh, mm, codigo) {
-            const popup = document.createElement('div');
-            popup.className = 'result-popup';
-            popup.innerHTML = `
-                <div class="result-popup-content">
-                    <div class="congrats">🎉 ¡FELICITACIONES! 🎉</div>
-                    <div class="winner-name">${name}</div>
-                    <div style="color:#92400e;">obtuvo</div>
-                    <div class="prize-won">${prize.emoji} ${prize.label}</div>
-                    <div class="prize-time">🕐 ${hh}:${mm} hs</div>
-                    <div class="coupon-code">${codigo}</div>
-                    <p style="font-size:13px;color:#78350f;margin-bottom:15px;">Mostrá este código al hacer tu pedido</p>
-                    <button class="btn-primary" onclick="this.closest('.result-popup').remove()">✅ ¡Genial!</button>
-                </div>
-            `;
-            document.body.appendChild(popup);
+    const popup = document.createElement('div');
+    popup.className = 'result-popup';
+    
+    const condicionHTML = prize.condicional 
+        ? `<p style="font-size:12px;color:#78350f;margin-bottom:10px;background:#fef3c7;padding:8px;border-radius:8px;border:1px dashed #d97706;">
+             ⚠️ Válido en compras superiores a <strong>$10.000</strong>
+           </p>` 
+        : '';
+    
+    popup.innerHTML = `
+        <div class="result-popup-content">
+            <div class="congrats">🎉 ¡FELICITACIONES! 🎉</div>
+            <div class="winner-name">${name}</div>
+            <div style="color:#92400e;">obtuvo</div>
+            <div class="prize-won">${prize.emoji} ${prize.label}</div>
+            <div class="prize-time">🕐 ${hh}:${mm} hs</div>
+            <div class="coupon-code">${codigo}</div>
+            ${condicionHTML}
+            <p style="font-size:13px;color:#78350f;margin-bottom:15px;">Mostrá este código al hacer tu pedido</p>
+            <button class="btn-primary" onclick="this.closest('.result-popup').remove()">✅ ¡Genial!</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
 
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.background = ['#f472b6', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'][Math.floor(Math.random() * 5)];
-                confetti.style.animationDelay = Math.random() * 2 + 's';
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                popup.appendChild(confetti);
-            }
-        }
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = ['#f472b6', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'][Math.floor(Math.random() * 5)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        popup.appendChild(confetti);
+    }
+}
 
         // ============ PANEL ADMIN ============
         let adminSessionExpires = 0;
