@@ -950,7 +950,15 @@
     </div>
 
     <div class="grid-container" id="grid"></div>
+<div class="grid-container" id="grid"></div>
 
+<div class="cta-button-container">
+    <a href="#" onclick="activarToken(); return false;" class="cta-button" style="background:linear-gradient(135deg,#7b1fa2,#4a148c); box-shadow:0 10px 30px rgba(123,31,162,0.5), 0 0 0 4px rgba(123,31,162,0.2);">
+        <span class="btn-emoji">🎫🔑</span>
+        YA TENGO MI TOKEN
+        <span class="btn-sub">Activalo y descubrí tu número de la suerte</span>
+    </a>
+</div>
     <div class="prizes-section">
         <h2 class="prizes-title">🏆 3 Premios 🏆</h2>
         <div class="prizes-grid">
@@ -1071,8 +1079,17 @@
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
         
-        <div class="admin-section">
-            <h4>📊 Sorteo Día de la Madre</h4>
+<div class="admin-section">
+    <h4>➕ Registrar participante (venta manual)</h4>
+    <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+    <button class="btn-secondary" onclick="verTokenCasilla()" style="margin:4px 0;">🔍 Ver token de esta casilla</button>
+    <input type="text" id="admin-nombre" placeholder="Nombre del cliente" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+    <input type="tel" id="admin-telefono" placeholder="Teléfono (5411...)" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+    <button class="btn-secondary" onclick="registrarManual()" style="background:#dcfce7;color:#166534;border-color:#16a34a;">✅ Registrar y ocupar casilla</button>
+</div>
+
+<div class="admin-section">
+    <h4>📊 Sorteo Día de la Madre</h4>
             <p id="admin-status">Cargando...</p>
             <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
             <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
@@ -1147,18 +1164,55 @@
         let timerInterval = null;
         let ganadoresLista = {};
 
-        function crearGrid() {
-            grid.innerHTML = '';
-            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.id = `cell-${i}`;
-                cell.innerText = String(i).padStart(2, '0');
-                cell.onclick = () => seleccionarCasilla(i);
-                grid.appendChild(cell);
-            }
-        }
-        crearGrid();
+function crearGrid() {
+    grid.innerHTML = '';
+    for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = `cell-${i}`;
+        cell.innerText = String(i).padStart(2, '0');
+        grid.appendChild(cell);
+    }
+}
+crearGrid();
+
+// === NUEVO: Activar token (pide datos ANTES de consumir el token = sin bug) ===
+async function activarToken() {
+    const tokenInput = prompt("🎫 Ingresá el token de tu boleto:");
+    if (!tokenInput) return;
+    const tokenLimpio = tokenInput.trim().toUpperCase();
+
+    const nombre = prompt("👤 Tu NOMBRE COMPLETO:");
+    if (!nombre) return;
+
+    const telefono = prompt("📱 Tu TELÉFONO (con código país, ej: 541123456789):");
+    if (!telefono) return;
+
+    const tokenRef = db.ref(`tokens/${tokenLimpio}`);
+    const snap = await tokenRef.once('value');
+
+    if (!snap.exists()) { alert("❌ Token no existente."); return; }
+    const data = snap.val();
+    if (data.usado === true) { alert("❌ Este token ya fue usado."); return; }
+
+    const numero = data.casilla;
+    if (participantesRegistrados[numero]) { alert(`La casilla #${numero} ya está ocupada.`); return; }
+
+    const { committed } = await tokenRef.transaction(c => {
+        if (c === null || c.usado === true) return;
+        return { ...c, usado: true, nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP };
+    });
+    if (!committed) { alert("❌ Token inválido o ya usado."); return; }
+
+    await db.ref(`casillas/${numero}`).set({
+        nombre: nombre.trim(),
+        telefono: telefono.trim(),
+        token: tokenLimpio,
+        fecha: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    alert(`🎉 ¡Listo ${nombre.trim()}! Tu número de la suerte es el #${String(numero).padStart(2,'0')} 🌸`);
+}
 
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
@@ -1247,11 +1301,6 @@
         }
         initTimer();
 
-        async function seleccionarCasilla(numero) {
-            if (participantesRegistrados[numero]) {
-                alert(`Número #${String(numero).padStart(2,'0')} ocupado por ${participantesRegistrados[numero].nombre}`);
-                return;
-            }
             const tokenInput = prompt(`Token del boleto #${String(numero).padStart(2,'0')} (te lo enviamos por WhatsApp):`);
             if (!tokenInput) return;
             const tokenLimpio = tokenInput.trim().toUpperCase();
@@ -1928,7 +1977,41 @@
             });
             window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
         }
+async function verTokenCasilla() {
+    const casilla = parseInt(document.getElementById('admin-casilla').value);
+    if (!casilla || casilla < 1 || casilla > 100) { alert('Poné una casilla entre 1 y 100'); return; }
+    const snap = await db.ref('tokens').once('value');
+    let tk = null;
+    snap.forEach(ch => { if (ch.val().casilla === casilla) tk = ch.key; });
+    alert(tk ? `🔑 Token de la casilla #${casilla}: ${tk}` : 'No hay token para esa casilla');
+}
 
+async function registrarManual() {
+    const casilla = parseInt(document.getElementById('admin-casilla').value);
+    const nombre = document.getElementById('admin-nombre').value.trim();
+    const telefono = document.getElementById('admin-telefono').value.trim();
+
+    if (!casilla || casilla < 1 || casilla > 100) { alert('Casilla entre 1 y 100'); return; }
+    if (!nombre || !telefono) { alert('Completá nombre y teléfono'); return; }
+    if (participantesRegistrados[casilla]) { alert(`La casilla #${casilla} ya está ocupada`); return; }
+
+    const snap = await db.ref('tokens').once('value');
+    let tokenKey = null;
+    snap.forEach(ch => { if (ch.val().casilla === casilla) tokenKey = ch.key; });
+    if (!tokenKey) { alert('No hay token para esa casilla'); return; }
+
+    await db.ref(`tokens/${tokenKey}`).update({
+        usado: true, nombre, telefono, fechaUso: Date.now()
+    });
+    await db.ref(`casillas/${casilla}`).set({
+        nombre, telefono, token: tokenKey, fecha: Date.now()
+    });
+
+    alert(`✅ Casilla #${casilla} asignada a ${nombre}\n🔑 Token: ${tokenKey}`);
+    document.getElementById('admin-casilla').value = '';
+    document.getElementById('admin-nombre').value = '';
+    document.getElementById('admin-telefono').value = '';
+}
         if (location.hash === '#admin') toggleAdmin();
 
 
