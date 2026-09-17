@@ -218,7 +218,7 @@
             width: 100%; aspect-ratio: 1; background-color: var(--cell-default); border-radius: 8px;
             display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem;
             color: var(--primary-pink-dark); border: 2px solid var(--cell-border); user-select: none;
-            transition: all 0.2s ease; cursor: default;
+            transition: all 0.2s ease; cursor: pointer;
         }
         .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; }
         .cell.chaos { animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white; }
@@ -486,15 +486,10 @@
         <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
     </div>
 
-    <div class="grid-container" id="grid"></div>
-
-    <div class="cta-button-container">
-        <a href="#" onclick="activarToken(); return false;" class="cta-button" style="background:linear-gradient(135deg,#7b1fa2,#4a148c); box-shadow:0 10px 30px rgba(123,31,162,0.5), 0 0 0 4px rgba(123,31,162,0.2);">
-            <span class="btn-emoji">🎫🔑</span>
-            YA TENGO MI TOKEN
-            <span class="btn-sub">Activalo y descubrí tu número de la suerte</span>
-        </a>
-    </div>
+    <p style="text-align:center;color:#8b5a6b;font-size:0.85rem;margin:0 auto 12px;max-width:650px;">
+    👆 Tocá un número para ver a quién pertenece
+</p>
+<div class="grid-container" id="grid"></div>
 
     <div class="prizes-section">
         <h2 class="prizes-title">🏆 3 Premios 🏆</h2>
@@ -694,55 +689,38 @@
         let timerInterval = null;
         let ganadoresLista = {};
 
-        function crearGrid() {
-            grid.innerHTML = '';
-            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.id = 'cell-' + i;
-                cell.innerText = String(i).padStart(2, '0');
-                grid.appendChild(cell);
-            }
-        }
+function crearGrid() {
+    grid.innerHTML = '';
+    for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = 'cell-' + i;
+        cell.innerText = String(i).padStart(2, '0');
+        cell.onclick = () => verCasilla(i);
+        grid.appendChild(cell);
+    }
+}
+crearGrid();
+
+// === Ver dueño de la casilla (datos parcialmente ocultos) ===
+function verCasilla(numero) {
+    const data = participantesRegistrados[numero];
+    const numTxt = String(numero).padStart(2, '0');
+
+    if (!data) {
+        alert('🎫 La casilla #' + numTxt + ' está LIBRE.\n\n📲 ¡Conseguila por WhatsApp!');
+        return;
+    }
+
+    const nombre = (data.nombre || '?').trim();
+    const nombreOculto = nombre.charAt(0).toUpperCase() + '*****';
+    const tel = (data.telefono || '').replace(/\D/g, '');
+    const telOculto = '****' + tel.slice(-4);
+
+    alert('🎀 Casilla #' + numTxt + '\n👤 ' + nombreOculto + '\n📱 ' + telOculto);
+}
         crearGrid();
-
-        // === Activar token: pide datos ANTES de consumir el token (sin bug) ===
-        async function activarToken() {
-            const tokenInput = prompt("🎫 Ingresá el token de tu boleto:");
-            if (!tokenInput) return;
-            const tokenLimpio = tokenInput.trim().toUpperCase();
-
-            const nombre = prompt("👤 Tu NOMBRE COMPLETO:");
-            if (!nombre) return;
-
-            const telefono = prompt("📱 Tu TELÉFONO (con código país, ej: 541123456789):");
-            if (!telefono) return;
-
-            const tokenRef = db.ref('tokens/' + tokenLimpio);
-            const snap = await tokenRef.once('value');
-
-            if (!snap.exists()) { alert("❌ Token no existente."); return; }
-            const data = snap.val();
-            if (data.usado === true) { alert("❌ Este token ya fue usado."); return; }
-
-            const numero = data.casilla;
-            if (participantesRegistrados[numero]) { alert("La casilla #" + numero + " ya está ocupada."); return; }
-
-            const result = await tokenRef.transaction(c => {
-                if (c === null || c.usado === true) return;
-                return Object.assign({}, c, { usado: true, nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP });
-            });
-            if (!result.committed) { alert("❌ Token inválido o ya usado."); return; }
-
-            await db.ref('casillas/' + numero).set({
-                nombre: nombre.trim(),
-                telefono: telefono.trim(),
-                token: tokenLimpio,
-                fecha: firebase.database.ServerValue.TIMESTAMP
-            });
-
-            alert("🎉 ¡Listo " + nombre.trim() + "! Tu número de la suerte es el #" + String(numero).padStart(2, '0') + " 🌸");
-        }
+        
 
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
