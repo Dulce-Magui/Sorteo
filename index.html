@@ -1931,157 +1931,172 @@
 
         if (location.hash === '#admin') toggleAdmin();
 
-        // ============ COMPARTIR EN INSTAGRAM (NUEVO) ============
+
+// ============ COMPARTIR EN INSTAGRAM ============
 async function compartirInstagram(emoji, premio, nombre, codigo) {
-    const canvas = document.createElement('canvas');
-    const WIDTH = 1080;
-    const HEIGHT = 1350; // Formato 4:5 ideal para Instagram Feed
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
-    const ctx = canvas.getContext('2d');
+    try {
+        const canvas = document.createElement('canvas');
+        const WIDTH = 1080;
+        const HEIGHT = 1350; // Formato 4:5 ideal para Instagram
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+        const ctx = canvas.getContext('2d');
 
-    // === FONDO degradado rosa ===
-    const grad = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
-    grad.addColorStop(0, '#fff5f7');
-    grad.addColorStop(0.5, '#fce7f3');
-    grad.addColorStop(1, '#fbcfe8');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        // === FONDO degradado rosa ===
+        const grad = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+        grad.addColorStop(0, '#fff5f7');
+        grad.addColorStop(0.5, '#fce7f3');
+        grad.addColorStop(1, '#fbcfe8');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    // === Borde decorativo ===
-    ctx.strokeStyle = '#ec4899';
-    ctx.lineWidth = 12;
-    ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
-    ctx.strokeStyle = '#fbbf24';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(48, 48, WIDTH - 96, HEIGHT - 96);
+        // === Borde decorativo ===
+        ctx.strokeStyle = '#ec4899';
+        ctx.lineWidth = 12;
+        ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(48, 48, WIDTH - 96, HEIGHT - 96);
 
-    // === Flores decorativas en esquinas ===
-    ctx.font = '70px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('🌸', 95, 115);
-    ctx.fillText('💐', WIDTH - 95, 115);
-    ctx.fillText('🌷', 95, HEIGHT - 75);
-    ctx.fillText('🌺', WIDTH - 95, HEIGHT - 75);
+        // === Flores decorativas en esquinas ===
+        ctx.font = '70px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🌸', 95, 115);
+        ctx.fillText('💐', WIDTH - 95, 115);
+        ctx.fillText('🌷', 95, HEIGHT - 75);
+        ctx.fillText('🌺', WIDTH - 95, HEIGHT - 75);
 
-            // === LOGO circular arriba ===
-            try {
-                const logoImg = await cargarImagen('logo.png');
-                const logoR = 78;
-                const logoY = 145;
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(SIZE / 2, logoY, logoR, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(logoImg, SIZE / 2 - logoR, logoY - logoR, logoR * 2, logoR * 2);
-                ctx.restore();
-                ctx.beginPath();
-                ctx.arc(SIZE / 2, logoY, logoR + 4, 0, Math.PI * 2);
-                ctx.strokeStyle = '#ec4899';
-                ctx.lineWidth = 6;
-                ctx.stroke();
-            } catch (e) {
-                // Si no hay logo, no dibuja nada
-            }
-
-            // === Nombre del negocio ===
-            ctx.fillStyle = '#be185d';
-            ctx.font = 'bold 46px Segoe UI, sans-serif';
-            ctx.fillText('💐 DULCE MAGUI 💐', WIDTH / 2, 285);
-
-            // === ¡GANÉ! ===
-            ctx.fillStyle = '#db2777';
-            ctx.font = 'bold 60px Segoe UI, sans-serif';
-            ctx.fillText('¡GANÉ EN LA RULETA!', WIDTH / 2, 360);
-
-            // === Premio grande ===
-            ctx.font = '105px serif';
-            ctx.fillText(emoji, WIDTH / 2, 465);
-
-            ctx.fillStyle = '#92400e';
-            ctx.font = 'bold 74px Segoe UI, sans-serif';
-            ctx.fillText(premio, WIDTH / 2, 550);
-
-            // === Nombre ganador ===
-            ctx.fillStyle = '#4a3038';
-            ctx.font = '40px Segoe UI, sans-serif';
-            ctx.fillText(`🎉 ${nombre} 🎉`, WIDTH / 2, 610);
-
-            // === Ruleta de Descuentos / Tirá gratis y ganá ===
-            ctx.fillStyle = '#be185d';
-            ctx.font = 'bold 44px Segoe UI, sans-serif';
-            ctx.fillText('RULETA DE DESCUENTOS', WIDTH / 2, 675);
-
-            ctx.fillStyle = '#8b5a6b';
-            ctx.font = 'italic 34px Segoe UI, sans-serif';
-            ctx.fillText('¡Tirá gratis y ganá! 🎡', WIDTH / 2, 718);
-
-            // === Cuadro blanco para el QR ===
-            const qrSize = 220;
-            const qrX = SIZE / 2 - qrSize / 2;
-            const qrY = 745;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+        // === LOGO circular arriba ===
+        try {
+            const logoImg = await cargarImagen('logo.png');
+            const logoR = 78;
+            const logoY = 145;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(WIDTH / 2, logoY, logoR, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(logoImg, WIDTH / 2 - logoR, logoY - logoR, logoR * 2, logoR * 2);
+            ctx.restore();
+            ctx.beginPath();
+            ctx.arc(WIDTH / 2, logoY, logoR + 4, 0, Math.PI * 2);
             ctx.strokeStyle = '#ec4899';
-            ctx.lineWidth = 5;
-            ctx.strokeRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+            ctx.lineWidth = 6;
+            ctx.stroke();
+        } catch (e) {
+            // Si no hay logo, sigue sin él
+        }
 
-            try {
-                const qrImg = await cargarImagen('QRWEB.png');
-                ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-            } catch (e) {
-                ctx.fillStyle = '#f3f4f6';
-                ctx.fillRect(qrX, qrY, qrSize, qrSize);
-                ctx.fillStyle = '#9ca3af';
-                ctx.font = '30px Segoe UI, sans-serif';
-                ctx.fillText('QR', WIDTH / 2, qrY + qrSize / 2);
+        // === Nombre del negocio ===
+        ctx.fillStyle = '#be185d';
+        ctx.font = 'bold 46px Segoe UI, sans-serif';
+        ctx.fillText('💐 DULCE MAGUI 💐', WIDTH / 2, 285);
+
+        // === ¡GANÉ! ===
+        ctx.fillStyle = '#db2777';
+        ctx.font = 'bold 60px Segoe UI, sans-serif';
+        ctx.fillText('¡GANÉ EN LA RULETA!', WIDTH / 2, 360);
+
+        // === Premio grande ===
+        ctx.font = '105px serif';
+        ctx.fillText(emoji, WIDTH / 2, 465);
+
+        ctx.fillStyle = '#92400e';
+        ctx.font = 'bold 74px Segoe UI, sans-serif';
+        ctx.fillText(premio, WIDTH / 2, 550);
+
+        // === Nombre ganador ===
+        ctx.fillStyle = '#4a3038';
+        ctx.font = '40px Segoe UI, sans-serif';
+        ctx.fillText(`🎉 ${nombre} 🎉`, WIDTH / 2, 610);
+
+        // === Ruleta de Descuentos ===
+        ctx.fillStyle = '#be185d';
+        ctx.font = 'bold 44px Segoe UI, sans-serif';
+        ctx.fillText('RULETA DE DESCUENTOS', WIDTH / 2, 675);
+
+        ctx.fillStyle = '#8b5a6b';
+        ctx.font = 'italic 34px Segoe UI, sans-serif';
+        ctx.fillText('¡Tirá gratis y ganá! 🎡', WIDTH / 2, 718);
+
+        // === Cuadro blanco para el QR ===
+        const qrSize = 220;
+        const qrX = WIDTH / 2 - qrSize / 2;
+        const qrY = 745;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+        ctx.strokeStyle = '#ec4899';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+
+        try {
+            const qrImg = await cargarImagen('QRWEB.png');
+            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+        } catch (e) {
+            ctx.fillStyle = '#f3f4f6';
+            ctx.fillRect(qrX, qrY, qrSize, qrSize);
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '30px Segoe UI, sans-serif';
+            ctx.fillText('QR', WIDTH / 2, qrY + qrSize / 2);
+        }
+
+        // === Texto debajo del QR ===
+        ctx.fillStyle = '#be185d';
+        ctx.font = 'bold 34px Segoe UI, sans-serif';
+        ctx.fillText('🎡 Escaneá y probá tu suerte', WIDTH / 2, qrY + qrSize + 55);
+
+        // === Instagram handle ===
+        ctx.fillStyle = '#db2777';
+        ctx.font = 'bold 36px Segoe UI, sans-serif';
+        ctx.fillText('📸 @tortas.dulcemagui', WIDTH / 2, qrY + qrSize + 100);
+
+        // === Compartir o descargar ===
+        canvas.toBlob(async (blob) => {
+            if (!blob) {
+                alert('❌ No se pudo generar la imagen');
+                return;
+            }
+            const archivo = new File([blob], 'mi-premio-sorteo.png', { type: 'image/png' });
+
+            if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+                try {
+                    await navigator.share({
+                        files: [archivo],
+                        title: '¡Gané en la ruleta!',
+                        text: `🎉 ¡Gané ${premio} en la Ruleta de Descuentos de @tortas.dulcemagui! Tirá gratis y ganá vos también 🎡💐`
+                    });
+                    return;
+                } catch (e) {
+                    // Si cancela, cae al download
+                }
             }
 
-            // === Texto debajo del QR ===
-            ctx.fillStyle = '#be185d';
-            ctx.font = 'bold 34px Segoe UI, sans-serif';
-            ctx.fillText('🎡 Escaneá y probá tu suerte', WIDTH / 2, qrY + qrSize + 55);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mi-premio-sorteo.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('📸 Imagen descargada!\n\nSubila a Instagram y etiquetá a @tortas.dulcemagui 💐');
+        }, 'image/png');
 
-            // === Instagram handle ===
-            ctx.fillStyle = '#db2777';
-            ctx.font = 'bold 36px Segoe UI, sans-serif';
-            ctx.fillText('📸 @tortas.dulcemagui', WIDTH / 2, qrY + qrSize + 100);
+    } catch (error) {
+        console.error('Error al generar imagen:', error);
+        alert('❌ Error al generar la imagen: ' + error.message);
+    }
+}
 
-            // === Compartir o descargar ===
-            canvas.toBlob(async (blob) => {
-                const archivo = new File([blob], 'mi-premio-sorteo.png', { type: 'image/png' });
-
-                if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-                    try {
-                        await navigator.share({
-                            files: [archivo],
-                            title: '¡Gané en la ruleta!',
-                            text: `🎉 ¡Gané ${premio} en la Ruleta de Descuentos de @tortas.dulcemagui! Tirá gratis y ganá vos también 🎡💐`
-                        });
-                        return;
-                    } catch (e) {}
-                }
-
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'mi-premio-sorteo.png';
-                a.click();
-                URL.revokeObjectURL(url);
-                alert('📸 Imagen descargada!\n\nSubila a Instagram y etiquetá a @tortas.dulcemagui 💐');
-            }, 'image/png');
-        }
-
-        function cargarImagen(src) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.onload = () => resolve(img);
-                img.onerror = reject;
-                img.src = src;
-            });
-        }
+function cargarImagen(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+}
     </script>
 </body>
 </html>
