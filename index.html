@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- 📱 IMAGEN AL COMPARTIR (WhatsApp, Facebook, Instagram) -->
+
     <meta property="og:title" content="💐 Sorteo Día de la Madre - 3 Premios Increíbles" />
-    <meta property="og:description" content="🎟️ 100 números • 3 premios gigantes • Sorteo 18 de octubre 20hs. ¡Conseguí tu número antes de que se agoten!" />
+    <meta property="og:description" content="🎟️ 100 números • 3 premios gigantes • Sorteo 17 de octubre 20hs. ¡Conseguí tu número antes de que se agoten!" />
     <meta property="og:image" content="https://dulce-magui.github.io/Sorteo/share-image.jpg" />
     <meta property="og:image:secure_url" content="https://dulce-magui.github.io/Sorteo/share-image.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -17,19 +16,15 @@
     <meta property="og:site_name" content="Dulce Magui" />
     <meta property="og:locale" content="es_AR" />
     <meta property="og:image:alt" content="Sorteo Día de la Madre - Torta + Ramo + Premios" />
-    
-    <!-- 🐦 TWITTER -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="💐 Sorteo Día de la Madre - 3 Premios Increíbles" />
-    <meta name="twitter:description" content="🎟️ 100 números • 3 premios gigantes • Sorteo 18 de octubre 20hs" />
+    <meta name="twitter:description" content="🎟️ 100 números • 3 premios gigantes • Sorteo 17 de octubre 20hs" />
     <meta name="twitter:image" content="https://dulce-magui.github.io/Sorteo/share-image.jpg" />
-    
-    <!-- 🔍 SEO -->
     <meta name="description" content="Gran Sorteo Día de la Madre. 100 números, 3 premios increíbles. Conseguí tu boleto por WhatsApp." />
     <meta name="theme-color" content="#ec4899" />
-    
+
     <title>💐 Sorteo Día de la Madre + Ruleta de Descuentos</title>
-    
+
     <style>
         :root {
             --bg-color: #fff5f7;
@@ -47,285 +42,121 @@
             --whatsapp: #25D366;
             --gold: #d97706;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-
         body {
             background: linear-gradient(135deg, #fff5f7 0%, #fce7f3 50%, #fbcfe8 100%);
             color: var(--text-color);
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 20px;
-            position: relative;
-            overflow-x: hidden;
+            position: relative; overflow-x: hidden;
         }
-
         body::before {
-            content: '🌸 💐 🌷 🌺 💮 🌹';
-            position: fixed;
-            top: 10%;
-            left: -50px;
-            font-size: 30px;
-            opacity: 0.15;
-            transform: rotate(-15deg);
-            letter-spacing: 40px;
-            pointer-events: none;
-            z-index: 0;
+            content: '🌸 💐  🌺 💮 ';
+            position: fixed; top: 10%; left: -50px; font-size: 30px; opacity: 0.15;
+            transform: rotate(-15deg); letter-spacing: 40px; pointer-events: none; z-index: 0;
         }
-
         body::after {
-            content: '🌸 💐 🌷 🌺 💮 🌹';
-            position: fixed;
-            bottom: 10%;
-            right: -50px;
-            font-size: 30px;
-            opacity: 0.15;
-            transform: rotate(15deg);
-            letter-spacing: 40px;
-            pointer-events: none;
-            z-index: 0;
+            content: '🌸 💐  🌺 💮 ';
+            position: fixed; bottom: 10%; right: -50px; font-size: 30px; opacity: 0.15;
+            transform: rotate(15deg); letter-spacing: 40px; pointer-events: none; z-index: 0;
         }
-
         header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; position: relative; z-index: 1; }
-
         .logo-container {
             width: 150px; height: 150px; border-radius: 50%; overflow: hidden;
             border: 5px solid var(--primary-pink); margin: 0 auto 15px;
             box-shadow: 0 0 30px var(--primary-pink-glow);
-            background-color: #fff; animation: logoGlow 3s ease-in-out infinite;
-            position: relative;
+            background-color: #fff; animation: logoGlow 3s ease-in-out infinite; position: relative;
         }
-
         .logo-container::after {
-            content: '💐';
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            font-size: 40px;
+            content: '💐'; position: absolute; bottom: -5px; right: -5px; font-size: 40px;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-
         @keyframes logoGlow {
             0%, 100% { box-shadow: 0 0 20px var(--primary-pink-glow); }
             50% { box-shadow: 0 0 40px var(--primary-pink-glow), 0 0 60px rgba(236, 72, 153, 0.4); }
         }
-
         .logo-container img { width: 100%; height: 100%; object-fit: cover; }
-
         .pretitle {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-pink), var(--primary-rose));
-            color: white;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
+            display: inline-block; background: linear-gradient(135deg, var(--primary-pink), var(--primary-rose));
+            color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
+            letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase;
             box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
         }
-
         h1 {
             font-size: 2.5rem; color: var(--primary-pink-dark); text-transform: uppercase;
-            letter-spacing: 2px; text-shadow: 0 0 15px rgba(236, 72, 153, 0.4); margin-bottom: 5px;
-            line-height: 1.1;
+            letter-spacing: 2px; text-shadow: 0 0 15px rgba(236, 72, 153, 0.4); margin-bottom: 5px; line-height: 1.1;
         }
-
         .subtitle { color: var(--subtitle-color); font-size: 1.1rem; margin-bottom: 15px; font-weight: 500; }
-
         .timer-box {
             font-size: 1.3rem; font-weight: 900; color: var(--primary-pink-dark);
             background: white; padding: 12px 25px; border-radius: 25px;
             border: 3px solid var(--primary-pink); margin-bottom: 20px;
-            display: inline-block; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25);
-            letter-spacing: 1px;
+            display: inline-block; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25); letter-spacing: 1px;
         }
-
         .info-bubble {
-            max-width: 700px; width: 100%;
-            background: rgba(255, 255, 255, 0.97);
-            border: 3px solid var(--primary-pink);
-            border-radius: 20px; padding: 25px; margin-bottom: 30px;
-            font-size: 0.95rem;
-            box-shadow: 0 10px 35px rgba(236, 72, 153, 0.2);
-            position: relative;
-            z-index: 1;
+            max-width: 700px; width: 100%; background: rgba(255, 255, 255, 0.97);
+            border: 3px solid var(--primary-pink); border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            font-size: 0.95rem; box-shadow: 0 10px 35px rgba(236, 72, 153, 0.2); position: relative; z-index: 1;
         }
-
         .bubble-header { text-align: center; margin-bottom: 20px; }
-
         .bubble-title {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-size: 1.15rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 18px rgba(236, 72, 153, 0.4);
+            display: inline-block; background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white; padding: 10px 25px; border-radius: 25px; font-size: 1.15rem; font-weight: 900;
+            letter-spacing: 1px; box-shadow: 0 5px 18px rgba(236, 72, 153, 0.4);
         }
-
-        .bubble-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
+        .bubble-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 22px; }
         .bubble-info-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #fff5f7;
-            border: 2px solid var(--cell-border);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: left;
+            display: flex; align-items: center; gap: 10px; background: #fff5f7;
+            border: 2px solid var(--cell-border); border-radius: 12px; padding: 12px; text-align: left;
         }
-
         .bubble-info-item .info-icon { font-size: 1.8rem; }
-
-        .bubble-info-item strong {
-            display: block;
-            color: var(--primary-pink-dark);
-            font-size: 0.9rem;
-            line-height: 1.2;
-        }
-
-        .bubble-info-item small {
-            color: var(--subtitle-color);
-            font-size: 0.75rem;
-        }
-
-        .packs-divider {
-            text-align: center;
-            margin: 20px 0 15px;
-            position: relative;
-        }
-
+        .bubble-info-item strong { display: block; color: var(--primary-pink-dark); font-size: 0.9rem; line-height: 1.2; }
+        .bubble-info-item small { color: var(--subtitle-color); font-size: 0.75rem; }
+        .packs-divider { text-align: center; margin: 20px 0 15px; position: relative; }
         .packs-divider::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 0; right: 0;
-            height: 2px;
+            content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
         }
-
         .packs-divider span {
-            position: relative;
-            background: white;
-            padding: 5px 18px;
-            color: var(--primary-pink-dark);
-            font-weight: 900;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            border-radius: 20px;
-            border: 2px solid var(--primary-pink);
+            position: relative; background: white; padding: 5px 18px; color: var(--primary-pink-dark);
+            font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; border-radius: 20px; border: 2px solid var(--primary-pink);
         }
-
-        .packs-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
+        .packs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
         .pack-card {
-            background: linear-gradient(135deg, #ffffff, #fff5f7);
-            border: 3px solid var(--cell-border);
-            border-radius: 16px;
-            padding: 18px 10px;
-            text-align: center;
-            position: relative;
+            background: linear-gradient(135deg, #ffffff, #fff5f7); border: 3px solid var(--cell-border);
+            border-radius: 16px; padding: 18px 10px; text-align: center; position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .pack-card:hover { transform: translateY(-5px); }
-
         .pack-card.featured {
-            border-color: var(--primary-pink);
-            background: linear-gradient(135deg, #fff, #fce7f3);
-            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.25);
-            transform: scale(1.03);
+            border-color: var(--primary-pink); background: linear-gradient(135deg, #fff, #fce7f3);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.25); transform: scale(1.03);
         }
-
         .pack-card.best {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, #fff, #fef3c7);
-            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.25);
-            transform: scale(1.03);
+            border-color: var(--gold); background: linear-gradient(135deg, #fff, #fef3c7);
+            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.25); transform: scale(1.03);
         }
-
         .pack-badge {
-            position: absolute;
-            top: -12px; left: 50%;
-            transform: translateX(-50%);
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.65rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            box-shadow: 0 3px 10px rgba(236, 72, 153, 0.4);
+            color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.65rem; font-weight: 900;
+            letter-spacing: 1px; white-space: nowrap; box-shadow: 0 3px 10px rgba(236, 72, 153, 0.4);
         }
-
-        .pack-badge.gold {
-            background: linear-gradient(135deg, #92400e, var(--gold));
-            box-shadow: 0 3px 10px rgba(217, 119, 6, 0.4);
-        }
-
+        .pack-badge.gold { background: linear-gradient(135deg, #92400e, var(--gold)); box-shadow: 0 3px 10px rgba(217, 119, 6, 0.4); }
         .pack-emojis { font-size: 1.6rem; margin-bottom: 5px; }
-
-        .pack-count {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--primary-pink-dark);
-            line-height: 1;
-        }
-
+        .pack-count { font-size: 2.2rem; font-weight: 900; color: var(--primary-pink-dark); line-height: 1; }
         .pack-card.best .pack-count { color: #92400e; }
-
-        .pack-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--subtitle-color);
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-
-        .pack-price {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary-pink-dark);
-        }
-
+        .pack-label { font-size: 0.75rem; font-weight: 700; color: var(--subtitle-color); letter-spacing: 2px; margin-bottom: 8px; }
+        .pack-price { font-size: 1.5rem; font-weight: 900; color: var(--primary-pink-dark); }
         .pack-card.best .pack-price { color: #92400e; }
-
         .pack-save {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #16a34a;
-            background: #dcfce7;
-            border-radius: 10px;
-            padding: 3px 8px;
-            margin-top: 6px;
-            display: inline-block;
-            min-height: 18px;
+            font-size: 0.72rem; font-weight: 700; color: #16a34a; background: #dcfce7;
+            border-radius: 10px; padding: 3px 8px; margin-top: 6px; display: inline-block; min-height: 18px;
         }
-
         .bubble-footer {
-            text-align: center;
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 2px dashed var(--gold);
-            border-radius: 12px;
-            padding: 12px;
-            color: #78350f;
-            font-size: 0.95rem;
+            text-align: center; background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px dashed var(--gold); border-radius: 12px; padding: 12px; color: #78350f; font-size: 0.95rem;
         }
-
         @media (max-width: 600px) {
             .packs-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .pack-card { padding: 14px 6px; }
@@ -336,515 +167,239 @@
             .pack-save { font-size: 0.6rem; }
             .bubble-info-grid { grid-template-columns: 1fr; }
         }
-
         .counter-badge {
             background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 8px 20px; border-radius: 25px;
-            font-size: 1rem; font-weight: bold;
-            display: inline-block; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            color: white; padding: 8px 20px; border-radius: 25px; font-size: 1rem; font-weight: bold;
+            display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
         }
-
         .progress-bar {
-            width: 100%; max-width: 650px; height: 25px;
-            background: #f3e8ff; border-radius: 15px; overflow: hidden; margin: 10px auto 20px;
-            border: 2px solid var(--primary-pink);
+            width: 100%; max-width: 650px; height: 25px; background: #f3e8ff; border-radius: 15px;
+            overflow: hidden; margin: 10px auto 20px; border: 2px solid var(--primary-pink);
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
-
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
-            transition: width 0.5s ease;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 13px; font-weight: bold;
-            box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+            height: 100%; background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
+            transition: width 0.5s ease; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 13px; font-weight: bold; box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
         }
-
-        .cta-button-container {
-            width: 100%; max-width: 650px;
-            text-align: center; margin: 20px auto 30px;
-            position: relative;
-            z-index: 1;
-        }
-
+        .cta-button-container { width: 100%; max-width: 650px; text-align: center; margin: 20px auto 30px; position: relative; z-index: 1; }
         .cta-button {
-            display: inline-block;
-            width: 100%;
-            padding: 25px 30px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            display: inline-block; width: 100%; padding: 25px 30px;
+            background: linear-gradient(135deg, #25D366, #128C7E); color: white; text-decoration: none;
+            border-radius: 25px; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: ctaPulse 2s ease-in-out infinite;
+            transition: all 0.3s ease; position: relative; overflow: hidden; animation: ctaPulse 2s ease-in-out infinite;
         }
-
         @keyframes ctaPulse {
             0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2); }
             50% { transform: scale(1.02); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.7), 0 0 0 8px rgba(37, 211, 102, 0.3); }
         }
-
         .cta-button:hover { transform: translateY(-3px) scale(1.02); }
-
         .cta-button::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -100%;
-            width: 100%; height: calc(100% + 4px);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 3s infinite;
+            content: ''; position: absolute; top: -2px; left: -100%; width: 100%; height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite;
         }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
         .cta-button .btn-emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
-
-        .cta-button .btn-sub {
-            font-size: 0.9rem; font-weight: 500; opacity: 0.9;
-            letter-spacing: 0; text-transform: none; display: block; margin-top: 5px;
-        }
-
+        .cta-button .btn-sub { font-size: 0.9rem; font-weight: 500; opacity: 0.9; letter-spacing: 0; text-transform: none; display: block; margin-top: 5px; }
         .grid-container {
             display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px;
             max-width: 700px; width: 100%; margin-bottom: 35px; padding: 15px;
-            background: white; border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
-            border: 4px solid var(--primary-pink);
-            position: relative;
-            z-index: 1;
+            background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
+            border: 4px solid var(--primary-pink); position: relative; z-index: 1;
         }
-
         .grid-container::before {
-            content: '🌸 100 NÚMEROS • 3 GANADORES 🌸';
-            position: absolute;
-            top: -15px; left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 5px 20px; border-radius: 15px;
-            font-size: 0.85rem; font-weight: bold; letter-spacing: 2px;
-            white-space: nowrap; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            content: '🌸 100 NÚMEROS • 3 GANADORES 🌸'; position: absolute; top: -15px; left: 50%;
+            transform: translateX(-50%); background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white; padding: 5px 20px; border-radius: 15px; font-size: 0.85rem; font-weight: bold;
+            letter-spacing: 2px; white-space: nowrap; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
         }
-
         .cell {
-            width: 100%; aspect-ratio: 1; background-color: var(--cell-default);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 1rem; color: var(--primary-pink-dark);
-            border: 2px solid var(--cell-border); user-select: none;
-            transition: all 0.2s ease; cursor: pointer;
+            width: 100%; aspect-ratio: 1; background-color: var(--cell-default); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem;
+            color: var(--primary-pink-dark); border: 2px solid var(--cell-border); user-select: none;
+            transition: all 0.2s ease; cursor: default;
         }
-
-        .cell:hover:not(.occupied):not(.winner) {
-            transform: scale(1.08);
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-            z-index: 2;
-        }
-
-        .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; cursor: not-allowed; }
-
+        .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; }
         .cell.chaos { animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white; }
-
         @keyframes chaosAnim {
             0% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
             33% { background-color: #fde047; transform: scale(1.2); box-shadow: 0 0 20px #fde047; }
             66% { background-color: #a7f3d0; transform: scale(0.9); box-shadow: 0 0 15px #a7f3d0; }
             100% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
         }
-
         .cell.winner {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            color: #ffffff; border-color: #fde68a;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-            animation: winnerReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #ffffff; border-color: #fde68a;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8); animation: winnerReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         @keyframes winnerReveal { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
         .prizes-section { width: 100%; max-width: 900px; position: relative; z-index: 1; }
         .prizes-title {
-            text-align: center; color: var(--primary-pink-dark); font-size: 2rem;
-            margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px;
-            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
+            text-align: center; color: var(--primary-pink-dark); font-size: 2rem; margin-bottom: 25px;
+            text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
         }
-
         .prizes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-
         .prize-card {
-            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
-            border: 3px solid var(--primary-pink); border-radius: 20px;
-            padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
-            position: relative;
-            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%); border: 3px solid var(--primary-pink);
+            border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+            position: relative; transition: transform 0.3s ease;
         }
-
         .prize-card:hover { transform: translateY(-5px); }
-
-        .prize-card.gold {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            box-shadow: 0 15px 40px rgba(217, 119, 6, 0.3);
-        }
-
+        .prize-card.gold { border-color: var(--gold); background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); box-shadow: 0 15px 40px rgba(217, 119, 6, 0.3); }
         .prize-badge {
-            position: absolute;
-            top: -12px; left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 5px 15px; border-radius: 15px;
-            font-size: 0.8rem; font-weight: bold; letter-spacing: 1px;
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink)); color: white;
+            padding: 5px 15px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
         }
-
         .prize-card.gold .prize-badge { background: linear-gradient(135deg, #92400e, var(--gold)); }
-
-        .prize-emoji {
-            font-size: 4rem; margin: 15px 0 10px;
-            display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
-        }
-
-        .prize-card h3 {
-            color: var(--primary-pink-dark); font-size: 1.2rem; margin-bottom: 10px;
-            font-weight: 900;
-        }
-
+        .prize-emoji { font-size: 4rem; margin: 15px 0 10px; display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15)); }
+        .prize-card h3 { color: var(--primary-pink-dark); font-size: 1.2rem; margin-bottom: 10px; font-weight: 900; }
         .prize-card.gold h3 { color: #92400e; }
-
-        .prize-description {
-            font-size: 0.9rem; color: var(--subtitle-color);
-            margin-bottom: 15px; line-height: 1.4;
-        }
-
+        .prize-description { font-size: 0.9rem; color: var(--subtitle-color); margin-bottom: 15px; line-height: 1.4; }
         .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 30px; }
-
         .winner-item {
-            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
-            color: #713f12; font-weight: 700; font-size: 0.9rem;
-            padding: 10px 14px; border-radius: 10px; text-align: left;
-            animation: slideIn 0.4s ease forwards;
-            border: 2px solid #fbbf24;
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%); color: #713f12; font-weight: 700;
+            font-size: 0.9rem; padding: 10px 14px; border-radius: 10px; text-align: left;
+            animation: slideIn 0.4s ease forwards; border: 2px solid #fbbf24;
         }
-
         .winner-item .wa-btn {
-            display: inline-block; background: var(--whatsapp); color: white;
-            padding: 5px 10px; border-radius: 5px; text-decoration: none;
-            font-size: 0.8rem; margin-top: 5px; font-weight: bold;
+            display: inline-block; background: var(--whatsapp); color: white; padding: 5px 10px;
+            border-radius: 5px; text-decoration: none; font-size: 0.8rem; margin-top: 5px; font-weight: bold;
         }
-
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
         .separator {
             width: 100%; max-width: 650px; height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
-            margin: 50px 0; border-radius: 2px;
-            position: relative; z-index: 1;
+            margin: 50px 0; border-radius: 2px; position: relative; z-index: 1;
         }
-
         .ruleta-section { width: 100%; max-width: 650px; margin-top: 20px; position: relative; z-index: 1; }
-
-        .ruleta-section > h2 {
-            text-align: center; color: var(--primary-pink-dark); font-size: 2rem;
-            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
-        }
-
+        .ruleta-section > h2 { text-align: center; color: var(--primary-pink-dark); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .ruleta-subtitle { text-align: center; color: var(--subtitle-color); margin-bottom: 25px; font-size: 1rem; }
-
-        .card {
-            background: white; border-radius: 20px; padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 20px;
-        }
-
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 20px; }
         .card h3 { color: var(--primary-pink-dark); margin-bottom: 10px; text-align: center; }
-
         .help { font-size: 13px; color: #666; text-align: center; margin-bottom: 15px; line-height: 1.5; }
         .help a { color: var(--whatsapp); font-weight: bold; }
-
         input, select {
-            width: 100%; padding: 14px; margin-bottom: 12px;
-            border: 2px solid #ffe0b2; border-radius: 12px;
-            font-size: 16px; outline: none; transition: border 0.2s;
+            width: 100%; padding: 14px; margin-bottom: 12px; border: 2px solid #ffe0b2;
+            border-radius: 12px; font-size: 16px; outline: none; transition: border 0.2s;
         }
-
         input:focus, select:focus { border-color: var(--primary-pink); }
-
         .btn-primary {
-            width: 100%; padding: 14px;
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; border: none; border-radius: 12px;
-            font-size: 17px; font-weight: bold; cursor: pointer;
+            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
+            color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(194,24,91,0.4); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
         .btn-wa { background: linear-gradient(135deg, #128C7E, #25D366) !important; margin-top: 10px; }
         .btn-copy { background: #3b82f6 !important; margin-top: 10px; }
-
         .btn-secondary {
-            width: 100%; background: #f3f4f6; color: var(--text-color);
-            padding: 12px; border: 2px solid #e5e7eb; border-radius: 12px;
-            font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;
+            width: 100%; background: #f3f4f6; color: var(--text-color); padding: 12px;
+            border: 2px solid #e5e7eb; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;
         }
-
         .btn-secondary:hover { background: #e5e7eb; }
-
-        .btn-spin {
-            background: linear-gradient(135deg, #4a148c, #7b1fa2);
-            margin-top: 15px; font-size: 20px; padding: 18px;
-        }
-
+        .btn-spin { background: linear-gradient(135deg, #4a148c, #7b1fa2); margin-top: 15px; font-size: 20px; padding: 18px; }
         .error { background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; font-size: 14px; }
-
-        .success {
-            background: #d4edda; color: #155724; padding: 12px; border-radius: 10px;
-            margin-top: 10px; text-align: center; font-size: 14px; border: 2px solid #28a745;
-        }
-
-        .token-display {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 3px dashed #d97706; border-radius: 15px; padding: 20px;
-            text-align: center; margin-top: 15px;
-        }
-
+        .success { background: #d4edda; color: #155724; padding: 12px; border-radius: 10px; margin-top: 10px; text-align: center; font-size: 14px; border: 2px solid #28a745; }
+        .token-display { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 3px dashed #d97706; border-radius: 15px; padding: 20px; text-align: center; margin-top: 15px; }
         .token-display .label { font-size: 14px; color: #92400e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .token-display .token-value { font-size: 2.2rem; font-weight: 900; color: #78350f; font-family: 'Courier New', monospace; letter-spacing: 4px; }
-
         .hidden { display: none !important; }
-
         .wheel-container { position: relative; width: 340px; height: 340px; margin: 20px auto; }
-
         .pointer {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            font-size: 40px; color: var(--primary-pink-dark); z-index: 20;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 40px;
+            color: var(--primary-pink-dark); z-index: 20; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
             animation: pointerPulse 0.5s ease-in-out infinite alternate;
         }
-
-        @keyframes pointerPulse {
-            from { transform: translateX(-50%) translateY(0); }
-            to { transform: translateX(-50%) translateY(5px); }
-        }
-
+        @keyframes pointerPulse { from { transform: translateX(-50%) translateY(0); } to { transform: translateX(-50%) translateY(5px); } }
         .pointer.spinning { animation: pointerShake 0.1s infinite; }
-
         @keyframes pointerShake {
             0% { transform: translateX(-50%) rotate(-3deg); }
             50% { transform: translateX(-50%) rotate(3deg); }
             100% { transform: translateX(-50%) rotate(-3deg); }
         }
-
         .wheel-outer {
-            width: 100%; height: 100%; border-radius: 50%;
-            position: relative; padding: 12px;
+            width: 100%; height: 100%; border-radius: 50%; position: relative; padding: 12px;
             background: conic-gradient(from 0deg, #db2777, #f472b6, #fcd34d, #f472b6, #db2777);
             box-shadow: 0 0 40px rgba(219, 39, 119, 0.5), inset 0 0 20px rgba(0,0,0,0.2);
         }
-
         .wheel {
-            width: 100%; height: 100%; border-radius: 50%;
-            position: relative; overflow: hidden;
-            border: 6px solid white;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
+            width: 100%; height: 100%; border-radius: 50%; position: relative; overflow: hidden;
+            border: 6px solid white; box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
             transition: transform 7s cubic-bezier(0.12, 0.85, 0.25, 1);
         }
-
         .wheel.spinning { transition: transform 7.5s cubic-bezier(0.08, 0.9, 0.2, 1); }
-
         .wheel-center {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 60px; height: 60px; border-radius: 50%;
-            background: linear-gradient(135deg, #fff, #f3f4f6);
-            border: 4px solid var(--primary-pink-dark);
-            z-index: 15; display: flex; align-items: center; justify-content: center;
+            width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #fff, #f3f4f6);
+            border: 4px solid var(--primary-pink-dark); z-index: 15; display: flex; align-items: center; justify-content: center;
             font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
         .segment {
-            position: absolute; width: 50%; height: 50%;
-            top: 0; left: 50%; transform-origin: 0% 100%;
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-            display: flex; align-items: flex-start; justify-content: center;
-            padding-top: 25px;
+            position: absolute; width: 50%; height: 50%; top: 0; left: 50%; transform-origin: 0% 100%;
+            clip-path: polygon(0 0, 100% 0, 100% 100%); display: flex; align-items: flex-start; justify-content: center; padding-top: 25px;
         }
-
         .segment-label {
-            transform: rotate(25deg);
-            font-weight: 900; font-size: 13px;
-            color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            white-space: nowrap; text-align: center;
-            background: rgba(0,0,0,0.25);
-            padding: 4px 8px; border-radius: 6px;
-            line-height: 1.2;
+            transform: rotate(25deg); font-weight: 900; font-size: 13px; color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7); white-space: nowrap; text-align: center;
+            background: rgba(0,0,0,0.25); padding: 4px 8px; border-radius: 6px; line-height: 1.2;
         }
-
         .segment-label .emoji { font-size: 18px; display: block; margin-bottom: 2px; }
-
-        .wheel-lights {
-            position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
-            border-radius: 50%; pointer-events: none; z-index: 10;
-        }
-
-        .light-dot {
-            position: absolute; width: 12px; height: 12px; border-radius: 50%;
-            background: #fde047; box-shadow: 0 0 10px #fde047;
-        }
-
+        .wheel-lights { position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border-radius: 50%; pointer-events: none; z-index: 10; }
+        .light-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #fde047; box-shadow: 0 0 10px #fde047; }
         .light-dot.on { background: #fff; box-shadow: 0 0 20px #fff, 0 0 30px #fde047; }
-
-        .spinning-text {
-            text-align: center; font-size: 1.5rem; font-weight: 900;
-            color: var(--primary-pink-dark); margin-top: 15px;
-            animation: blinkText 0.3s infinite;
-            display: none;
-        }
-
+        .spinning-text { text-align: center; font-size: 1.5rem; font-weight: 900; color: var(--primary-pink-dark); margin-top: 15px; animation: blinkText 0.3s infinite; display: none; }
         .spinning-text.active { display: block; }
-
-        @keyframes blinkText {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.05); }
-        }
-
-        .results-board {
-            background: linear-gradient(135deg, #1e1b4b, #312e81);
-            border-radius: 15px; padding: 20px; margin-top: 20px;
-            border: 3px solid #fbbf24; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .results-board h3 {
-            color: #fbbf24; text-align: center; margin-bottom: 15px;
-            font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;
-        }
-
+        @keyframes blinkText { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+        .results-board { background: linear-gradient(135deg, #1e1b4b, #312e81); border-radius: 15px; padding: 20px; margin-top: 20px; border: 3px solid #fbbf24; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .results-board h3 { color: #fbbf24; text-align: center; margin-bottom: 15px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
         .results-list { max-height: 250px; overflow-y: auto; }
-
         .result-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(255,255,255,0.1); padding: 10px 15px;
-            border-radius: 10px; margin-bottom: 8px;
-            border-left: 4px solid #fbbf24;
+            display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1);
+            padding: 10px 15px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #fbbf24;
             animation: resultSlideIn 0.5s ease forwards;
         }
-
-        @keyframes resultSlideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
+        @keyframes resultSlideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
         .result-item .r-name { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .result-item .r-prize { color: #fbbf24; font-weight: 900; font-size: 1rem; }
         .result-item .r-time { color: #a5b4fc; font-size: 0.8rem; }
-
-        .result-item.highlight {
-            background: rgba(251, 191, 36, 0.2);
-            border-left-color: #fff;
-            animation: resultHighlight 1s ease;
-        }
-
-        @keyframes resultHighlight {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .result-popup {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
+        .result-item.highlight { background: rgba(251, 191, 36, 0.2); border-left-color: #fff; animation: resultHighlight 1s ease; }
+        @keyframes resultHighlight { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+        .result-popup { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .result-popup-content {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-radius: 25px; padding: 40px; text-align: center;
-            max-width: 400px; width: 90%;
-            border: 5px solid var(--primary-pink-dark);
-            box-shadow: 0 0 60px rgba(219, 39, 119, 0.8);
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+            background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 25px; padding: 40px; text-align: center;
+            max-width: 400px; width: 90%; border: 5px solid var(--primary-pink-dark);
+            box-shadow: 0 0 60px rgba(219, 39, 119, 0.8); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5);
         }
-
-        @keyframes popIn {
-            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-            100% { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
+        @keyframes popIn { 0% { transform: scale(0) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
         .result-popup-content .congrats { font-size: 1.2rem; color: #92400e; margin-bottom: 10px; }
         .result-popup-content .winner-name { font-size: 1.8rem; font-weight: 900; color: var(--primary-pink-dark); margin-bottom: 5px; }
         .result-popup-content .prize-won { font-size: 3rem; font-weight: 900; color: #b45309; margin: 15px 0; text-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
         .result-popup-content .prize-time { font-size: 1rem; color: #78350f; margin-bottom: 20px; }
         .result-popup-content .coupon-code {
-            background: white; padding: 15px; border-radius: 10px;
-            font-family: 'Courier New', monospace; font-size: 1.4rem;
-            font-weight: 900; color: var(--primary-pink-dark);
-            border: 3px dashed var(--primary-pink); margin: 15px 0;
+            background: white; padding: 15px; border-radius: 10px; font-family: 'Courier New', monospace;
+            font-size: 1.4rem; font-weight: 900; color: var(--primary-pink-dark); border: 3px dashed var(--primary-pink); margin: 15px 0;
         }
-
-        .confetti {
-            position: absolute; width: 10px; height: 10px;
-            animation: confettiFall 3s linear forwards;
-        }
-
-        @keyframes confettiFall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        .info-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 14px; color: #666; margin-bottom: 15px;
-            background: #fef3c7; padding: 10px 15px; border-radius: 10px;
-        }
-
+        .confetti { position: absolute; width: 10px; height: 10px; animation: confettiFall 3s linear forwards; }
+        @keyframes confettiFall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+        .info-bar { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #666; margin-bottom: 15px; background: #fef3c7; padding: 10px 15px; border-radius: 10px; }
         .info-bar .user-name { font-weight: 700; color: var(--primary-pink-dark); }
-
         footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; position: relative; z-index: 1; }
         footer a { color: var(--primary-pink-dark); font-weight: bold; text-decoration: none; }
-
-        #admin-panel {
-            position: fixed; top: 0; right: 0; width: 380px; max-width: 95vw; height: 100vh;
-            background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-            padding: 20px; overflow-y: auto; z-index: 1000;
-        }
-
+        #admin-panel { position: fixed; top: 0; right: 0; width: 380px; max-width: 95vw; height: 100vh; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2); padding: 20px; overflow-y: auto; z-index: 1000; }
         #admin-panel h3 { color: var(--primary-pink-dark); margin-bottom: 15px; border-bottom: 2px solid var(--primary-pink); padding-bottom: 8px; }
         #admin-panel .admin-section { margin-bottom: 20px; padding: 12px; background: #f9fafb; border-radius: 8px; }
         #admin-panel .admin-section h4 { color: var(--primary-pink-dark); margin-bottom: 10px; font-size: 1rem; }
         #admin-panel .close-btn { float: right; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-
-        .admin-item {
-            background: white; padding: 8px; margin: 5px 0; border-radius: 5px;
-            border-left: 3px solid var(--primary-pink); font-size: 0.85rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .admin-item { background: white; padding: 8px; margin: 5px 0; border-radius: 5px; border-left: 3px solid var(--primary-pink); font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
         .admin-item strong { color: var(--primary-pink-dark); }
         .admin-item button { background: #ef4444; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-
         .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
-
-        .tab {
-            flex: 1; padding: 10px; background: #f3f4f6;
-            border: 2px solid #e5e7eb; border-radius: 10px;
-            cursor: pointer; text-align: center; font-weight: bold;
-            font-size: 13px; transition: all 0.2s;
-        }
-
+        .tab { flex: 1; padding: 10px; background: #f3f4f6; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; text-align: center; font-weight: bold; font-size: 13px; transition: all 0.2s; }
         .tab.active { background: var(--primary-pink-dark); color: white; border-color: var(--primary-pink-dark); }
-
         .ruleta-users-list { max-height: 250px; overflow-y: auto; background: white; border-radius: 8px; padding: 8px; }
-
         @media (max-width: 768px) {
             .grid-container { grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 10px; }
             .cell { font-size: 0.7rem; }
@@ -873,35 +428,21 @@
         <div class="bubble-header">
             <span class="bubble-title">🌸Premio especial para mamá🌸</span>
         </div>
-
         <div class="bubble-info-grid">
             <div class="bubble-info-item">
                 <span class="info-icon">📅</span>
-                <div>
-                    <strong>SÁBADO 17 DE OCTUBRE</strong>
-                    <small>20:00 hs en punto</small>
-                </div>
+                <div><strong>SÁBADO 17 DE OCTUBRE</strong><small>20:00 hs en punto</small></div>
             </div>
             <div class="bubble-info-item">
                 <span class="info-icon">📺</span>
-                <div>
-                    <strong>SORTEO EN VIVO</strong>
-                    <small>Por esta misma página</small>
-                </div>
+                <div><strong>SORTEO EN VIVO</strong><small>Por esta misma página</small></div>
             </div>
             <div class="bubble-info-item">
                 <span class="info-icon">🎲</span>
-                <div>
-                    <strong>100% TRANSPARENTE</strong>
-                    <small>Selección aleatoria auditada</small>
-                </div>
+                <div><strong>100% TRANSPARENTE</strong><small>Selección aleatoria auditada</small></div>
             </div>
         </div>
-
-        <div class="packs-divider">
-            <span>🎟️ ELEGÍ TU PACK DE BOLETOS 🎟️</span>
-        </div>
-
+        <div class="packs-divider"><span>🎟️ ELEGÍ TU PACK DE BOLETOS 🎟️</span></div>
         <div class="packs-grid">
             <div class="pack-card">
                 <div class="pack-emojis">🎫</div>
@@ -912,7 +453,7 @@
             </div>
             <div class="pack-card featured">
                 <div class="pack-badge">⭐ MÁS ELEGIDO</div>
-                <div class="pack-emojis">🎫🎫</div>
+                <div class="pack-emojis">🎫</div>
                 <div class="pack-count">2</div>
                 <div class="pack-label">BOLETOS</div>
                 <div class="pack-price">$4.000</div>
@@ -927,15 +468,11 @@
                 <div class="pack-save">Ahorrás $2.500</div>
             </div>
         </div>
-
-        <div class="bubble-footer">
-            🏆 <strong>Cada número tiene oportunidad de ganar.</strong> ¡No te quedes sin el tuyo!
-        </div>
+        <div class="bubble-footer">🏆 <strong>Cada número tiene oportunidad de ganar.</strong> ¡No te quedes sin el tuyo!</div>
     </div>
 
     <div class="cta-button-container">
-        <a href="https://wa.me/541168911377/?text=%F0%9F%8C%B8%20Hola!%20Quiero%20mi%20n%C3%BAmero%20para%20el%20Sorteo%20del%20D%C3%ADa%20de%20la%20Madre%20%F0%9F%92%90" 
-           target="_blank" class="cta-button">
+        <a href="https://wa.me/541168911377/?text=%F0%9F%8C%B8%20Hola!%20Quiero%20mi%20n%C3%BAmero%20para%20el%20Sorteo%20del%20D%C3%ADa%20de%20la%20Madre%20%F0%9F%92%90" target="_blank" class="cta-button">
             <span class="btn-emoji">💐🎟️💝</span>
             CONSEGUÍ TU NÚMERO AHORA
             <span class="btn-sub">Hacé click y escribinos por WhatsApp</span>
@@ -950,38 +487,38 @@
     </div>
 
     <div class="grid-container" id="grid"></div>
-<div class="grid-container" id="grid"></div>
 
-<div class="cta-button-container">
-    <a href="#" onclick="activarToken(); return false;" class="cta-button" style="background:linear-gradient(135deg,#7b1fa2,#4a148c); box-shadow:0 10px 30px rgba(123,31,162,0.5), 0 0 0 4px rgba(123,31,162,0.2);">
-        <span class="btn-emoji">🎫🔑</span>
-        YA TENGO MI TOKEN
-        <span class="btn-sub">Activalo y descubrí tu número de la suerte</span>
-    </a>
-</div>
+    <div class="cta-button-container">
+        <a href="#" onclick="activarToken(); return false;" class="cta-button" style="background:linear-gradient(135deg,#7b1fa2,#4a148c); box-shadow:0 10px 30px rgba(123,31,162,0.5), 0 0 0 4px rgba(123,31,162,0.2);">
+            <span class="btn-emoji">🎫🔑</span>
+            YA TENGO MI TOKEN
+            <span class="btn-sub">Activalo y descubrí tu número de la suerte</span>
+        </a>
+    </div>
+
     <div class="prizes-section">
         <h2 class="prizes-title">🏆 3 Premios 🏆</h2>
         <div class="prizes-grid">
             <div class="prize-card gold">
                 <span class="prize-badge">🥇 1er PREMIO</span>
-                <span class="prize-emoji">🎁🎂🍰</span>
+                <span class="prize-emoji">🎁🍰</span>
                 <h3>BOX 1</h3>
                 <p class="prize-description">
                     ✨ MINI TORTA FLAN 🎂<br>
                     + 12 SHOTS sabores surtidos<br>
                     + 3 Porciones a elección<br>
-                    + RAMO rozas de chocolate 
+                    + RAMO rozas de chocolate
                 </p>
                 <div class="prize-winners" id="prize-1"></div>
             </div>
             <div class="prize-card">
                 <span class="prize-badge">🥈 2do PREMIO</span>
-                <span class="prize-emoji">🎁🍰🍧</span>
+                <span class="prize-emoji">🎁🍰</span>
                 <h3>BOX 2</h3>
                 <p class="prize-description">
                     ✨ 6 SHOTS sabores surtidos 🍧<br>
                     + 2 PORCIONES a elección<br>
-                    + RAMO rozas de chocolate 
+                    + RAMO rozas de chocolate
                 </p>
                 <div class="prize-winners" id="prize-2"></div>
             </div>
@@ -992,7 +529,7 @@
                 <p class="prize-description">
                     ✨ 1 PORCIÓN a elección 🍰<br>
                     + 3 SHOTS sabores surtidos<br>
-                    + RAMO rozas de chocolate 
+                    + RAMO rozas de chocolate
                 </p>
                 <div class="prize-winners" id="prize-3"></div>
             </div>
@@ -1045,7 +582,6 @@
                 <span>👋 <span class="user-name" id="user-greeting"></span></span>
                 <span id="next-spin"></span>
             </div>
-
             <div class="wheel-container">
                 <div class="pointer" id="pointer">▼</div>
                 <div class="wheel-outer">
@@ -1054,18 +590,14 @@
                 </div>
                 <div class="wheel-lights" id="wheel-lights"></div>
             </div>
-
             <div class="spinning-text" id="spinning-text">🎰 GIRANDO... 🎰</div>
-
             <button id="spin-btn" class="btn-primary btn-spin">🎲 ¡GIRAR AHORA!</button>
-
             <div class="results-board">
                 <h3>🏆 Últimos Ganadores</h3>
                 <div class="results-list" id="results-list">
                     <p style="color:#a5b4fc;text-align:center;font-size:14px;">Todavía nadie giró... ¡Sé el primero!</p>
                 </div>
             </div>
-
             <button class="btn-secondary" onclick="logoutRuleta()">🚪 Salir</button>
         </div>
     </section>
@@ -1078,18 +610,18 @@
     <div id="admin-panel" class="hidden">
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
-        
-<div class="admin-section">
-    <h4>➕ Registrar participante (venta manual)</h4>
-    <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-    <button class="btn-secondary" onclick="verTokenCasilla()" style="margin:4px 0;">🔍 Ver token de esta casilla</button>
-    <input type="text" id="admin-nombre" placeholder="Nombre del cliente" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-    <input type="tel" id="admin-telefono" placeholder="Teléfono (5411...)" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-    <button class="btn-secondary" onclick="registrarManual()" style="background:#dcfce7;color:#166534;border-color:#16a34a;">✅ Registrar y ocupar casilla</button>
-</div>
 
-<div class="admin-section">
-    <h4>📊 Sorteo Día de la Madre</h4>
+        <div class="admin-section">
+            <h4>➕ Registrar participante (venta manual)</h4>
+            <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+            <button class="btn-secondary" onclick="verTokenCasilla()" style="margin:4px 0;">🔍 Ver token de esta casilla</button>
+            <input type="text" id="admin-nombre" placeholder="Nombre del cliente" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+            <input type="tel" id="admin-telefono" placeholder="Teléfono (5411...)" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
+            <button class="btn-secondary" onclick="registrarManual()" style="background:#dcfce7;color:#166534;border-color:#16a34a;">✅ Registrar y ocupar casilla</button>
+        </div>
+
+        <div class="admin-section">
+            <h4>📊 Sorteo Día de la Madre</h4>
             <p id="admin-status">Cargando...</p>
             <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
             <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
@@ -1122,7 +654,6 @@
             appId: "1:719595477279:web:fcb0bebc5965b013f3b82a",
             measurementId: "G-8ZG47Q7GTL"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -1137,8 +668,7 @@
 
         function showRuletaView(view) {
             ['menu', 'register', 'login', 'wheel-section'].forEach(v => {
-                document.getElementById(v === 'wheel-section' ? 'wheel-section' : 'ruleta-' + v)
-                    .classList.add('hidden');
+                document.getElementById(v === 'wheel-section' ? 'wheel-section' : 'ruleta-' + v).classList.add('hidden');
             });
             const target = view === 'wheel-section' ? 'wheel-section' : 'ruleta-' + view;
             document.getElementById(target).classList.remove('hidden');
@@ -1150,87 +680,88 @@
         // ============ SORTEO DÍA DE LA MADRE ============
         const TOTAL_CASILLAS = 100;
         const grid = document.getElementById('grid');
-        
+
         const premios = [
             { catId: 'prize-1', nombre: 'BOX 1', cantidad: 1 },
             { catId: 'prize-2', nombre: 'BOX 2', cantidad: 1 },
             { catId: 'prize-3', nombre: 'BOX 3', cantidad: 1 }
         ];
 
-        const FECHA_SORTEO_FIJA = "2026-10-17T23:00:00Z"; // Sábado 17 Oct 20hs ARG
+        const FECHA_SORTEO_FIJA = "2026-10-17T23:00:00Z";
 
         let participantesRegistrados = {};
         let sorteoEjecutado = false;
         let timerInterval = null;
         let ganadoresLista = {};
 
-function crearGrid() {
-    grid.innerHTML = '';
-    for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.id = `cell-${i}`;
-        cell.innerText = String(i).padStart(2, '0');
-        grid.appendChild(cell);
-    }
-}
-crearGrid();
+        function crearGrid() {
+            grid.innerHTML = '';
+            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.id = 'cell-' + i;
+                cell.innerText = String(i).padStart(2, '0');
+                grid.appendChild(cell);
+            }
+        }
+        crearGrid();
 
-// === NUEVO: Activar token (pide datos ANTES de consumir el token = sin bug) ===
-async function activarToken() {
-    const tokenInput = prompt("🎫 Ingresá el token de tu boleto:");
-    if (!tokenInput) return;
-    const tokenLimpio = tokenInput.trim().toUpperCase();
+        // === Activar token: pide datos ANTES de consumir el token (sin bug) ===
+        async function activarToken() {
+            const tokenInput = prompt("🎫 Ingresá el token de tu boleto:");
+            if (!tokenInput) return;
+            const tokenLimpio = tokenInput.trim().toUpperCase();
 
-    const nombre = prompt("👤 Tu NOMBRE COMPLETO:");
-    if (!nombre) return;
+            const nombre = prompt("👤 Tu NOMBRE COMPLETO:");
+            if (!nombre) return;
 
-    const telefono = prompt("📱 Tu TELÉFONO (con código país, ej: 541123456789):");
-    if (!telefono) return;
+            const telefono = prompt("📱 Tu TELÉFONO (con código país, ej: 541123456789):");
+            if (!telefono) return;
 
-    const tokenRef = db.ref(`tokens/${tokenLimpio}`);
-    const snap = await tokenRef.once('value');
+            const tokenRef = db.ref('tokens/' + tokenLimpio);
+            const snap = await tokenRef.once('value');
 
-    if (!snap.exists()) { alert("❌ Token no existente."); return; }
-    const data = snap.val();
-    if (data.usado === true) { alert("❌ Este token ya fue usado."); return; }
+            if (!snap.exists()) { alert("❌ Token no existente."); return; }
+            const data = snap.val();
+            if (data.usado === true) { alert("❌ Este token ya fue usado."); return; }
 
-    const numero = data.casilla;
-    if (participantesRegistrados[numero]) { alert(`La casilla #${numero} ya está ocupada.`); return; }
+            const numero = data.casilla;
+            if (participantesRegistrados[numero]) { alert("La casilla #" + numero + " ya está ocupada."); return; }
 
-    const { committed } = await tokenRef.transaction(c => {
-        if (c === null || c.usado === true) return;
-        return { ...c, usado: true, nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP };
-    });
-    if (!committed) { alert("❌ Token inválido o ya usado."); return; }
+            const result = await tokenRef.transaction(c => {
+                if (c === null || c.usado === true) return;
+                return Object.assign({}, c, { usado: true, nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP });
+            });
+            if (!result.committed) { alert("❌ Token inválido o ya usado."); return; }
 
-    await db.ref(`casillas/${numero}`).set({
-        nombre: nombre.trim(),
-        telefono: telefono.trim(),
-        token: tokenLimpio,
-        fecha: firebase.database.ServerValue.TIMESTAMP
-    });
+            await db.ref('casillas/' + numero).set({
+                nombre: nombre.trim(),
+                telefono: telefono.trim(),
+                token: tokenLimpio,
+                fecha: firebase.database.ServerValue.TIMESTAMP
+            });
 
-    alert(`🎉 ¡Listo ${nombre.trim()}! Tu número de la suerte es el #${String(numero).padStart(2,'0')} 🌸`);
-}
+            alert("🎉 ¡Listo " + nombre.trim() + "! Tu número de la suerte es el #" + String(numero).padStart(2, '0') + " 🌸");
+        }
 
         db.ref('casillas').on('value', (snapshot) => {
             participantesRegistrados = snapshot.val() || {};
             const ocupadas = Object.keys(participantesRegistrados).length;
-            document.getElementById('casillas-counter').innerText = `Números: ${ocupadas} / ${TOTAL_CASILLAS}`;
+            document.getElementById('casillas-counter').innerText = 'Números: ' + ocupadas + ' / ' + TOTAL_CASILLAS;
             const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
             const pf = document.getElementById('progress-fill');
             pf.style.width = porcentaje + '%';
             pf.innerText = Math.round(porcentaje) + '%';
 
             for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                const cell = document.getElementById(`cell-${i}`);
+                const cell = document.getElementById('cell-' + i);
                 if (cell) {
                     if (participantesRegistrados[i]) {
                         cell.classList.add('occupied');
-                        cell.title = `Reservado por: ${participantesRegistrados[i].nombre}`;
+                        cell.title = 'Reservado por: ' + participantesRegistrados[i].nombre;
                     } else {
                         cell.classList.remove('occupied');
+                        cell.title = '';
                     }
                 }
             }
@@ -1258,9 +789,9 @@ async function activarToken() {
                     gs.forEach(g => {
                         const item = document.createElement('div');
                         item.className = 'winner-item';
-                        const waMsg = encodeURIComponent(`🎉 ¡Felicitaciones ${g.nombre}! 🎉\nGanaste: *${g.premio}*\nNúmero #${g.casilla}`);
-                        const waLink = `https://wa.me/${g.telefono.replace(/\D/g,'')}?text=${waMsg}`;
-                        item.innerHTML = `<strong>#${String(g.casilla).padStart(2,'0')}</strong> ${g.nombre}<br><a href="${waLink}" target="_blank" class="wa-btn">📱 Notificar</a>`;
+                        const waMsg = encodeURIComponent('🎉 ¡Felicitaciones ' + g.nombre + '! 🎉\nGanaste: *' + g.premio + '*\nNúmero #' + g.casilla);
+                        const waLink = 'https://wa.me/' + g.telefono.replace(/\D/g, '') + '?text=' + waMsg;
+                        item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> ' + g.nombre + '<br><a href="' + waLink + '" target="_blank" class="wa-btn">📱 Notificar</a>';
                         lista.appendChild(item);
                     });
                 }
@@ -1270,15 +801,11 @@ async function activarToken() {
         async function initTimer() {
             const snap = await db.ref('configuracion/fechaSorteo').once('value');
             let fechaObjetivo = snap.val() || FECHA_SORTEO_FIJA;
-            
             if (!snap.val()) {
                 await db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA);
             }
-
             if (timerInterval) clearInterval(timerInterval);
-
             const target = new Date(fechaObjetivo).getTime();
-            
             timerInterval = setInterval(() => {
                 const diff = target - Date.now();
                 if (diff <= 0) {
@@ -1290,37 +817,14 @@ async function activarToken() {
                     const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const s = Math.floor((diff % (1000 * 60)) / 1000);
-                    
                     let texto = '';
-                    if (d > 0) texto += `${d}d `;
-                    texto += `${h}h ${m}m ${s}s`;
-                    
-                    document.getElementById('timer').innerText = `💐 ${texto}`;
+                    if (d > 0) texto += d + 'd ';
+                    texto += h + 'h ' + m + 'm ' + s + 's';
+                    document.getElementById('timer').innerText = '💐 ' + texto;
                 }
             }, 1000);
         }
         initTimer();
-
-            const tokenInput = prompt(`Token del boleto #${String(numero).padStart(2,'0')} (te lo enviamos por WhatsApp):`);
-            if (!tokenInput) return;
-            const tokenLimpio = tokenInput.trim().toUpperCase();
-            const tokenRef = db.ref(`tokens/${tokenLimpio}`);
-            try {
-                const { committed } = await tokenRef.transaction(c => {
-                    if (c === null || c.usado === true) return;
-                    return { ...c, usado: true, casilla: numero };
-                });
-                if (!committed) { alert("Token inválido o ya usado."); return; }
-                const nombre = prompt("Tu NOMBRE COMPLETO:");
-                if (!nombre) return;
-                const telefono = prompt("Tu TELÉFONO (con código país, ej: 541123456789):");
-                if (!telefono) return;
-                const datos = { nombre: nombre.trim(), telefono: telefono.trim(), token: tokenLimpio, fecha: firebase.database.ServerValue.TIMESTAMP };
-                await db.ref(`casillas/${numero}`).set(datos);
-                await tokenRef.update({ nombre: nombre.trim(), telefono: telefono.trim(), fechaUso: firebase.database.ServerValue.TIMESTAMP });
-                alert(`¡Número #${String(numero).padStart(2,'0')} reservado! 🌸`);
-            } catch (e) { alert("Error: " + e.message); }
-        }
 
         async function iniciarAnimacionSorteo() {
             if (sorteoEjecutado) return;
@@ -1329,11 +833,11 @@ async function activarToken() {
             sorteoEjecutado = true;
             const casillas = Object.keys(participantesRegistrados).map(Number);
             if (!casillas.length) return;
-            let bolsa = [...casillas];
+            let bolsa = casillas.slice();
             for (const p of premios) {
                 for (let i = 1; i <= p.cantidad; i++) {
                     if (!bolsa.length) return;
-                    await sortearUnGanador(p.catId, `${p.nombre} #${i}`, bolsa);
+                    await sortearUnGanador(p.catId, p.nombre + ' #' + i, bolsa);
                 }
             }
         }
@@ -1343,11 +847,11 @@ async function activarToken() {
                 let tiempo = 2500, intervalo = 80, transcurrido = 0, ultima = null;
                 const timer = setInterval(() => {
                     if (ultima) {
-                        const c = document.getElementById(`cell-${ultima}`);
+                        const c = document.getElementById('cell-' + ultima);
                         if (c && !c.classList.contains('winner')) c.classList.remove('chaos');
                     }
                     ultima = bolsa[Math.floor(Math.random() * bolsa.length)];
-                    const c = document.getElementById(`cell-${ultima}`);
+                    const c = document.getElementById('cell-' + ultima);
                     if (c) c.classList.add('chaos');
                     transcurrido += intervalo;
                     if (transcurrido >= tiempo) {
@@ -1355,10 +859,10 @@ async function activarToken() {
                         const gIdx = Math.floor(Math.random() * bolsa.length);
                         const num = bolsa.splice(gIdx, 1)[0];
                         if (c) c.classList.remove('chaos');
-                        const cg = document.getElementById(`cell-${num}`);
+                        const cg = document.getElementById('cell-' + num);
                         if (cg) cg.classList.add('winner');
                         const d = participantesRegistrados[num];
-                        db.ref(`ganadores/${num}`).set({ casilla: num, premio: nombrePremio, nombre: d.nombre, telefono: d.telefono, token: d.token, fechaSorteo: Date.now() });
+                        db.ref('ganadores/' + num).set({ casilla: num, premio: nombrePremio, nombre: d.nombre, telefono: d.telefono, token: d.token, fechaSorteo: Date.now() });
                         setTimeout(resolve, 500);
                     }
                 }, intervalo);
@@ -1367,17 +871,16 @@ async function activarToken() {
 
         // ============ RULETA ============
         const PRIZES = [
-            { label: "5% OFF",        emoji: "🎂", discount: "5%",    prob: 0.35,  color: "#ff6b6b" },
-            { label: "10% OFF",       emoji: "🍰", discount: "10%",   prob: 0.35,  color: "#4ecdc4" },
-            { label: "15% OFF",       emoji: "🧁", discount: "15%",   prob: 0.10,  color: "#45b7d1" },
-            { label: "2 SHOTS",       emoji: "🍸", discount: "2SHOTS", prob: 0.10,  color: "#6c5ce7", condicional: true },
-            { label: "1 PORCIÓN",     emoji: "🍰", discount: "PORCION", prob: 0.06, color: "#fd79a8", condicional: true },
-            { label: "20% OFF",       emoji: "🍩", discount: "20%",   prob: 0.015, color: "#96ceb4" },
-            { label: "25% OFF",       emoji: "🎁", discount: "25%",   prob: 0.015, color: "#e17055" },
-            { label: "50% OFF",       emoji: "💎", discount: "50%",   prob: 0.01,  color: "#fbbf24" }
+            { label: "5% OFF",    emoji: "🎂", discount: "5%",      prob: 0.35,  color: "#ff6b6b" },
+            { label: "10% OFF",   emoji: "🍰", discount: "10%",     prob: 0.35,  color: "#4ecdc4" },
+            { label: "15% OFF",   emoji: "🧁", discount: "15%",     prob: 0.10,  color: "#45b7d1" },
+            { label: "2 SHOTS",   emoji: "🍸", discount: "2SHOTS",  prob: 0.10,  color: "#6c5ce7", condicional: true },
+            { label: "1 PORCIÓN", emoji: "🍰", discount: "PORCION", prob: 0.06,  color: "#fd79a8", condicional: true },
+            { label: "20% OFF",   emoji: "🍩", discount: "20%",     prob: 0.015, color: "#96ceb4" },
+            { label: "25% OFF",   emoji: "🎁", discount: "25%",     prob: 0.015, color: "#e17055" },
+            { label: "50% OFF",   emoji: "💎", discount: "50%",     prob: 0.01,  color: "#fbbf24" }
         ];
 
-        // 1 TIRO POR SEMANA (7 días)
         const COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
         let currentPhone = null;
         let currentName = null;
@@ -1414,15 +917,9 @@ async function activarToken() {
                 const time = new Date(s.timestamp);
                 const hh = String(time.getHours()).padStart(2, '0');
                 const mm = String(time.getMinutes()).padStart(2, '0');
-                return `
-                    <div class="result-item ${i === 0 ? 'highlight' : ''}">
-                        <div>
-                            <div class="r-name">🎉 ${s.name || 'Anónimo'}</div>
-                            <div class="r-time">${hh}:${mm} hs</div>
-                        </div>
-                        <div class="r-prize">${s.prize}</div>
-                    </div>
-                `;
+                return '<div class="result-item ' + (i === 0 ? 'highlight' : '') + '">' +
+                    '<div><div class="r-name">🎉 ' + (s.name || 'Anónimo') + '</div><div class="r-time">' + hh + ':' + mm + ' hs</div></div>' +
+                    '<div class="r-prize">' + s.prize + '</div></div>';
             }).join('');
         }
 
@@ -1430,37 +927,20 @@ async function activarToken() {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
             const phone = cleanPhone(document.getElementById('reg-phone').value);
+            if (phone.length < 8) { showMsg('register-msg', '❌ Número inválido.', 'error'); return; }
+            if (name.length < 2) { showMsg('register-msg', '❌ Ingresá tu nombre.', 'error'); return; }
 
-            if (phone.length < 8) {
-                showMsg('register-msg', '❌ Número inválido.', 'error');
-                return;
-            }
-            if (name.length < 2) {
-                showMsg('register-msg', '❌ Ingresá tu nombre.', 'error');
-                return;
-            }
-
-            const userRef = db.ref(`ruletaUsuarios/${phone}`);
+            const userRef = db.ref('ruletaUsuarios/' + phone);
             const snap = await userRef.once('value');
 
             if (snap.exists()) {
                 const data = snap.val();
-                if (data.bloqueado) {
-                    showMsg('register-msg', '⛔ Número bloqueado.', 'error');
-                    return;
-                }
-                showMsg('register-msg', `
-                    <div class="success">
-                        ✅ ¡Ya estabas registrado, ${data.name || name}!<br>
-                        <small>Tu token es:</small>
-                        <div class="token-display">
-                            <div class="label">Tu Token</div>
-                            <div class="token-value">${data.token}</div>
-                        </div>
-                        <button class="btn-primary btn-copy" onclick="copiarToken('${data.token}')">📋 Copiar token</button>
-                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${data.token}','${name}')">📱 Guardar en mi WhatsApp</button>
-                    </div>
-                `, 'success');
+                if (data.bloqueado) { showMsg('register-msg', '⛔ Número bloqueado.', 'error'); return; }
+                showMsg('register-msg',
+                    '<div class="success">✅ ¡Ya estabas registrado, ' + (data.name || name) + '!<br><small>Tu token es:</small>' +
+                    '<div class="token-display"><div class="label">Tu Token</div><div class="token-value">' + data.token + '</div></div>' +
+                    '<button class="btn-primary btn-copy" onclick="copiarToken(\'' + data.token + '\')">📋 Copiar token</button>' +
+                    '<button class="btn-primary btn-wa" onclick="enviarTokenWA(\'' + phone + '\',\'' + data.token + '\',\'' + name + '\')">📱 Guardar en mi WhatsApp</button></div>', 'success');
                 return;
             }
 
@@ -1473,26 +953,13 @@ async function activarToken() {
             }
 
             try {
-                await userRef.set({
-                    phone, token, name,
-                    registrado: Date.now(),
-                    lastSpin: null,
-                    bloqueado: false
-                });
-
-                showMsg('register-msg', `
-                    <div class="success">
-                        🎉 <strong>¡Bienvenido ${name}!</strong><br>
-                        <small>Guardá tu token, es permanente:</small>
-                        <div class="token-display">
-                            <div class="label">Tu Token Personal</div>
-                            <div class="token-value">${token}</div>
-                        </div>
-                        <button class="btn-primary btn-copy" onclick="copiarToken('${token}')">📋 Copiar token</button>
-                        <button class="btn-primary btn-wa" onclick="enviarTokenWA('${phone}','${token}','${name}')">📱 Enviármelo a mi WhatsApp</button>
-                        <p style="margin-top:15px;font-size:13px;">👇 Después tocá "Ya tengo token" para entrar a girar</p>
-                    </div>
-                `, 'success');
+                await userRef.set({ phone: phone, token: token, name: name, registrado: Date.now(), lastSpin: null, bloqueado: false });
+                showMsg('register-msg',
+                    '<div class="success">🎉 <strong>¡Bienvenido ' + name + '!</strong><br><small>Guardá tu token, es permanente:</small>' +
+                    '<div class="token-display"><div class="label">Tu Token Personal</div><div class="token-value">' + token + '</div></div>' +
+                    '<button class="btn-primary btn-copy" onclick="copiarToken(\'' + token + '\')">📋 Copiar token</button>' +
+                    '<button class="btn-primary btn-wa" onclick="enviarTokenWA(\'' + phone + '\',\'' + token + '\',\'' + name + '\')">📱 Enviármelo a mi WhatsApp</button>' +
+                    '<p style="margin-top:15px;font-size:13px;">👇 Después tocá "Ya tengo token" para entrar a girar</p></div>', 'success');
             } catch (err) {
                 showMsg('register-msg', '❌ Error: ' + err.message, 'error');
             }
@@ -1505,44 +972,27 @@ async function activarToken() {
 
         function enviarTokenWA(phone, token, name) {
             const msg = encodeURIComponent(
-                `🎂 *MI TOKEN DE LA RULETA* 🎂\n\n` +
-                `👤 Nombre: ${name}\n` +
-                `🔑 Token: *${token}*\n` +
-                `📱 Mi número: ${phone}\n\n` +
-                `_Lo guardo para usarlo cada vez que quiera tirar (1 tiro por semana)_ 🎰`
+                '🎂 *MI TOKEN DE LA RULETA* 🎂\n\n' +
+                '👤 Nombre: ' + name + '\n' +
+                '🔑 Token: *' + token + '*\n' +
+                '📱 Mi número: ' + phone + '\n\n' +
+                '_Lo guardo para usarlo cada vez que quiera tirar (1 tiro por semana)_ 🎰'
             );
-            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+            window.open('https://wa.me/' + phone + '?text=' + msg, '_blank');
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const phone = cleanPhone(document.getElementById('login-phone').value);
             const token = document.getElementById('login-token').value.trim().toUpperCase();
+            if (phone.length < 8) { showMsg('login-msg', '❌ Número inválido.', 'error'); return; }
 
-            if (phone.length < 8) {
-                showMsg('login-msg', '❌ Número inválido.', 'error');
-                return;
-            }
-
-            const userRef = db.ref(`ruletaUsuarios/${phone}`);
+            const userRef = db.ref('ruletaUsuarios/' + phone);
             const snap = await userRef.once('value');
-
-            if (!snap.exists()) {
-                showMsg('login-msg', '❌ Número no registrado. Tocá "Soy nuevo" primero.', 'error');
-                return;
-            }
-
+            if (!snap.exists()) { showMsg('login-msg', '❌ Número no registrado. Tocá "Soy nuevo" primero.', 'error'); return; }
             const data = snap.val();
-
-            if (data.bloqueado) {
-                showMsg('login-msg', '⛔ Usuario bloqueado.', 'error');
-                return;
-            }
-
-            if (data.token !== token) {
-                showMsg('login-msg', '❌ Token incorrecto.', 'error');
-                return;
-            }
+            if (data.bloqueado) { showMsg('login-msg', '⛔ Usuario bloqueado.', 'error'); return; }
+            if (data.token !== token) { showMsg('login-msg', '❌ Token incorrecto.', 'error'); return; }
 
             if (data.lastSpin) {
                 const elapsed = Date.now() - data.lastSpin;
@@ -1551,8 +1001,8 @@ async function activarToken() {
                     const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let msg = '⏰ Ya usaste tu tiro esta semana. Volvé en ';
-                    if (days > 0) msg += `${days}d `;
-                    msg += `${hours}h`;
+                    if (days > 0) msg += days + 'd ';
+                    msg += hours + 'h';
                     showMsg('login-msg', msg, 'error');
                     return;
                 }
@@ -1594,18 +1044,12 @@ async function activarToken() {
             const wheel = document.getElementById('wheel');
             wheel.innerHTML = '';
             const segAngle = 360 / PRIZES.length;
-
             PRIZES.forEach((prize, i) => {
                 const seg = document.createElement('div');
                 seg.className = 'segment';
-                seg.style.background = `linear-gradient(135deg, ${prize.color}, ${adjustColor(prize.color, -30)})`;
-                seg.style.transform = `rotate(${i * segAngle}deg) skewY(${-(90 - segAngle)}deg)`;
-                seg.innerHTML = `
-                    <div class="segment-label">
-                        <span class="emoji">${prize.emoji}</span>
-                        ${prize.label}
-                    </div>
-                `;
+                seg.style.background = 'linear-gradient(135deg, ' + prize.color + ', ' + adjustColor(prize.color, -30) + ')';
+                seg.style.transform = 'rotate(' + (i * segAngle) + 'deg) skewY(' + (-(90 - segAngle)) + 'deg)';
+                seg.innerHTML = '<div class="segment-label"><span class="emoji">' + prize.emoji + '</span>' + prize.label + '</div>';
                 wheel.appendChild(seg);
             });
         }
@@ -1615,7 +1059,7 @@ async function activarToken() {
             const r = Math.min(255, Math.max(0, (num >> 16) + amount));
             const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
             const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
-            return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+            return '#' + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
         }
 
         function createLights() {
@@ -1630,8 +1074,8 @@ async function activarToken() {
                 const y = 50 + radius * Math.sin(rad);
                 const dot = document.createElement('div');
                 dot.className = 'light-dot';
-                dot.style.left = `calc(${x}% - 6px)`;
-                dot.style.top = `calc(${y}% - 6px)`;
+                dot.style.left = 'calc(' + x + '% - 6px)';
+                dot.style.top = 'calc(' + y + '% - 6px)';
                 container.appendChild(dot);
             }
         }
@@ -1654,7 +1098,6 @@ async function activarToken() {
         document.getElementById('spin-btn').addEventListener('click', async () => {
             if (spinning || !canSpin || !currentPhone) return;
             spinning = true;
-
             const spinBtn = document.getElementById('spin-btn');
             const pointer = document.getElementById('pointer');
             const spinningText = document.getElementById('spinning-text');
@@ -1669,21 +1112,16 @@ async function activarToken() {
             const pIdx = pickPrize();
             const prize = PRIZES[pIdx];
             const segAngle = 360 / PRIZES.length;
-
             const targetAngle = 360 - (pIdx * segAngle + segAngle / 2);
-
             const fullSpins = 8;
             const overshoot = 15;
             const finalRotation = fullSpins * 360 + targetAngle + overshoot;
 
             wheel.classList.add('spinning');
-            wheel.style.transform = `rotate(${finalRotation}deg)`;
-
+            wheel.style.transform = 'rotate(' + finalRotation + 'deg)';
             await new Promise(r => setTimeout(r, 7000));
-
             wheel.style.transition = 'transform 0.5s ease-out';
-            wheel.style.transform = `rotate(${finalRotation - overshoot}deg)`;
-
+            wheel.style.transform = 'rotate(' + (finalRotation - overshoot) + 'deg)';
             await new Promise(r => setTimeout(r, 600));
 
             pointer.classList.remove('spinning');
@@ -1692,67 +1130,46 @@ async function activarToken() {
 
             try {
                 const now = Date.now();
-                await db.ref(`ruletaUsuarios/${currentPhone}/lastSpin`).set(now);
-
-                await db.ref('ruletaSpins').push({
-                    phone: currentPhone,
-                    name: currentName,
-                    prize: prize.label,
-                    discount: prize.discount,
-                    timestamp: now
-                });
+                await db.ref('ruletaUsuarios/' + currentPhone + '/lastSpin').set(now);
+                await db.ref('ruletaSpins').push({ phone: currentPhone, name: currentName, prize: prize.label, discount: prize.discount, timestamp: now });
 
                 const time = new Date(now);
                 const hh = String(time.getHours()).padStart(2, '0');
                 const mm = String(time.getMinutes()).padStart(2, '0');
                 let codigo;
-                if (prize.discount === '2SHOTS') {
-                    codigo = `${currentPhone.slice(-4)}-2SH`;
-                } else if (prize.discount === 'PORCION') {
-                    codigo = `${currentPhone.slice(-4)}-1P`;
-                } else {
-                    codigo = `${currentPhone.slice(-4)}-${prize.discount.replace(/\D/g,'') || 'SHOT'}`;
-                }
+                if (prize.discount === '2SHOTS') codigo = currentPhone.slice(-4) + '-2SH';
+                else if (prize.discount === 'PORCION') codigo = currentPhone.slice(-4) + '-1P';
+                else codigo = currentPhone.slice(-4) + '-' + (prize.discount.replace(/\D/g, '') || 'SHOT');
 
                 showResultPopup(currentName, prize, hh, mm, codigo);
-
                 canSpin = false;
                 spinBtn.textContent = "Volvé la próxima semana 🌙";
             } catch (e) {
                 alert("Error guardando tu premio. Contactanos por WhatsApp.");
             }
-
             spinning = false;
         });
 
         function showResultPopup(name, prize, hh, mm, codigo) {
             const popup = document.createElement('div');
             popup.className = 'result-popup';
-            
-            const condicionHTML = prize.condicional 
-                ? `<p style="font-size:12px;color:#78350f;margin-bottom:10px;background:#fef3c7;padding:8px;border-radius:8px;border:1px dashed #d97706;">
-                     ⚠️ Válido en compras superiores a <strong>$10.000</strong>
-                   </p>` 
+            const condicionHTML = prize.condicional
+                ? '<p style="font-size:12px;color:#78350f;margin-bottom:10px;background:#fef3c7;padding:8px;border-radius:8px;border:1px dashed #d97706;">⚠️ Válido en compras superiores a <strong>$10.000</strong></p>'
                 : '';
-            
-            popup.innerHTML = `
-                <div class="result-popup-content">
-                    <div class="congrats">🎉 ¡FELICITACIONES! 🎉</div>
-                    <div class="winner-name">${name}</div>
-                    <div style="color:#92400e;">obtuvo</div>
-                    <div class="prize-won">${prize.emoji} ${prize.label}</div>
-                    <div class="prize-time">🕐 ${hh}:${mm} hs</div>
-                    <div class="coupon-code">${codigo}</div>
-                    ${condicionHTML}
-                    <p style="font-size:13px;color:#78350f;margin-bottom:15px;">Mostrá este código al hacer tu pedido</p>
-                    <button class="btn-primary btn-wa" onclick="compartirInstagram('${prize.emoji}', '${prize.label}', '${name}', '${codigo}')">
-                        📸 Compartir en Instagram
-                    </button>
-                    <button class="btn-primary" onclick="this.closest('.result-popup').remove()">✅ ¡Genial!</button>
-                </div>
-            `;
+            popup.innerHTML =
+                '<div class="result-popup-content">' +
+                '<div class="congrats">🎉 ¡FELICITACIONES! 🎉</div>' +
+                '<div class="winner-name">' + name + '</div>' +
+                '<div style="color:#92400e;">obtuvo</div>' +
+                '<div class="prize-won">' + prize.emoji + ' ' + prize.label + '</div>' +
+                '<div class="prize-time">🕐 ' + hh + ':' + mm + ' hs</div>' +
+                '<div class="coupon-code">' + codigo + '</div>' +
+                condicionHTML +
+                '<p style="font-size:13px;color:#78350f;margin-bottom:15px;">Mostrá este código al hacer tu pedido</p>' +
+                '<button class="btn-primary btn-wa" onclick="compartirInstagram(\'' + prize.emoji + '\', \'' + prize.label + '\', \'' + name + '\', \'' + codigo + '\')">📸 Compartir en Instagram</button>' +
+                '<button class="btn-primary" onclick="this.closest(\'.result-popup\').remove()">✅ ¡Genial!</button>' +
+                '</div>';
             document.body.appendChild(popup);
-
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -1772,42 +1189,22 @@ async function activarToken() {
 
         function showAdminLoginModal() {
             if (document.getElementById('admin-login-modal')) return;
-
             const modal = document.createElement('div');
             modal.id = 'admin-login-modal';
-            modal.style.cssText = `
-                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.85); z-index: 9999;
-                display: flex; align-items: center; justify-content: center;
-            `;
-            modal.innerHTML = `
-                <div style="
-                    background: white; border-radius: 20px; padding: 30px;
-                    max-width: 350px; width: 90%; text-align: center;
-                    border: 3px solid #db2777; box-shadow: 0 0 40px rgba(219,39,119,0.5);
-                ">
-                    <h3 style="color:#db2777;margin-bottom:15px;">🔐 Acceso Admin</h3>
-                    <p style="font-size:13px;color:#666;margin-bottom:20px;">Ingresá tu token de administrador</p>
-                    <input type="password" id="admin-token-input" placeholder="Token admin" 
-                           style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-bottom:15px;">
-                    <div id="admin-login-error" style="color:#dc2626;font-size:13px;margin-bottom:10px;display:none;"></div>
-                    <button onclick="submitAdminToken()" style="
-                        width:100%;padding:12px;background:linear-gradient(135deg,#db2777,#f472b6);
-                        color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer;
-                    ">Ingresar</button>
-                    <button onclick="closeAdminLoginModal()" style="
-                        width:100%;padding:10px;background:#f3f4f6;color:#666;
-                        border:none;border-radius:10px;margin-top:10px;cursor:pointer;
-                    ">Cancelar</button>
-                </div>
-            `;
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;';
+            modal.innerHTML =
+                '<div style="background:white;border-radius:20px;padding:30px;max-width:350px;width:90%;text-align:center;border:3px solid #db2777;box-shadow:0 0 40px rgba(219,39,119,0.5);">' +
+                '<h3 style="color:#db2777;margin-bottom:15px;">🔐 Acceso Admin</h3>' +
+                '<p style="font-size:13px;color:#666;margin-bottom:20px;">Ingresá tu token de administrador</p>' +
+                '<input type="password" id="admin-token-input" placeholder="Token admin" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-bottom:15px;">' +
+                '<div id="admin-login-error" style="color:#dc2626;font-size:13px;margin-bottom:10px;display:none;"></div>' +
+                '<button onclick="submitAdminToken()" style="width:100%;padding:12px;background:linear-gradient(135deg,#db2777,#f472b6);color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer;">Ingresar</button>' +
+                '<button onclick="closeAdminLoginModal()" style="width:100%;padding:10px;background:#f3f4f6;color:#666;border:none;border-radius:10px;margin-top:10px;cursor:pointer;">Cancelar</button>' +
+                '</div>';
             document.body.appendChild(modal);
-            
             const input = document.getElementById('admin-token-input');
             input.focus();
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') submitAdminToken();
-            });
+            input.addEventListener('keypress', (e) => { if (e.key === 'Enter') submitAdminToken(); });
         }
 
         function closeAdminLoginModal() {
@@ -1818,23 +1215,11 @@ async function activarToken() {
         async function submitAdminToken() {
             const inputToken = document.getElementById('admin-token-input').value.trim();
             const errorEl = document.getElementById('admin-login-error');
-            
-            if (!inputToken) {
-                errorEl.textContent = 'Ingresá un token';
-                errorEl.style.display = 'block';
-                return;
-            }
-
+            if (!inputToken) { errorEl.textContent = 'Ingresá un token'; errorEl.style.display = 'block'; return; }
             try {
                 const snap = await db.ref('admin').once('value');
                 const adminData = snap.val();
-                
-                if (!adminData || !adminData.token) {
-                    errorEl.textContent = '❌ Token admin no configurado';
-                    errorEl.style.display = 'block';
-                    return;
-                }
-
+                if (!adminData || !adminData.token) { errorEl.textContent = '❌ Token admin no configurado'; errorEl.style.display = 'block'; return; }
                 if (inputToken === adminData.token) {
                     closeAdminLoginModal();
                     openAdminPanel(adminData.sessionMinutes || 15);
@@ -1842,10 +1227,7 @@ async function activarToken() {
                     errorEl.textContent = '❌ Token incorrecto';
                     errorEl.style.display = 'block';
                     document.getElementById('admin-token-input').value = '';
-                    db.ref('adminIntentosFallidos').push({
-                        fecha: Date.now(),
-                        tokenUsado: inputToken.substring(0, 3) + '***'
-                    });
+                    db.ref('adminIntentosFallidos').push({ fecha: Date.now(), tokenUsado: inputToken.substring(0, 3) + '***' });
                 }
             } catch (err) {
                 errorEl.textContent = '❌ Error: ' + err.message;
@@ -1857,34 +1239,21 @@ async function activarToken() {
             adminSessionExpires = Date.now() + (sessionMinutes * 60 * 1000);
             document.getElementById('admin-panel').classList.remove('hidden');
             actualizarAdminPanel();
-            
             if (sessionCheckInterval) clearInterval(sessionCheckInterval);
             sessionCheckInterval = setInterval(() => {
-                if (Date.now() > adminSessionExpires) {
-                    closeAdminPanel();
-                    alert('⏰ Sesión expirada');
-                }
+                if (Date.now() > adminSessionExpires) { closeAdminPanel(); alert('⏰ Sesión expirada'); }
             }, 5000);
         }
 
         function closeAdminPanel() {
             document.getElementById('admin-panel').classList.add('hidden');
             adminSessionExpires = 0;
-            if (sessionCheckInterval) {
-                clearInterval(sessionCheckInterval);
-                sessionCheckInterval = null;
-            }
+            if (sessionCheckInterval) { clearInterval(sessionCheckInterval); sessionCheckInterval = null; }
         }
 
         function toggleAdmin() {
-            if (!document.getElementById('admin-panel').classList.contains('hidden')) {
-                closeAdminPanel();
-                return;
-            }
-            if (adminSessionExpires > Date.now()) {
-                openAdminPanel(15);
-                return;
-            }
+            if (!document.getElementById('admin-panel').classList.contains('hidden')) { closeAdminPanel(); return; }
+            if (adminSessionExpires > Date.now()) { openAdminPanel(15); return; }
             showAdminLoginModal();
         }
 
@@ -1894,29 +1263,24 @@ async function activarToken() {
                 logoTapCount++;
                 if (logoTapTimer) clearTimeout(logoTapTimer);
                 logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
-                if (logoTapCount >= 5) {
-                    logoTapCount = 0;
-                    toggleAdmin();
-                }
+                if (logoTapCount >= 5) { logoTapCount = 0; toggleAdmin(); }
             });
         }
 
         function actualizarAdminPanel() {
             const ocupadas = Object.keys(participantesRegistrados).length;
             const s = document.getElementById('admin-status');
-            if (s) s.innerHTML = `<strong>Números vendidos:</strong> ${ocupadas}/${TOTAL_CASILLAS}<br><strong>Ganadores:</strong> ${Object.keys(ganadoresLista).length}/3`;
-
+            if (s) s.innerHTML = '<strong>Números vendidos:</strong> ' + ocupadas + '/' + TOTAL_CASILLAS + '<br><strong>Ganadores:</strong> ' + Object.keys(ganadoresLista).length + '/3';
             const g = document.getElementById('admin-ganadores');
             if (g) {
                 if (!Object.keys(ganadoresLista).length) {
                     g.innerHTML = '<p style="color:#666;font-size:13px;">Sin ganadores aún</p>';
                 } else {
                     g.innerHTML = Object.entries(ganadoresLista).map(([n, d]) =>
-                        `<div class="admin-item"><span><strong>#${String(n).padStart(2,'0')}</strong> ${d.nombre} - ${d.premio}</span></div>`
+                        '<div class="admin-item"><span><strong>#' + String(n).padStart(2, '0') + '</strong> ' + d.nombre + ' - ' + d.premio + '</span></div>'
                     ).join('');
                 }
             }
-
             const rc = document.getElementById('admin-ruleta-count');
             const ru = document.getElementById('admin-ruleta-users');
             if (rc && ru) {
@@ -1925,24 +1289,48 @@ async function activarToken() {
                 if (!users.length) {
                     ru.innerHTML = '<p style="color:#666;font-size:13px;">Sin usuarios</p>';
                 } else {
-                    ru.innerHTML = users.map(([phone, data]) => `
-                        <div class="admin-item">
-                            <span>
-                                <strong>${data.name || 'Sin nombre'}</strong> (+${phone})<br>
-                                <small>Token: <code>${data.token}</code></small><br>
-                                <small>${data.bloqueado ? '⛔ Bloqueado' : '✅ Activo'}</small>
-                            </span>
-                            <button onclick="bloquearUsuario('${phone}', ${!data.bloqueado})">${data.bloqueado ? '✓' : '⛔'}</button>
-                        </div>
-                    `).join('');
+                    ru.innerHTML = users.map(([phone, data]) =>
+                        '<div class="admin-item"><span><strong>' + (data.name || 'Sin nombre') + '</strong> (+' + phone + ')<br>' +
+                        '<small>Token: <code>' + data.token + '</code></small><br>' +
+                        '<small>' + (data.bloqueado ? '⛔ Bloqueado' : '✅ Activo') + '</small></span>' +
+                        '<button onclick="bloquearUsuario(\'' + phone + '\', ' + (!data.bloqueado) + ')">' + (data.bloqueado ? '✓' : '⛔') + '</button></div>'
+                    ).join('');
                 }
             }
         }
 
         async function bloquearUsuario(phone, bloquear) {
-            if (!confirm(`${bloquear ? 'Bloquear' : 'Desbloquear'} a ${phone}?`)) return;
-            await db.ref(`ruletaUsuarios/${phone}/bloqueado`).set(bloquear);
+            if (!confirm((bloquear ? 'Bloquear' : 'Desbloquear') + ' a ' + phone + '?')) return;
+            await db.ref('ruletaUsuarios/' + phone + '/bloqueado').set(bloquear);
             alert('✅ Listo');
+        }
+
+        async function verTokenCasilla() {
+            const casilla = parseInt(document.getElementById('admin-casilla').value);
+            if (!casilla || casilla < 1 || casilla > 100) { alert('Poné una casilla entre 1 y 100'); return; }
+            const snap = await db.ref('tokens').once('value');
+            let tk = null;
+            snap.forEach(ch => { if (ch.val().casilla === casilla) tk = ch.key; });
+            alert(tk ? '🔑 Token de la casilla #' + casilla + ': ' + tk : 'No hay token para esa casilla');
+        }
+
+        async function registrarManual() {
+            const casilla = parseInt(document.getElementById('admin-casilla').value);
+            const nombre = document.getElementById('admin-nombre').value.trim();
+            const telefono = document.getElementById('admin-telefono').value.trim();
+            if (!casilla || casilla < 1 || casilla > 100) { alert('Casilla entre 1 y 100'); return; }
+            if (!nombre || !telefono) { alert('Completá nombre y teléfono'); return; }
+            if (participantesRegistrados[casilla]) { alert('La casilla #' + casilla + ' ya está ocupada'); return; }
+            const snap = await db.ref('tokens').once('value');
+            let tokenKey = null;
+            snap.forEach(ch => { if (ch.val().casilla === casilla) tokenKey = ch.key; });
+            if (!tokenKey) { alert('No hay token para esa casilla'); return; }
+            await db.ref('tokens/' + tokenKey).update({ usado: true, nombre: nombre, telefono: telefono, fechaUso: Date.now() });
+            await db.ref('casillas/' + casilla).set({ nombre: nombre, telefono: telefono, token: tokenKey, fecha: Date.now() });
+            alert('✅ Casilla #' + casilla + ' asignada a ' + nombre + '\n🔑 Token: ' + tokenKey);
+            document.getElementById('admin-casilla').value = '';
+            document.getElementById('admin-nombre').value = '';
+            document.getElementById('admin-telefono').value = '';
         }
 
         async function forceSorteo() {
@@ -1961,7 +1349,7 @@ async function activarToken() {
             const t = await db.ref('tokens').once('value');
             if (t.exists()) {
                 Object.keys(t.val()).forEach(k => {
-                    db.ref(`tokens/${k}`).update({ usado: false, casilla: null, nombre: null, telefono: null, fechaUso: null });
+                    db.ref('tokens/' + k).update({ usado: false, nombre: null, telefono: null, fechaUso: null });
                 });
             }
             sorteoEjecutado = false;
@@ -1973,213 +1361,155 @@ async function activarToken() {
             if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
             let txt = "🏆 *GANADORES SORTEO DÍA DE LA MADRE* 🏆\n\n";
             Object.values(ganadoresLista).forEach(g => {
-                txt += `🎁 *${g.premio}*\n👤 ${g.nombre}\n📞 ${g.telefono}\n🔢 #${String(g.casilla).padStart(2,'0')}\n\n`;
+                txt += '🎁 *' + g.premio + '*\n👤 ' + g.nombre + '\n📞 ' + g.telefono + '\n🔢 #' + String(g.casilla).padStart(2, '0') + '\n\n';
             });
-            window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
-        }
-async function verTokenCasilla() {
-    const casilla = parseInt(document.getElementById('admin-casilla').value);
-    if (!casilla || casilla < 1 || casilla > 100) { alert('Poné una casilla entre 1 y 100'); return; }
-    const snap = await db.ref('tokens').once('value');
-    let tk = null;
-    snap.forEach(ch => { if (ch.val().casilla === casilla) tk = ch.key; });
-    alert(tk ? `🔑 Token de la casilla #${casilla}: ${tk}` : 'No hay token para esa casilla');
-}
-
-async function registrarManual() {
-    const casilla = parseInt(document.getElementById('admin-casilla').value);
-    const nombre = document.getElementById('admin-nombre').value.trim();
-    const telefono = document.getElementById('admin-telefono').value.trim();
-
-    if (!casilla || casilla < 1 || casilla > 100) { alert('Casilla entre 1 y 100'); return; }
-    if (!nombre || !telefono) { alert('Completá nombre y teléfono'); return; }
-    if (participantesRegistrados[casilla]) { alert(`La casilla #${casilla} ya está ocupada`); return; }
-
-    const snap = await db.ref('tokens').once('value');
-    let tokenKey = null;
-    snap.forEach(ch => { if (ch.val().casilla === casilla) tokenKey = ch.key; });
-    if (!tokenKey) { alert('No hay token para esa casilla'); return; }
-
-    await db.ref(`tokens/${tokenKey}`).update({
-        usado: true, nombre, telefono, fechaUso: Date.now()
-    });
-    await db.ref(`casillas/${casilla}`).set({
-        nombre, telefono, token: tokenKey, fecha: Date.now()
-    });
-
-    alert(`✅ Casilla #${casilla} asignada a ${nombre}\n🔑 Token: ${tokenKey}`);
-    document.getElementById('admin-casilla').value = '';
-    document.getElementById('admin-nombre').value = '';
-    document.getElementById('admin-telefono').value = '';
-}
-        if (location.hash === '#admin') toggleAdmin();
-
-
-// ============ COMPARTIR EN INSTAGRAM ============
-async function compartirInstagram(emoji, premio, nombre, codigo) {
-    try {
-        const canvas = document.createElement('canvas');
-        const WIDTH = 1080;
-        const HEIGHT = 1350; // Formato 4:5 ideal para Instagram
-        canvas.width = WIDTH;
-        canvas.height = HEIGHT;
-        const ctx = canvas.getContext('2d');
-
-        // === FONDO degradado rosa ===
-        const grad = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
-        grad.addColorStop(0, '#fff5f7');
-        grad.addColorStop(0.5, '#fce7f3');
-        grad.addColorStop(1, '#fbcfe8');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        // === Borde decorativo ===
-        ctx.strokeStyle = '#ec4899';
-        ctx.lineWidth = 12;
-        ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
-        ctx.strokeStyle = '#fbbf24';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(48, 48, WIDTH - 96, HEIGHT - 96);
-
-        // === Flores decorativas en esquinas ===
-        ctx.font = '70px serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('🌸', 95, 115);
-        ctx.fillText('💐', WIDTH - 95, 115);
-        ctx.fillText('🌷', 95, HEIGHT - 75);
-        ctx.fillText('🌺', WIDTH - 95, HEIGHT - 75);
-
-        // === LOGO circular arriba ===
-        try {
-            const logoImg = await cargarImagen('logo.png');
-            const logoR = 78;
-            const logoY = 145;
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(WIDTH / 2, logoY, logoR, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
-            ctx.drawImage(logoImg, WIDTH / 2 - logoR, logoY - logoR, logoR * 2, logoR * 2);
-            ctx.restore();
-            ctx.beginPath();
-            ctx.arc(WIDTH / 2, logoY, logoR + 4, 0, Math.PI * 2);
-            ctx.strokeStyle = '#ec4899';
-            ctx.lineWidth = 6;
-            ctx.stroke();
-        } catch (e) {
-            // Si no hay logo, sigue sin él
+            window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
         }
 
-        // === Nombre del negocio ===
-        ctx.fillStyle = '#be185d';
-        ctx.font = 'bold 46px Segoe UI, sans-serif';
-        ctx.fillText('💐 DULCE MAGUI 💐', WIDTH / 2, 285);
+        // ============ COMPARTIR EN INSTAGRAM ============
+        async function compartirInstagram(emoji, premio, nombre, codigo) {
+            try {
+                const canvas = document.createElement('canvas');
+                const WIDTH = 1080;
+                const HEIGHT = 1350;
+                canvas.width = WIDTH;
+                canvas.height = HEIGHT;
+                const ctx = canvas.getContext('2d');
 
-        // === ¡GANÉ! ===
-        ctx.fillStyle = '#db2777';
-        ctx.font = 'bold 60px Segoe UI, sans-serif';
-        ctx.fillText('¡GANÉ EN LA RULETA!', WIDTH / 2, 360);
+                const grad = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+                grad.addColorStop(0, '#fff5f7');
+                grad.addColorStop(0.5, '#fce7f3');
+                grad.addColorStop(1, '#fbcfe8');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        // === Premio grande ===
-        ctx.font = '105px serif';
-        ctx.fillText(emoji, WIDTH / 2, 465);
+                ctx.strokeStyle = '#ec4899';
+                ctx.lineWidth = 12;
+                ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(48, 48, WIDTH - 96, HEIGHT - 96);
 
-        ctx.fillStyle = '#92400e';
-        ctx.font = 'bold 74px Segoe UI, sans-serif';
-        ctx.fillText(premio, WIDTH / 2, 550);
+                ctx.font = '70px serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('🌸', 95, 115);
+                ctx.fillText('💐', WIDTH - 95, 115);
+                ctx.fillText('🌷', 95, HEIGHT - 75);
+                ctx.fillText('🌺', WIDTH - 95, HEIGHT - 75);
 
-        // === Nombre ganador ===
-        ctx.fillStyle = '#4a3038';
-        ctx.font = '40px Segoe UI, sans-serif';
-        ctx.fillText(`🎉 ${nombre} 🎉`, WIDTH / 2, 610);
-
-        // === Ruleta de Descuentos ===
-        ctx.fillStyle = '#be185d';
-        ctx.font = 'bold 44px Segoe UI, sans-serif';
-        ctx.fillText('RULETA DE DESCUENTOS', WIDTH / 2, 675);
-
-        ctx.fillStyle = '#8b5a6b';
-        ctx.font = 'italic 34px Segoe UI, sans-serif';
-        ctx.fillText('¡Tirá gratis y ganá! 🎡', WIDTH / 2, 718);
-
-        // === Cuadro blanco para el QR ===
-        const qrSize = 220;
-        const qrX = WIDTH / 2 - qrSize / 2;
-        const qrY = 745;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
-        ctx.strokeStyle = '#ec4899';
-        ctx.lineWidth = 5;
-        ctx.strokeRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
-
-        try {
-            const qrImg = await cargarImagen('QRWEB.png');
-            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-        } catch (e) {
-            ctx.fillStyle = '#f3f4f6';
-            ctx.fillRect(qrX, qrY, qrSize, qrSize);
-            ctx.fillStyle = '#9ca3af';
-            ctx.font = '30px Segoe UI, sans-serif';
-            ctx.fillText('QR', WIDTH / 2, qrY + qrSize / 2);
-        }
-
-        // === Texto debajo del QR ===
-        ctx.fillStyle = '#be185d';
-        ctx.font = 'bold 34px Segoe UI, sans-serif';
-        ctx.fillText('🎡 Escaneá y probá tu suerte', WIDTH / 2, qrY + qrSize + 55);
-
-        // === Instagram handle ===
-        ctx.fillStyle = '#db2777';
-        ctx.font = 'bold 36px Segoe UI, sans-serif';
-        ctx.fillText('📸 @tortas.dulcemagui', WIDTH / 2, qrY + qrSize + 100);
-
-        // === Compartir o descargar ===
-        canvas.toBlob(async (blob) => {
-            if (!blob) {
-                alert('❌ No se pudo generar la imagen');
-                return;
-            }
-            const archivo = new File([blob], 'mi-premio-sorteo.png', { type: 'image/png' });
-
-            if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
                 try {
-                    await navigator.share({
-                        files: [archivo],
-                        title: '¡Gané en la ruleta!',
-                        text: `🎉 ¡Gané ${premio} en la Ruleta de Descuentos de @tortas.dulcemagui! Tirá gratis y ganá vos también 🎡💐`
-                    });
-                    return;
+                    const logoImg = await cargarImagen('logo.png');
+                    const logoR = 78;
+                    const logoY = 145;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(WIDTH / 2, logoY, logoR, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(logoImg, WIDTH / 2 - logoR, logoY - logoR, logoR * 2, logoR * 2);
+                    ctx.restore();
+                    ctx.beginPath();
+                    ctx.arc(WIDTH / 2, logoY, logoR + 4, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#ec4899';
+                    ctx.lineWidth = 6;
+                    ctx.stroke();
+                } catch (e) {}
+
+                ctx.fillStyle = '#be185d';
+                ctx.font = 'bold 46px Segoe UI, sans-serif';
+                ctx.fillText('💐 DULCE MAGUI 💐', WIDTH / 2, 285);
+
+                ctx.fillStyle = '#db2777';
+                ctx.font = 'bold 60px Segoe UI, sans-serif';
+                ctx.fillText('¡GANÉ EN LA RULETA!', WIDTH / 2, 360);
+
+                ctx.font = '105px serif';
+                ctx.fillText(emoji, WIDTH / 2, 465);
+
+                ctx.fillStyle = '#92400e';
+                ctx.font = 'bold 74px Segoe UI, sans-serif';
+                ctx.fillText(premio, WIDTH / 2, 550);
+
+                ctx.fillStyle = '#4a3038';
+                ctx.font = '40px Segoe UI, sans-serif';
+                ctx.fillText('🎉 ' + nombre + ' 🎉', WIDTH / 2, 610);
+
+                ctx.fillStyle = '#be185d';
+                ctx.font = 'bold 44px Segoe UI, sans-serif';
+                ctx.fillText('RULETA DE DESCUENTOS', WIDTH / 2, 675);
+
+                ctx.fillStyle = '#8b5a6b';
+                ctx.font = 'italic 34px Segoe UI, sans-serif';
+                ctx.fillText('¡Tirá gratis y ganá! 🎡', WIDTH / 2, 718);
+
+                const qrSize = 220;
+                const qrX = WIDTH / 2 - qrSize / 2;
+                const qrY = 745;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+                ctx.strokeStyle = '#ec4899';
+                ctx.lineWidth = 5;
+                ctx.strokeRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
+
+                try {
+                    const qrImg = await cargarImagen('QRWEB.png');
+                    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
                 } catch (e) {
-                    // Si cancela, cae al download
+                    ctx.fillStyle = '#f3f4f6';
+                    ctx.fillRect(qrX, qrY, qrSize, qrSize);
+                    ctx.fillStyle = '#9ca3af';
+                    ctx.font = '30px Segoe UI, sans-serif';
+                    ctx.fillText('QR', WIDTH / 2, qrY + qrSize / 2);
                 }
+
+                ctx.fillStyle = '#be185d';
+                ctx.font = 'bold 34px Segoe UI, sans-serif';
+                ctx.fillText('🎡 Escaneá y probá tu suerte', WIDTH / 2, qrY + qrSize + 55);
+
+                ctx.fillStyle = '#db2777';
+                ctx.font = 'bold 36px Segoe UI, sans-serif';
+                ctx.fillText('📸 @tortas.dulcemagui', WIDTH / 2, qrY + qrSize + 100);
+
+                canvas.toBlob(async (blob) => {
+                    if (!blob) { alert('❌ No se pudo generar la imagen'); return; }
+                    const archivo = new File([blob], 'mi-premio-sorteo.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+                        try {
+                            await navigator.share({
+                                files: [archivo],
+                                title: '¡Gané en la ruleta!',
+                                text: '🎉 ¡Gané ' + premio + ' en la Ruleta de Descuentos de @tortas.dulcemagui! Tirá gratis y ganá vos también 🎡💐'
+                            });
+                            return;
+                        } catch (e) {}
+                    }
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'mi-premio-sorteo.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    alert('📸 Imagen descargada!\n\nSubila a Instagram y etiquetá a @tortas.dulcemagui 💐');
+                }, 'image/png');
+            } catch (error) {
+                console.error('Error al generar imagen:', error);
+                alert('❌ Error al generar la imagen: ' + error.message);
             }
+        }
 
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'mi-premio-sorteo.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            alert('📸 Imagen descargada!\n\nSubila a Instagram y etiquetá a @tortas.dulcemagui 💐');
-        }, 'image/png');
+        function cargarImagen(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
 
-    } catch (error) {
-        console.error('Error al generar imagen:', error);
-        alert('❌ Error al generar la imagen: ' + error.message);
-    }
-}
-
-function cargarImagen(src) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = src;
-    });
-}
+        if (location.hash === '#admin') toggleAdmin();
     </script>
 </body>
 </html>
