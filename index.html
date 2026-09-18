@@ -670,21 +670,24 @@
         }
 
         // ============ SORTEO DÍA DE LA MADRE ============
-        const TOTAL_CASILLAS = 100;
-        const grid = document.getElementById('grid');
+        
+const TOTAL_CASILLAS = 100;
+const grid = document.getElementById('grid');
 
-        const premios = [
-            { catId: 'prize-1', nombre: 'BOX 1', cantidad: 1 },
-            { catId: 'prize-2', nombre: 'BOX 2', cantidad: 1 },
-            { catId: 'prize-3', nombre: 'BOX 3', cantidad: 1 }
-        ];
+const premios = [
+    { catId: 'prize-1', nombre: 'BOX 1', cantidad: 1 },
+    { catId: 'prize-2', nombre: 'BOX 2', cantidad: 1 },
+    { catId: 'prize-3', nombre: 'BOX 3', cantidad: 1 }
+];
 
-        const FECHA_SORTEO_FIJA = "2026-10-17T23:00:00Z";
+const FECHA_SORTEO_FIJA = "2026-10-17T23:00:00Z";
 
-        let participantesRegistrados = {};
-        let sorteoEjecutado = false;
-        let timerInterval = null;
-        let ganadoresLista = {};
+let participantesRegistrados = {};
+let sorteoEjecutado = false;
+let timerInterval = null;
+let ganadoresLista = {};
+let fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
+let ganadoresAnimados = new Set();
 
 function crearGrid() {
     grid.innerHTML = '';
@@ -699,84 +702,118 @@ function crearGrid() {
 }
 crearGrid();
 
-// === Ver dueño de la casilla (datos parcialmente ocultos) ===
 function verCasilla(numero) {
     const data = participantesRegistrados[numero];
     const numTxt = String(numero).padStart(2, '0');
-
     if (!data) {
         alert('🎫 La casilla #' + numTxt + ' está LIBRE.\n\n📲 ¡Conseguila por WhatsApp!');
         return;
     }
-
     const nombre = (data.nombre || '?').trim();
     const nombreOculto = nombre.charAt(0).toUpperCase() + '*****';
     const tel = (data.telefono || '').replace(/\D/g, '');
     const telOculto = '****' + tel.slice(-4);
-
     alert('🎀 Casilla #' + numTxt + '\n👤 ' + nombreOculto + '\n📱 ' + telOculto);
 }
-        crearGrid();
-        
 
-        db.ref('casillas').on('value', (snapshot) => {
-            participantesRegistrados = snapshot.val() || {};
-            const ocupadas = Object.keys(participantesRegistrados).length;
-            document.getElementById('casillas-counter').innerText = 'Números: ' + ocupadas + ' / ' + TOTAL_CASILLAS;
-            const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
-            const pf = document.getElementById('progress-fill');
-            pf.style.width = porcentaje + '%';
-            pf.innerText = Math.round(porcentaje) + '%';
-
-            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                const cell = document.getElementById('cell-' + i);
-                if (cell) {
-                    if (participantesRegistrados[i]) {
-                        cell.classList.add('occupied');
-                        cell.title = 'Reservado por: ' + participantesRegistrados[i].nombre;
-                    } else {
-                        cell.classList.remove('occupied');
-                        cell.title = '';
-                    }
-                }
+db.ref('casillas').on('value', (snapshot) => {
+    participantesRegistrados = snapshot.val() || {};
+    const ocupadas = Object.keys(participantesRegistrados).length;
+    document.getElementById('casillas-counter').innerText = 'Números: ' + ocupadas + ' / ' + TOTAL_CASILLAS;
+    const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
+    const pf = document.getElementById('progress-fill');
+    pf.style.width = porcentaje + '%';
+    pf.innerText = Math.round(porcentaje) + '%';
+    for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+        const cell = document.getElementById('cell-' + i);
+        if (cell) {
+            if (participantesRegistrados[i]) {
+                cell.classList.add('occupied');
+                cell.title = 'Reservado por: ' + participantesRegistrados[i].nombre;
+            } else {
+                cell.classList.remove('occupied');
+                cell.title = '';
             }
-            actualizarAdminPanel();
-        });
+        }
+    }
+    actualizarAdminPanel();
+});
 
-        db.ref('ganadores').on('value', (snap) => {
-            ganadoresLista = snap.val() || {};
-            renderizarGanadores();
-            actualizarAdminPanel();
-        });
+db.ref('ganadores').on('value', (snap) => {
+    ganadoresLista = snap.val() || {};
+    renderizarGanadores();
+    actualizarAdminPanel();
+});
 
-        function renderizarGanadores() {
-            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
-            const agrupado = {};
-            Object.values(ganadoresLista).forEach(g => {
-                if (!agrupado[g.premio]) agrupado[g.premio] = [];
-                agrupado[g.premio].push(g);
-            });
-            Object.entries(agrupado).forEach(([premio, gs]) => {
-                let catId = null;
-                premios.forEach(p => { if (premio.startsWith(p.nombre)) catId = p.catId; });
-                if (catId) {
-                    const lista = document.getElementById(catId);
-                    gs.forEach(g => {
-                        const item = document.createElement('div');
-                        item.className = 'winner-item';
-                        const waMsg = encodeURIComponent('🎉 ¡Felicitaciones ' + g.nombre + '! 🎉\nGanaste: *' + g.premio + '*\nNúmero #' + g.casilla);
-                        const waLink = 'https://wa.me/' + g.telefono.replace(/\D/g, '') + '?text=' + waMsg;
-                        item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> ' + g.nombre + '<br><a href="' + waLink + '" target="_blank" class="wa-btn">📱 Notificar</a>';
-                        lista.appendChild(item);
-                    });
-                }
+function renderizarGanadores() {
+    document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
+    const agrupado = {};
+    Object.values(ganadoresLista).forEach(g => {
+        if (!agrupado[g.premio]) agrupado[g.premio] = [];
+        agrupado[g.premio].push(g);
+    });
+    Object.entries(agrupado).forEach(([premio, gs]) => {
+        let catId = null;
+        premios.forEach(p => { if (premio.startsWith(p.nombre)) catId = p.catId; });
+        if (catId) {
+            const lista = document.getElementById(catId);
+            gs.forEach(g => {
+                const item = document.createElement('div');
+                item.className = 'winner-item';
+                const waMsg = encodeURIComponent('🎉 ¡Felicitaciones ' + g.nombre + '! 🎉\nGanaste: *' + g.premio + '*\nNúmero #' + g.casilla);
+                const waLink = 'https://wa.me/' + g.telefono.replace(/\D/g, '') + '?text=' + waMsg;
+                item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> ' + g.nombre + '<br><a href="' + waLink + '" target="_blank" class="wa-btn">📱 Notificar</a>';
+                lista.appendChild(item);
             });
         }
+    });
+}
 
-        // ============ SORTEO SINCRONIZADO: todos ven lo mismo ============
-let ganadoresAnimados = new Set();
+// ---- TIMER A PRUEBA DE FALLOS ----
+function pintarTimer() {
+    const el = document.getElementById('timer');
+    const diff = fechaObjetivo - Date.now();
+    if (diff <= 0) {
+        if (timerInterval) clearInterval(timerInterval);
+        el.innerText = "🎉 ¡SORTEO EN VIVO! 🎉";
+        iniciarAnimacionSorteo();
+        return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    let t = '';
+    if (d > 0) t += d + 'd ';
+    t += h + 'h ' + m + 'm ' + s + 's';
+    el.innerText = '💐 ' + t;
+}
 
-// Generador aleatorio con semilla: garantiza la MISMA secuencia de destellos en todas las pantallas
+function iniciarTimerLocal() {
+    if (timerInterval) clearInterval(timerInterval);
+    pintarTimer();
+    timerInterval = setInterval(pintarTimer, 1000);
+}
+
+async function sincronizarFecha() {
+    try {
+        const snap = await db.ref('configuracion/fechaSorteo').once('value');
+        if (snap.exists() && snap.val()) {
+            const t = new Date(snap.val()).getTime();
+            if (!isNaN(t)) fechaObjetivo = t;
+        } else {
+            db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA).catch(() => {});
+        }
+        pintarTimer();
+    } catch (e) {
+        console.warn('⚠️ Sin conexión a Firebase: uso fecha local.', e);
+    }
+}
+
+iniciarTimerLocal();
+sincronizarFecha();
+
+// ---- SORTEO SINCRONIZADO ----
 function mulberry32(a) {
     return function() {
         a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -788,31 +825,16 @@ function mulberry32(a) {
 
 async function iniciarAnimacionSorteo() {
     if (sorteoEjecutado) return;
-
-    // Si ya hay ganadores guardados, no se vuelve a sortear
     const snapPrevio = await db.ref('ganadores').once('value');
-    if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) {
-        sorteoEjecutado = true;
-        return;
-    }
-
-    // CANDADO ATÓMICO: solo UN dispositivo calcula los ganadores
+    if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) { sorteoEjecutado = true; return; }
     const lock = await db.ref('configuracion/sorteoBloqueado').transaction(v => {
-        if (v === true) return; // ya lo tomó otro
+        if (v === true) return;
         return true;
     });
-
-    if (!lock.committed) {
-        // Otro dispositivo está sorteando: este solo mira
-        sorteoEjecutado = true;
-        return;
-    }
-
-    // SOY EL LÍDER: calculo los 3 ganadores y los publico
+    if (!lock.committed) { sorteoEjecutado = true; return; }
     sorteoEjecutado = true;
     const casillas = Object.keys(participantesRegistrados).map(Number);
     if (!casillas.length) return;
-
     let bolsa = casillas.slice();
     const calculados = [];
     for (const p of premios) {
@@ -823,35 +845,24 @@ async function iniciarAnimacionSorteo() {
             calculados.push({ catId: p.catId, nombrePremio: p.nombre + ' #' + i, numero: num });
         }
     }
-
-    // Publico uno por uno con pausa: todas las pantallas animan en el mismo orden
     for (const g of calculados) {
         await new Promise(r => setTimeout(r, 2500));
         const d = participantesRegistrados[g.numero];
         await db.ref('ganadores/' + g.numero).set({
-            casilla: g.numero,
-            premio: g.nombrePremio,
-            nombre: d.nombre,
-            telefono: d.telefono,
-            token: d.token,
-            catId: g.catId,
-            fechaSorteo: Date.now()
+            casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre,
+            telefono: d.telefono, token: d.token, catId: g.catId, fechaSorteo: Date.now()
         });
     }
 }
 
-// TODAS las pantallas (incluida la del líder) reproducen la animación al recibir cada ganador
 db.ref('ganadores').on('child_added', async (snap) => {
     const num = parseInt(snap.key);
     if (ganadoresAnimados.has(num)) return;
     ganadoresAnimados.add(num);
     if (!sorteoEjecutado) return;
-
-    // Secuencia de destellos IDÉNTICA en todos los dispositivos (semilla = número ganador)
     const ocupadas = Object.keys(participantesRegistrados).map(Number);
     const rnd = mulberry32(num * 7919 + 13);
     let ultima = null;
-
     const flash = setInterval(() => {
         if (ultima) {
             const pc = document.getElementById('cell-' + ultima);
@@ -861,20 +872,14 @@ db.ref('ganadores').on('child_added', async (snap) => {
         const pc = document.getElementById('cell-' + ultima);
         if (pc) pc.classList.add('chaos');
     }, 80);
-
     await new Promise(r => setTimeout(r, 2500));
     clearInterval(flash);
-
     if (ultima) {
         const pc = document.getElementById('cell-' + ultima);
         if (pc && !pc.classList.contains('winner')) pc.classList.remove('chaos');
     }
-
     const cell = document.getElementById('cell-' + num);
-    if (cell) {
-        cell.classList.remove('chaos');
-        cell.classList.add('winner');
-    }
+    if (cell) { cell.classList.remove('chaos'); cell.classList.add('winner'); }
 });
 
         // ============ RULETA ============
@@ -1342,17 +1347,19 @@ db.ref('ganadores').on('child_added', async (snap) => {
         }
 
         async function forceSorteo() {
-            if (!confirm("¿Forzar sorteo AHORA?")) return;
-            await db.ref('configuracion/fechaSorteo').set(new Date(Date.now() + 5000).toISOString());
-            alert("Sorteo en 5 segundos");
-            initTimer();
-        }
+    if (!confirm("¿Forzar sorteo AHORA?")) return;
+    fechaObjetivo = Date.now() + 5000;
+    db.ref('configuracion/fechaSorteo').set(new Date(fechaObjetivo).toISOString()).catch(() => {});
+    alert("Sorteo en 5 segundos");
+    pintarTimer();
+    }
 
         async function resetSorteo() {
             if (!confirm("⚠️ BORRAR TODO?")) return;
             if (!confirm("¿100% seguro?")) return;
             await db.ref('ganadores').remove();
-            await db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA);
+          fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
+          db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA).catch(() => {});
             await db.ref('casillas').remove();
             const t = await db.ref('tokens').once('value');
             if (t.exists()) {
