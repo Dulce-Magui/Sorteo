@@ -410,6 +410,27 @@
             h1 { font-size: 2rem; }
             .cta-button { font-size: 1.2rem; padding: 20px; }
         }
+
+        /* ===== ANIMACIÓN DEL SORTEO (invisible hasta que se ejecuta) ===== */
+        .sorteo-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%, #3a0d1f 0%, #1a0510 60%, #0c0208 100%);opacity:0;transition:opacity .6s ease;overflow:hidden;}
+        .sorteo-overlay.activo{display:flex;opacity:1;}
+        .sorteo-overlay.shake{animation:sacudirOverlay .45s;}
+        .sorteo-vineta{position:absolute;inset:0;box-shadow:inset 0 0 180px 60px rgba(0,0,0,.85);pointer-events:none;}
+        .sorteo-texto{position:absolute;top:12%;width:100%;text-align:center;font-size:clamp(20px,5vw,34px);font-weight:800;letter-spacing:2px;color:#ffd98a;text-shadow:0 0 22px rgba(255,180,60,.7);animation:latidoSorteo 1.4s ease-in-out infinite;z-index:2;}
+        @keyframes latidoSorteo{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.06);opacity:1}}
+        .sorteo-numero{font-size:clamp(90px,26vw,220px);font-weight:900;color:#fff;text-shadow:0 0 30px rgba(255,200,80,.9),0 0 70px rgba(255,140,0,.5);z-index:2;font-variant-numeric:tabular-nums;}
+        .sorteo-numero.clavado{animation:clavarNumero .5s cubic-bezier(.2,2.2,.4,1) forwards;color:#ffd700;}
+        @keyframes clavarNumero{0%{transform:scale(2.6);filter:brightness(3)}100%{transform:scale(1);filter:brightness(1)}}
+        .sorteo-tarjeta{position:absolute;display:none;flex-direction:column;align-items:center;gap:6px;padding:28px 44px;border-radius:22px;text-align:center;z-index:3;background:linear-gradient(160deg,rgba(255,215,120,.16),rgba(120,30,60,.45));border:2px solid rgba(255,200,90,.7);box-shadow:0 0 60px rgba(255,170,40,.45);}
+        .sorteo-tarjeta.visible{display:flex;animation:popTarjeta .55s cubic-bezier(.2,1.9,.4,1);}
+        .sorteo-tarjeta.oro{border-color:#ffd700;box-shadow:0 0 90px rgba(255,190,20,.8);}
+        @keyframes popTarjeta{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+        .tarjeta-medalla{font-size:52px;}
+        .tarjeta-numero{font-size:64px;font-weight:900;color:#ffd700;text-shadow:0 0 24px rgba(255,190,40,.8);}
+        .tarjeta-nombre{font-size:26px;font-weight:700;color:#fff;}
+        .tarjeta-premio{font-size:18px;letter-spacing:3px;color:#ffd98a;font-weight:600;}
+        @keyframes sacudirOverlay{0%,100%{transform:translate(0)}20%{transform:translate(-7px,4px)}40%{transform:translate(6px,-5px)}60%{transform:translate(-5px,-3px)}80%{transform:translate(4px,3px)}}
+        @keyframes caerConfetiSorteo{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
     </style>
 </head>
 <body>
@@ -603,6 +624,21 @@
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
 
+        <!-- 🧪 MODO PRUEBA -->
+        <div class="admin-section" style="border: 2px solid #10b981; background: #ecfdf5;">
+            <h4 style="color:#065f46;">🧪 Modo Prueba</h4>
+            <p id="test-mode-status" style="font-size:12px;color:#047857;margin-bottom:10px;"></p>
+            <div id="test-controls-prod">
+                <button class="btn-secondary" onclick="activarModoPrueba()" style="background:linear-gradient(135deg,#10b981,#34d399);color:white;border-color:#10b981;">🧪 Activar Modo Prueba</button>
+                <p style="font-size:11px;color:#6b7280;margin-top:6px;">Copia tus casillas a una zona aislada para probar el sorteo sin tocar los datos reales.</p>
+            </div>
+            <div id="test-controls-test" style="display:none;">
+                <button class="btn-secondary" onclick="reiniciarPrueba()" style="background:linear-gradient(135deg,#db2777,#f472b6);color:white;border-color:#db2777;margin-bottom:6px;">🔄 Reiniciar prueba (sortear de nuevo)</button>
+                <button class="btn-secondary" onclick="desactivarModoPrueba()" style="background:#6b7280;color:white;border-color:#6b7280;">🚪 Salir del Modo Prueba</button>
+                <button class="btn-secondary" onclick="limpiarZonaPrueba()" style="background:transparent;color:#9ca3af;border:1px solid #d1d5db;margin-top:6px;font-size:12px;">🧹 Vaciar zona de prueba</button>
+            </div>
+        </div>
+
         <div class="admin-section">
             <h4>➕ Registrar participante (venta manual)</h4>
             <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
@@ -637,6 +673,19 @@
         </div>
     </div>
 
+    <!-- OVERLAY DE LA ANIMACIÓN DEL SORTEO -->
+    <div id="sorteoOverlay" class="sorteo-overlay">
+        <div class="sorteo-vineta"></div>
+        <div id="sorteoEstadoTexto" class="sorteo-texto">🥁 SORTEO EN CURSO...</div>
+        <div id="sorteoNumero" class="sorteo-numero">--</div>
+        <div id="sorteoTarjeta" class="sorteo-tarjeta">
+            <div id="tarjetaMedalla" class="tarjeta-medalla">🥉</div>
+            <div id="tarjetaNumero" class="tarjeta-numero">00</div>
+            <div id="tarjetaNombre" class="tarjeta-nombre"></div>
+            <div id="tarjetaPremio" class="tarjeta-premio"></div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -653,6 +702,19 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // ===== MODO PRUEBA: redirige el sorteo a una zona aislada =====
+        const LOTTERY_PATHS = ['casillas', 'ganadores', 'configuracion', 'tokens'];
+        function isTestMode() { return localStorage.getItem('sorteoTestMode') === '1'; }
+        const _realRef = db.ref.bind(db);
+        db.ref = function (path) {
+            path = path || '';
+            if (isTestMode() && path.indexOf('test/') !== 0) {
+                const raiz = path.split('/')[0];
+                if (LOTTERY_PATHS.indexOf(raiz) !== -1) return _realRef('test/' + path);
+            }
+            return _realRef(path);
+        };
 
         // ---- UTILIDADES Y SANITIZACIÓN (BLINDAJE XSS) ----
         function escapeHtml(str) {
@@ -702,6 +764,7 @@
 
         let participantesRegistrados = {};
         let sorteoEjecutado = false;
+        let sorteoEnCurso = false;
         let timerInterval = null;
         let ganadoresLista = {};
         let fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
@@ -802,8 +865,8 @@
             const diff = fechaObjetivo - Date.now();
             if (diff <= 0) {
                 if (timerInterval) clearInterval(timerInterval);
+                // Sorteo MANUAL: no se dispara solo
                 el.innerText = "🎉 ¡SORTEO EN VIVO! 🎉";
-                iniciarAnimacionSorteo();
                 return;
             }
             const d = Math.floor(diff / 86400000);
@@ -840,7 +903,7 @@
         iniciarTimerLocal();
         sincronizarFecha();
 
-        // ---- SORTEO SINCRONIZADO ----
+        // ---- SORTEO SINCRONIZADO (REESCRITO) ----
         function mulberry32(a) {
             return function() {
                 a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -850,64 +913,139 @@
             };
         }
 
-        async function iniciarAnimacionSorteo() {
-            if (sorteoEjecutado) return;
-            const snapPrevio = await db.ref('ganadores').once('value');
-            if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) { sorteoEjecutado = true; return; }
+        // Listener del ESTADO del sorteo (para que TODOS vean la animación)
+        db.ref('configuracion/estadoSorteo').on('value', (snap) => {
+            const estado = snap.val();
+            if (estado === 'girando') {
+                sorteoEnCurso = true;
+                mostrarAnimacionTormenta();
+            } else if (estado === 'finalizado') {
+                sorteoEnCurso = false;
+                setTimeout(() => {
+                    if (window.intervaloTormenta) { clearInterval(window.intervaloTormenta); window.intervaloTormenta = null; }
+                    const ov = document.getElementById('sorteoOverlay');
+                    if (ov) ov.classList.remove('activo');
+                    const numEl = document.getElementById('sorteoNumero');
+                    if (numEl) { numEl.style.display = 'none'; numEl.classList.remove('clavado'); }
+                    const tar = document.getElementById('sorteoTarjeta');
+                    if (tar) tar.classList.remove('visible');
+                }, 2500);
+            }
+        });
+
+        function mostrarAnimacionTormenta() {
+            const overlay = document.getElementById('sorteoOverlay');
+            const numEl = document.getElementById('sorteoNumero');
+            const tarjeta = document.getElementById('sorteoTarjeta');
+            const texto = document.getElementById('sorteoEstadoTexto');
+            if (!overlay || !numEl) return;
+            overlay.classList.add('activo');
+            if (tarjeta) tarjeta.classList.remove('visible');
+            if (texto) texto.textContent = '🥁 SORTEO EN CURSO...';
+            numEl.style.display = 'block';
+            numEl.classList.remove('clavado');
+            const pool = Object.keys(participantesRegistrados);
+            if (!pool.length) return;
+            if (window.intervaloTormenta) clearInterval(window.intervaloTormenta);
+            window.intervaloTormenta = setInterval(() => {
+                numEl.textContent = String(pool[Math.floor(Math.random() * pool.length)]).padStart(2, '0');
+            }, 75);
+        }
+
+        async function sortearDeVerdad() {
+            // Lock atómico: un solo dispositivo puede ejecutar el sorteo
             const lock = await db.ref('configuracion/sorteoBloqueado').transaction(v => {
                 if (v === true) return;
                 return true;
             });
-            if (!lock.committed) { sorteoEjecutado = true; return; }
-            sorteoEjecutado = true;
+            if (!lock.committed) { alert('⚠️ Ya hay un sorteo en curso.'); return; }
+
+            const snapPrevio = await db.ref('ganadores').once('value');
+            if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) { sorteoEjecutado = true; return; }
+
             const casillas = Object.keys(participantesRegistrados).map(Number);
-            if (!casillas.length) return;
+            if (!casillas.length) { alert('No hay casillas ocupadas.'); return; }
+
+            // Fase 1: tormenta de números en TODOS los dispositivos
+            await db.ref('configuracion/estadoSorteo').set('girando');
+            await new Promise(r => setTimeout(r, 4500));
+
+            // Fase 2: semilla pública + selección determinística (auditable)
+            const semilla = Date.now();
+            await db.ref('configuracion/semillaSorteo').set(semilla);
+            const rng = mulberry32(semilla);
             let bolsa = casillas.slice();
-            const calculados = [];
-            for (const p of premios) {
+            const ganadoresCalculados = [];
+            for (const p of [...premios].reverse()) {   // se revelan 3º, 2º y 1º al final
                 for (let i = 1; i <= p.cantidad; i++) {
                     if (!bolsa.length) break;
-                    const gIdx = Math.floor(Math.random() * bolsa.length);
-                    const num = bolsa.splice(gIdx, 1)[0];
-                    calculados.push({ catId: p.catId, nombrePremio: p.nombre + ' #' + i, numero: num });
+                    const num = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.cantidad > 1 ? p.nombre + ' #' + i : p.nombre, numero: num });
                 }
             }
-            for (const g of calculados) {
-                await new Promise(r => setTimeout(r, 2500));
-                const d = participantesRegistrados[g.numero];
+
+            // Fase 3: cada escritura dispara el reveal en todos los dispositivos
+            for (const g of ganadoresCalculados) {
+                const d = participantesRegistrados[g.numero] || {};
                 await db.ref('ganadores/' + g.numero).set({
                     casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
                     telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
                 });
+                await new Promise(r => setTimeout(r, 6500));
             }
+
+            await db.ref('configuracion/estadoSorteo').set('finalizado');
+            sorteoEjecutado = true;
         }
 
+        // Listener de ganadores - TODOS ven la animación
         db.ref('ganadores').on('child_added', async (snap) => {
             const num = parseInt(snap.key);
             if (ganadoresAnimados.has(num)) return;
+            if (!sorteoEnCurso) return;   // si recargás después del sorteo, no re-anima
             ganadoresAnimados.add(num);
-            if (!sorteoEjecutado) return;
-            const ocupadas = Object.keys(participantesRegistrados).map(Number);
-            if (!ocupadas.length) return;
-            const rnd = mulberry32(num * 7919 + 13);
-            let ultima = null;
-            const flash = setInterval(() => {
-                if (ultima) {
-                    const pc = document.getElementById('cell-' + ultima);
-                    if (pc && !pc.classList.contains('winner')) pc.classList.remove('chaos');
-                }
-                ultima = ocupadas[Math.floor(rnd() * ocupadas.length)];
-                const pc = document.getElementById('cell-' + ultima);
-                if (pc) pc.classList.add('chaos');
-            }, 80);
-            await new Promise(r => setTimeout(r, 2500));
-            clearInterval(flash);
-            if (ultima) {
-                const pc = document.getElementById('cell-' + ultima);
-                if (pc && !pc.classList.contains('winner')) pc.classList.remove('chaos');
+
+            const dataGanador = snap.val() || {};
+            const participante = participantesRegistrados[num] || {};
+            const premioTxt = dataGanador.premio || '';
+
+            // 1) Frenar la tormenta
+            if (window.intervaloTormenta) { clearInterval(window.intervaloTormenta); window.intervaloTormenta = null; }
+
+            const overlay = document.getElementById('sorteoOverlay');
+            const numEl = document.getElementById('sorteoNumero');
+            const tarjeta = document.getElementById('sorteoTarjeta');
+            if (overlay && numEl && tarjeta) {
+                // 2) El número se clava en el centro
+                overlay.classList.add('activo');
+                numEl.style.display = 'block';
+                numEl.textContent = String(num).padStart(2, '0');
+                numEl.classList.remove('clavado');
+                void numEl.offsetWidth;   // reinicia la animación
+                numEl.classList.add('clavado');
+                overlay.classList.add('shake');
+                setTimeout(() => overlay.classList.remove('shake'), 500);
+                lanzarConfetti();
+                if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+
+                await new Promise(r => setTimeout(r, 1400));
+                numEl.style.display = 'none';
+
+                // 3) Tarjeta con el ganador
+                document.getElementById('tarjetaMedalla').textContent = premioTxt.includes('BOX 1') ? '🥇' : (premioTxt.includes('BOX 2') ? '🥈' : '🥉');
+                document.getElementById('tarjetaNumero').textContent = String(num).padStart(2, '0');
+                document.getElementById('tarjetaNombre').textContent = participante.nombre || 'Ganador/a';
+                document.getElementById('tarjetaPremio').textContent = premioTxt;
+                tarjeta.classList.toggle('oro', premioTxt.includes('BOX 1'));
+                tarjeta.classList.add('visible');
+
+                await new Promise(r => setTimeout(r, 3800));
+                tarjeta.classList.remove('visible');
             }
+
+            // 4) Marcar la celda en la grilla (como ya lo hacía)
             const cell = document.getElementById('cell-' + num);
-            if (cell) { cell.classList.remove('chaos'); cell.classList.add('winner'); }
+            if (cell) cell.classList.add('winner');
         });
 
         // ============ RULETA ============
@@ -1384,20 +1522,27 @@
             document.getElementById('admin-telefono').value = '';
         }
 
+        // FORZAR SORTEO (CORREGIDO)
         async function forceSorteo() {
-            if (!confirm("¿Forzar sorteo AHORA?")) return;
-            fechaObjetivo = Date.now() + 5000;
-            db.ref('configuracion/fechaSorteo').set(new Date(fechaObjetivo).toISOString()).catch(() => {});
-            alert("Sorteo en 5 segundos");
-            pintarTimer();
+            const ocupadas = Object.keys(participantesRegistrados).length;
+            if (!ocupadas) { alert('No hay casillas ocupadas para sortear.'); return; }
+            const snapG = await db.ref('ganadores').once('value');
+            if (snapG.exists() && Object.keys(snapG.val()).length > 0) { alert('El sorteo ya fue realizado.'); return; }
+            if (!confirm('🎲 ¿Lanzar el sorteo AHORA?\n\nSe sorteará entre ' + ocupadas + ' números vendidos.\nLa animación se verá en TODOS los dispositivos conectados.')) return;
+            if (!confirm('Última confirmación. ¿Dale?')) return;
+            await sortearDeVerdad();
         }
 
+        // RESETEAR TODO (CORREGIDO)
         async function resetSorteo() {
             if (!confirm("⚠️ BORRAR TODO?")) return;
             if (!confirm("¿100% seguro?")) return;
             await db.ref('ganadores').remove();
             fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
             db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA).catch(() => {});
+            await db.ref('configuracion/sorteoBloqueado').remove();
+            await db.ref('configuracion/estadoSorteo').remove();
+            await db.ref('configuracion/semillaSorteo').remove();
             await db.ref('casillas').remove();
             const t = await db.ref('tokens').once('value');
             if (t.exists()) {
@@ -1627,6 +1772,77 @@
                 alert('❌ Error al liberar la casilla: ' + err.message);
             }
         }
+
+        // ===== CONTROLES DEL MODO PRUEBA =====
+        async function activarModoPrueba() {
+            const snap = await _realRef('casillas').once('value');
+            const casillas = snap.val();
+            const n = casillas ? Object.keys(casillas).length : 0;
+            if (!confirm('🧪 ACTIVAR MODO PRUEBA\n\n• Se copiarán tus ' + n + ' casillas reales a una zona aislada (test/).\n• Vas a poder ejecutar el sorteo completo las veces que quieras.\n• TUS DATOS REALES NO SE TOCAN.\n\n¿Activar?')) return;
+            if (casillas) await _realRef('test/casillas').set(casillas);
+            localStorage.setItem('sorteoTestMode', '1');
+            location.reload();
+        }
+
+        async function reiniciarPrueba() {
+            if (!isTestMode()) return;
+            if (!confirm('🔄 ¿Reiniciar la prueba?\nSe borran los ganadores de prueba y se recargan tus casillas para sortear de nuevo.')) return;
+            const snap = await _realRef('casillas').once('value');
+            const casillas = snap.val();
+            await _realRef('test/ganadores').remove();
+            await _realRef('test/configuracion').remove();
+            if (casillas) await _realRef('test/casillas').set(casillas);
+            location.reload();
+        }
+
+        async function limpiarZonaPrueba() {
+            if (!confirm('🧹 ¿Vaciar toda la zona de prueba? (Tus datos reales no se tocan)')) return;
+            await _realRef('test').remove();
+            alert('✅ Zona de prueba vaciada.');
+            if (isTestMode()) location.reload();
+        }
+
+        function desactivarModoPrueba() {
+            localStorage.removeItem('sorteoTestMode');
+            location.reload();
+        }
+
+        function actualizarUItestMode() {
+            const status = document.getElementById('test-mode-status');
+            const prod = document.getElementById('test-controls-prod');
+            const test = document.getElementById('test-controls-test');
+            if (!status) return;
+            if (isTestMode()) {
+                status.innerHTML = '🔴 <b>MODO PRUEBA ACTIVADO</b> — todo va a la zona aislada.';
+                if (prod) prod.style.display = 'none';
+                if (test) test.style.display = 'block';
+            } else {
+                status.innerHTML = '🟢 Modo producción (datos reales).';
+                if (prod) prod.style.display = 'block';
+                if (test) test.style.display = 'none';
+            }
+        }
+
+        // ===== CONFETI DEL SORTEO =====
+        function lanzarConfetti() {
+            const colores = ['#ffd700', '#ff5f8f', '#a86bff', '#5fd2ff', '#7cfc9a', '#ffffff'];
+            for (let i = 0; i < 90; i++) {
+                const c = document.createElement('div');
+                const dur = 2.2 + Math.random() * 1.8;
+                c.style.cssText = 'position:fixed;top:-12px;left:' + (Math.random() * 100) + 'vw;width:' + (6 + Math.random() * 7) + 'px;height:' + (6 + Math.random() * 7) + 'px;z-index:100000;pointer-events:none;background:' + colores[Math.floor(Math.random() * colores.length)] + ';border-radius:' + (Math.random() > .5 ? '50%' : '2px') + ';animation:caerConfetiSorteo ' + dur + 's linear forwards;animation-delay:' + (Math.random() * .4) + 's;';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), (dur + 1) * 1000);
+            }
+        }
+
+        // ===== MODO PRUEBA: banner e inicialización =====
+        if (isTestMode()) {
+            const bannerTest = document.createElement('div');
+            bannerTest.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:#fff;text-align:center;padding:8px 10px;font-weight:bold;z-index:100001;font-size:13px;';
+            bannerTest.textContent = '🧪 MODO PRUEBA — nada de esto afecta tus datos reales';
+            document.body.appendChild(bannerTest);
+        }
+        actualizarUItestMode();
     </script>
 </body>
 </html>
