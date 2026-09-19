@@ -49,6 +49,7 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 20px;
             position: relative; overflow-x: hidden;
+            transition: background 0.8s ease;
         }
         body::before {
             content: '🌸 💐  🌺 💮 ';
@@ -207,6 +208,7 @@
             max-width: 700px; width: 100%; margin-bottom: 35px; padding: 15px;
             background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
             border: 4px solid var(--primary-pink); position: relative; z-index: 1;
+            transition: background 0.8s ease, border-color 0.8s ease;
         }
         .grid-container::before {
             content: '🌸 100 NÚMEROS • 3 GANADORES 🌸'; position: absolute; top: -15px; left: 50%;
@@ -221,13 +223,6 @@
             transition: all 0.2s ease; cursor: pointer;
         }
         .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; }
-        .cell.chaos { animation: chaosAnim 0.15s infinite; z-index: 5; border-color: white; }
-        @keyframes chaosAnim {
-            0% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
-            33% { background-color: #fde047; transform: scale(1.2); box-shadow: 0 0 20px #fde047; }
-            66% { background-color: #a7f3d0; transform: scale(0.9); box-shadow: 0 0 15px #a7f3d0; }
-            100% { background-color: #f472b6; transform: scale(1.15); box-shadow: 0 0 15px #f472b6; }
-        }
         .cell.winner {
             background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #ffffff; border-color: #fde68a;
             box-shadow: 0 0 20px rgba(251, 191, 36, 0.8); animation: winnerReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -411,29 +406,77 @@
             .cta-button { font-size: 1.2rem; padding: 20px; }
         }
 
-        /* ===== ANIMACIÓN DEL SORTEO (invisible hasta que se ejecuta) ===== */
-        .sorteo-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%, #3a0d1f 0%, #1a0510 60%, #0c0208 100%);opacity:0;transition:opacity .6s ease;overflow:hidden;}
-        .sorteo-overlay.activo{display:flex;opacity:1;}
-        .sorteo-overlay.shake{animation:sacudirOverlay .45s;}
-        .sorteo-vineta{position:absolute;inset:0;box-shadow:inset 0 0 180px 60px rgba(0,0,0,.85);pointer-events:none;}
-        .sorteo-texto{position:absolute;top:12%;width:100%;text-align:center;font-size:clamp(20px,5vw,34px);font-weight:800;letter-spacing:2px;color:#ffd98a;text-shadow:0 0 22px rgba(255,180,60,.7);animation:latidoSorteo 1.4s ease-in-out infinite;z-index:2;}
-        @keyframes latidoSorteo{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.06);opacity:1}}
-        .sorteo-numero{font-size:clamp(90px,26vw,220px);font-weight:900;color:#fff;text-shadow:0 0 30px rgba(255,200,80,.9),0 0 70px rgba(255,140,0,.5);z-index:2;font-variant-numeric:tabular-nums;}
-        .sorteo-numero.clavado{animation:clavarNumero .5s cubic-bezier(.2,2.2,.4,1) forwards;color:#ffd700;}
-        @keyframes clavarNumero{0%{transform:scale(2.6);filter:brightness(3)}100%{transform:scale(1);filter:brightness(1)}}
-        .sorteo-tarjeta{position:absolute;display:none;flex-direction:column;align-items:center;gap:6px;padding:28px 44px;border-radius:22px;text-align:center;z-index:3;background:linear-gradient(160deg,rgba(255,215,120,.16),rgba(120,30,60,.45));border:2px solid rgba(255,200,90,.7);box-shadow:0 0 60px rgba(255,170,40,.45);}
-        .sorteo-tarjeta.visible{display:flex;animation:popTarjeta .55s cubic-bezier(.2,1.9,.4,1);}
-        .sorteo-tarjeta.oro{border-color:#ffd700;box-shadow:0 0 90px rgba(255,190,20,.8);}
-        @keyframes popTarjeta{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
-        .tarjeta-medalla{font-size:52px;}
-        .tarjeta-numero{font-size:64px;font-weight:900;color:#ffd700;text-shadow:0 0 24px rgba(255,190,40,.8);}
-        .tarjeta-nombre{font-size:26px;font-weight:700;color:#fff;}
-        .tarjeta-premio{font-size:18px;letter-spacing:3px;color:#ffd98a;font-weight:600;}
-        @keyframes sacudirOverlay{0%,100%{transform:translate(0)}20%{transform:translate(-7px,4px)}40%{transform:translate(6px,-5px)}60%{transform:translate(-5px,-3px)}80%{transform:translate(4px,3px)}}
-        @keyframes caerConfetiSorteo{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+        /* ===================================================== */
+        /* ===== ANIMACIÓN DEL SORTEO SOBRE LA GRILLA ========== */
+        /* ===================================================== */
+
+        /* Fondo oscuro parpadeante durante el sorteo */
+        #fondoParpadeo {
+            position: fixed; inset: 0; background: #000; opacity: 0;
+            pointer-events: none; z-index: 500;
+        }
+        #fondoParpadeo.activo { animation: parpadeoFondo 1.2s ease-in-out infinite; }
+        @keyframes parpadeoFondo {
+            0%, 100% { opacity: 0.28; }
+            50% { opacity: 0.52; }
+        }
+
+        /* Página en modo sorteo */
+        body.modo-sorteo {
+            background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
+        }
+        body.modo-sorteo::before, body.modo-sorteo::after { opacity: 0.04; }
+        body.modo-sorteo .grid-container {
+            background: #1b0d14; border-color: #ff2d78;
+            box-shadow: 0 0 45px rgba(255, 45, 120, 0.4);
+            position: relative; z-index: 600;
+        }
+        body.modo-sorteo .cell { background-color: #241019; border-color: #3d1a2c; color: #8f5f76; }
+        body.modo-sorteo .cell.occupied { background-color: #4a1130; border-color: #7a1f4d; color: #ffb3d1; }
+        body.modo-sorteo .cell.winner { box-shadow: 0 0 22px rgba(251, 191, 36, 0.95); }
+
+        /* Casilla iluminada (caos / luz saltando) */
+        .cell.lit {
+            background: linear-gradient(135deg, #ff2d78, #ff6ba0) !important;
+            color: #fff !important;
+            border-color: #fff !important;
+            box-shadow: 0 0 14px #ff2d78, 0 0 32px rgba(255, 45, 120, 0.8);
+            transform: scale(1.15);
+            z-index: 5;
+        }
+
+        /* Casilla ganadora anulada (ya no participa más) */
+        .cell.usada { position: relative; opacity: 0.92; }
+        .cell.usada::after {
+            content: '🏆'; position: absolute; top: -7px; right: -3px; font-size: 11px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+        }
+
+        /* Mensaje flotante del ganador */
+        .mensaje-ganador {
+            position: fixed; left: 50%; bottom: 8%;
+            transform: translateX(-50%) scale(0.5);
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #3b2405; padding: 16px 32px; border-radius: 18px;
+            font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-align: center;
+            line-height: 1.4;
+            box-shadow: 0 0 45px rgba(251, 191, 36, 0.85);
+            border: 3px solid #fff;
+            z-index: 99999; opacity: 0; pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.2, 1.8, 0.4, 1);
+        }
+        .mensaje-ganador.visible { opacity: 1; transform: translateX(-50%) scale(1); }
+
+        /* Confeti del sorteo */
+        @keyframes caerConfetiSorteo {
+            to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Fondo oscuro parpadeante del sorteo (invisible hasta que se ejecuta) -->
+    <div id="fondoParpadeo"></div>
 
     <header>
         <div class="logo-container" id="admin-trigger">
@@ -620,6 +663,9 @@
         <p>✨ Ruleta: 1 tiro por semana por teléfono</p>
     </footer>
 
+    <!-- Mensaje flotante del ganador -->
+    <div id="mensajeGanador" class="mensaje-ganador"></div>
+
     <div id="admin-panel" class="hidden">
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
@@ -670,19 +716,6 @@
             <h4>🏆 Ganadores del Sorteo</h4>
             <div id="admin-ganadores" style="max-height:200px;overflow-y:auto;">Cargando...</div>
             <button class="btn-secondary" onclick="exportarGanadoresWA()">📱 Exportar a WhatsApp</button>
-        </div>
-    </div>
-
-    <!-- OVERLAY DE LA ANIMACIÓN DEL SORTEO -->
-    <div id="sorteoOverlay" class="sorteo-overlay">
-        <div class="sorteo-vineta"></div>
-        <div id="sorteoEstadoTexto" class="sorteo-texto">🥁 SORTEO EN CURSO...</div>
-        <div id="sorteoNumero" class="sorteo-numero">--</div>
-        <div id="sorteoTarjeta" class="sorteo-tarjeta">
-            <div id="tarjetaMedalla" class="tarjeta-medalla">🥉</div>
-            <div id="tarjetaNumero" class="tarjeta-numero">00</div>
-            <div id="tarjetaNombre" class="tarjeta-nombre"></div>
-            <div id="tarjetaPremio" class="tarjeta-premio"></div>
         </div>
     </div>
 
@@ -764,11 +797,21 @@
 
         let participantesRegistrados = {};
         let sorteoEjecutado = false;
-        let sorteoEnCurso = false;
         let timerInterval = null;
         let ganadoresLista = {};
         let fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
         let ganadoresAnimados = new Set();
+
+        // Estado de la animación del sorteo
+        let sorteoEnCurso = false;
+        let modoSorteoActivo = false;
+        let sorteoTerminado = false;
+        let intervaloCaos = null;
+        let animandoGanador = false;
+        let colaAnimacion = [];
+        let numerosYaGanadores = new Set();
+
+        const dormir = ms => new Promise(r => setTimeout(r, ms));
 
         function crearGrid() {
             if (!grid) return;
@@ -829,6 +872,21 @@
             ganadoresLista = snap.val() || {};
             renderizarGanadores();
             actualizarAdminPanel();
+            numerosYaGanadores = new Set(Object.keys(ganadoresLista).map(Number));
+            // Si el sorteo no está en curso, marcar las casillas ganadoras directamente
+            if (!sorteoEnCurso) {
+                numerosYaGanadores.forEach(n => {
+                    const cell = document.getElementById('cell-' + n);
+                    if (cell && !cell.classList.contains('winner')) {
+                        cell.classList.add('winner');
+                        cell.classList.add('usada');
+                    }
+                });
+            }
+            if (Object.keys(ganadoresLista).length >= 3 && !sorteoEnCurso) {
+                sorteoTerminado = true;
+                pintarTimer();
+            }
         });
 
         function renderizarGanadores() {
@@ -862,10 +920,10 @@
         function pintarTimer() {
             const el = document.getElementById('timer');
             if (!el) return;
+            if (modoSorteoActivo) { el.innerText = '🎉 ¡SORTEO EN VIVO! 🎉'; return; }
+            if (sorteoTerminado) { el.innerText = '🏆 ¡Sorteo finalizado! Mirá los ganadores'; return; }
             const diff = fechaObjetivo - Date.now();
             if (diff <= 0) {
-                if (timerInterval) clearInterval(timerInterval);
-                // Sorteo MANUAL: no se dispara solo
                 el.innerText = "🎉 ¡SORTEO EN VIVO! 🎉";
                 return;
             }
@@ -903,7 +961,10 @@
         iniciarTimerLocal();
         sincronizarFecha();
 
-        // ---- SORTEO SINCRONIZADO (REESCRITO) ----
+        // ============================================================
+        // ===== SORTEO SINCRONIZADO CON ANIMACIÓN DE CAOS ===========
+        // ============================================================
+
         function mulberry32(a) {
             return function() {
                 a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -913,47 +974,177 @@
             };
         }
 
-        // Listener del ESTADO del sorteo (para que TODOS vean la animación)
+        function poolDisponibles() {
+            return Object.keys(participantesRegistrados).map(Number).filter(n => !numerosYaGanadores.has(n));
+        }
+
+        function pintarLuces(cant) {
+            document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+            const pool = poolDisponibles();
+            const mezcladas = pool.slice().sort(() => Math.random() - 0.5).slice(0, cant);
+            mezcladas.forEach(n => {
+                const cell = document.getElementById('cell-' + n);
+                if (cell) cell.classList.add('lit');
+            });
+        }
+
+        function iniciarCaosAmbiente() {
+            if (intervaloCaos) clearInterval(intervaloCaos);
+            intervaloCaos = setInterval(() => pintarLuces(12 + Math.floor(Math.random() * 4)), 130);
+        }
+
+        function detenerCaosAmbiente() {
+            if (intervaloCaos) { clearInterval(intervaloCaos); intervaloCaos = null; }
+        }
+
+        function entrarModoSorteoVisual() {
+            document.body.classList.add('modo-sorteo');
+            const fondo = document.getElementById('fondoParpadeo');
+            if (fondo) fondo.classList.add('activo');
+            modoSorteoActivo = true;
+            pintarTimer();
+            const gridEl = document.getElementById('grid');
+            if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            iniciarCaosAmbiente();
+        }
+
+        function salirModoSorteoVisual() {
+            document.body.classList.remove('modo-sorteo');
+            const fondo = document.getElementById('fondoParpadeo');
+            if (fondo) fondo.classList.remove('activo');
+            modoSorteoActivo = false;
+            detenerCaosAmbiente();
+            document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+            pintarTimer();
+        }
+
+        // Listener del estado del sorteo: sincroniza a TODOS los dispositivos
         db.ref('configuracion/estadoSorteo').on('value', (snap) => {
             const estado = snap.val();
             if (estado === 'girando') {
                 sorteoEnCurso = true;
-                mostrarAnimacionTormenta();
+                entrarModoSorteoVisual();
             } else if (estado === 'finalizado') {
                 sorteoEnCurso = false;
-                setTimeout(() => {
-                    if (window.intervaloTormenta) { clearInterval(window.intervaloTormenta); window.intervaloTormenta = null; }
-                    const ov = document.getElementById('sorteoOverlay');
-                    if (ov) ov.classList.remove('activo');
-                    const numEl = document.getElementById('sorteoNumero');
-                    if (numEl) { numEl.style.display = 'none'; numEl.classList.remove('clavado'); }
-                    const tar = document.getElementById('sorteoTarjeta');
-                    if (tar) tar.classList.remove('visible');
-                }, 2500);
+                sorteoTerminado = true;
+                salirModoSorteoVisual();
             }
         });
 
-        function mostrarAnimacionTormenta() {
-            const overlay = document.getElementById('sorteoOverlay');
-            const numEl = document.getElementById('sorteoNumero');
-            const tarjeta = document.getElementById('sorteoTarjeta');
-            const texto = document.getElementById('sorteoEstadoTexto');
-            if (!overlay || !numEl) return;
-            overlay.classList.add('activo');
-            if (tarjeta) tarjeta.classList.remove('visible');
-            if (texto) texto.textContent = '🥁 SORTEO EN CURSO...';
-            numEl.style.display = 'block';
-            numEl.classList.remove('clavado');
-            const pool = Object.keys(participantesRegistrados);
-            if (!pool.length) return;
-            if (window.intervaloTormenta) clearInterval(window.intervaloTormenta);
-            window.intervaloTormenta = setInterval(() => {
-                numEl.textContent = String(pool[Math.floor(Math.random() * pool.length)]).padStart(2, '0');
-            }, 75);
+        function etiquetaPremio(premioTxt) {
+            if (premioTxt.includes('BOX 1')) return 'el 1er PREMIO 🥇';
+            if (premioTxt.includes('BOX 2')) return 'el 2do PREMIO 🥈';
+            return 'el 3er PREMIO 🥉';
         }
 
+        function mostrarMensajeGanador(num, nombre, etiqueta) {
+            const el = document.getElementById('mensajeGanador');
+            if (!el) return;
+            el.innerHTML = '🎉 Casilla #' + String(num).padStart(2, '0') + ' — ' + escapeHtml(nombre) + '<br>ganó ' + etiqueta;
+            el.classList.add('visible');
+        }
+
+        function ocultarMensajeGanador() {
+            const el = document.getElementById('mensajeGanador');
+            if (el) el.classList.remove('visible');
+        }
+
+        // Animación completa de UN ganador sobre la grilla
+        async function animarGanadorGrilla(num, dataGanador) {
+            const premioTxt = (dataGanador.premio || '');
+            const nivel = premioTxt.includes('BOX 1') ? 3 : (premioTxt.includes('BOX 2') ? 2 : 1);
+            const participante = participantesRegistrados[num] || {};
+
+            detenerCaosAmbiente();
+
+            // FASE 1: CAOS — muchas casillas iluminadas al mismo tiempo
+            const durCaos = nivel === 3 ? 1600 : (nivel === 2 ? 2200 : 2800);
+            const cantCaos = nivel === 3 ? 16 : 14;
+            const finCaos = Date.now() + durCaos;
+            while (Date.now() < finCaos) {
+                pintarLuces(cantCaos);
+                await dormir(120);
+            }
+
+            // FASE 2: REDUCCIÓN — van quedando cada vez menos luces
+            const pasosReduccion = nivel === 3 ? [12, 9, 7, 5, 4, 3] : (nivel === 2 ? [12, 9, 6, 4, 3] : [11, 8, 5, 3]);
+            for (const c of pasosReduccion) {
+                pintarLuces(c);
+                await dormir(400 + nivel * 70);
+            }
+
+            // FASE 3: LUZ ÚNICA — salta de casilla en casilla frenando de a poco
+            const pool = poolDisponibles();
+            if (pool.indexOf(num) === -1) pool.push(num);
+            let pos = Math.floor(Math.random() * pool.length);
+            const saltos = 18 + nivel * 9;   // 27 / 36 / 45 saltos (más drama cada vez)
+            for (let i = 0; i < saltos; i++) {
+                document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+                const cell = document.getElementById('cell-' + pool[pos]);
+                if (cell) cell.classList.add('lit');
+                if (i === saltos - 1) break; // la última luz queda clavada
+                const prog = i / (saltos - 1);
+                let delay = 55 + Math.pow(prog, 2.3) * (300 + nivel * 130);
+                // Falsas frenadas: parece que para... y arranca de nuevo
+                if (nivel >= 2 && (i === Math.floor(saltos * 0.55) || i === Math.floor(saltos * 0.78))) delay += 600;
+                await dormir(delay);
+                if (i === saltos - 2) pos = pool.indexOf(num);
+                else pos = (pos + 1 + Math.floor(Math.random() * 3)) % pool.length;
+            }
+
+            // FASE 4: REVEAL — la casilla ganadora se enciende en dorado
+            await dormir(500);
+            document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+            const cellGanadora = document.getElementById('cell-' + num);
+            if (cellGanadora) {
+                cellGanadora.classList.add('winner');
+                cellGanadora.classList.add('usada');
+            }
+            numerosYaGanadores.add(num);
+            lanzarConfetti();
+            if (navigator.vibrate) navigator.vibrate([80, 50, 120]);
+            mostrarMensajeGanador(num, participante.nombre || 'Ganador/a', etiquetaPremio(premioTxt));
+            await dormir(4200 + nivel * 500);
+            ocultarMensajeGanador();
+            await dormir(600);
+            iniciarCaosAmbiente(); // mantiene el suspenso hasta el próximo ganador
+        }
+
+        // Cola de animación (un ganador a la vez, en orden)
+        async function procesarColaAnimacion() {
+            if (animandoGanador) return;
+            animandoGanador = true;
+            while (colaAnimacion.length) {
+                const item = colaAnimacion.shift();
+                await animarGanadorGrilla(item.num, item.data);
+            }
+            animandoGanador = false;
+        }
+
+        // Cuando llega un ganador por Firebase
+        db.ref('ganadores').on('child_added', async (snap) => {
+            const num = parseInt(snap.key);
+            if (ganadoresAnimados.has(num)) return;
+            ganadoresAnimados.add(num);
+            const dataGanador = snap.val() || {};
+
+            // Si no hay sorteo en curso (recarga posterior) o llegué tarde: marcar directo
+            if (!sorteoEnCurso || (dataGanador.fechaSorteo && Date.now() - dataGanador.fechaSorteo > 25000)) {
+                numerosYaGanadores.add(num);
+                const cell = document.getElementById('cell-' + num);
+                if (cell) {
+                    cell.classList.add('winner');
+                    cell.classList.add('usada');
+                }
+                return;
+            }
+
+            colaAnimacion.push({ num: num, data: dataGanador });
+            procesarColaAnimacion();
+        });
+
+        // El admin ejecuta el sorteo: escribe los ganadores con pausas dramáticas
         async function sortearDeVerdad() {
-            // Lock atómico: un solo dispositivo puede ejecutar el sorteo
             const lock = await db.ref('configuracion/sorteoBloqueado').transaction(v => {
                 if (v === true) return;
                 return true;
@@ -966,87 +1157,45 @@
             const casillas = Object.keys(participantesRegistrados).map(Number);
             if (!casillas.length) { alert('No hay casillas ocupadas.'); return; }
 
-            // Fase 1: tormenta de números en TODOS los dispositivos
-            await db.ref('configuracion/estadoSorteo').set('girando');
-            await new Promise(r => setTimeout(r, 4500));
-
-            // Fase 2: semilla pública + selección determinística (auditable)
+            // Semilla pública (auditable)
             const semilla = Date.now();
             await db.ref('configuracion/semillaSorteo').set(semilla);
             const rng = mulberry32(semilla);
             let bolsa = casillas.slice();
             const ganadoresCalculados = [];
-            for (const p of [...premios].reverse()) {   // se revelan 3º, 2º y 1º al final
+            for (const p of [...premios].reverse()) {   // BOX 3 primero, BOX 1 al final
                 for (let i = 1; i <= p.cantidad; i++) {
                     if (!bolsa.length) break;
-                    const num = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
-                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.cantidad > 1 ? p.nombre + ' #' + i : p.nombre, numero: num });
+                    const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
                 }
             }
 
-            // Fase 3: cada escritura dispara el reveal en todos los dispositivos
-            for (const g of ganadoresCalculados) {
-                const d = participantesRegistrados[g.numero] || {};
-                await db.ref('ganadores/' + g.numero).set({
-                    casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
-                    telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
-                });
-                await new Promise(r => setTimeout(r, 6500));
-            }
+            // FASE CAOS: todos los dispositivos oscurecen y parpadean
+            await db.ref('configuracion/estadoSorteo').set('girando');
+            await new Promise(r => setTimeout(r, 6000));
+
+            // 3er premio
+            await escribirGanador(ganadoresCalculados[0]);
+            await new Promise(r => setTimeout(r, 17000));
+            // 2do premio
+            await escribirGanador(ganadoresCalculados[1]);
+            await new Promise(r => setTimeout(r, 22000));
+            // 1er premio
+            await escribirGanador(ganadoresCalculados[2]);
+            await new Promise(r => setTimeout(r, 26000));
 
             await db.ref('configuracion/estadoSorteo').set('finalizado');
             sorteoEjecutado = true;
         }
 
-        // Listener de ganadores - TODOS ven la animación
-        db.ref('ganadores').on('child_added', async (snap) => {
-            const num = parseInt(snap.key);
-            if (ganadoresAnimados.has(num)) return;
-            if (!sorteoEnCurso) return;   // si recargás después del sorteo, no re-anima
-            ganadoresAnimados.add(num);
-
-            const dataGanador = snap.val() || {};
-            const participante = participantesRegistrados[num] || {};
-            const premioTxt = dataGanador.premio || '';
-
-            // 1) Frenar la tormenta
-            if (window.intervaloTormenta) { clearInterval(window.intervaloTormenta); window.intervaloTormenta = null; }
-
-            const overlay = document.getElementById('sorteoOverlay');
-            const numEl = document.getElementById('sorteoNumero');
-            const tarjeta = document.getElementById('sorteoTarjeta');
-            if (overlay && numEl && tarjeta) {
-                // 2) El número se clava en el centro
-                overlay.classList.add('activo');
-                numEl.style.display = 'block';
-                numEl.textContent = String(num).padStart(2, '0');
-                numEl.classList.remove('clavado');
-                void numEl.offsetWidth;   // reinicia la animación
-                numEl.classList.add('clavado');
-                overlay.classList.add('shake');
-                setTimeout(() => overlay.classList.remove('shake'), 500);
-                lanzarConfetti();
-                if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
-
-                await new Promise(r => setTimeout(r, 1400));
-                numEl.style.display = 'none';
-
-                // 3) Tarjeta con el ganador
-                document.getElementById('tarjetaMedalla').textContent = premioTxt.includes('BOX 1') ? '🥇' : (premioTxt.includes('BOX 2') ? '🥈' : '🥉');
-                document.getElementById('tarjetaNumero').textContent = String(num).padStart(2, '0');
-                document.getElementById('tarjetaNombre').textContent = participante.nombre || 'Ganador/a';
-                document.getElementById('tarjetaPremio').textContent = premioTxt;
-                tarjeta.classList.toggle('oro', premioTxt.includes('BOX 1'));
-                tarjeta.classList.add('visible');
-
-                await new Promise(r => setTimeout(r, 3800));
-                tarjeta.classList.remove('visible');
-            }
-
-            // 4) Marcar la celda en la grilla (como ya lo hacía)
-            const cell = document.getElementById('cell-' + num);
-            if (cell) cell.classList.add('winner');
-        });
+        async function escribirGanador(g) {
+            const d = participantesRegistrados[g.numero] || {};
+            await db.ref('ganadores/' + g.numero).set({
+                casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
+                telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
+            });
+        }
 
         // ============ RULETA ============
         const PRIZES = [
@@ -1522,18 +1671,18 @@
             document.getElementById('admin-telefono').value = '';
         }
 
-        // FORZAR SORTEO (CORREGIDO)
+        // FORZAR SORTEO (manual, con doble confirmación)
         async function forceSorteo() {
             const ocupadas = Object.keys(participantesRegistrados).length;
             if (!ocupadas) { alert('No hay casillas ocupadas para sortear.'); return; }
             const snapG = await db.ref('ganadores').once('value');
             if (snapG.exists() && Object.keys(snapG.val()).length > 0) { alert('El sorteo ya fue realizado.'); return; }
-            if (!confirm('🎲 ¿Lanzar el sorteo AHORA?\n\nSe sorteará entre ' + ocupadas + ' números vendidos.\nLa animación se verá en TODOS los dispositivos conectados.')) return;
+            if (!confirm('🎲 ¿Lanzar el sorteo AHORA?\n\nSe sorteará entre ' + ocupadas + ' números vendidos.\nLa animación se verá en TODOS los dispositivos conectados.\n\n⚠️ Mantené esta pantalla abierta y visible durante todo el show (~1 minuto).')) return;
             if (!confirm('Última confirmación. ¿Dale?')) return;
             await sortearDeVerdad();
         }
 
-        // RESETEAR TODO (CORREGIDO)
+        // RESETEAR TODO
         async function resetSorteo() {
             if (!confirm("⚠️ BORRAR TODO?")) return;
             if (!confirm("¿100% seguro?")) return;
@@ -1551,6 +1700,7 @@
                 });
             }
             sorteoEjecutado = false;
+            sorteoTerminado = false;
             alert("✅ Reseteado");
             location.reload();
         }
