@@ -410,7 +410,6 @@
         /* ===== ANIMACIÓN DEL SORTEO SOBRE LA GRILLA ========== */
         /* ===================================================== */
 
-        /* Fondo oscuro parpadeante durante el sorteo */
         #fondoParpadeo {
             position: fixed; inset: 0; background: #000; opacity: 0;
             pointer-events: none; z-index: 500;
@@ -421,7 +420,6 @@
             50% { opacity: 0.52; }
         }
 
-        /* Página en modo sorteo */
         body.modo-sorteo {
             background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
         }
@@ -435,7 +433,6 @@
         body.modo-sorteo .cell.occupied { background-color: #4a1130; border-color: #7a1f4d; color: #ffb3d1; }
         body.modo-sorteo .cell.winner { box-shadow: 0 0 22px rgba(251, 191, 36, 0.95); }
 
-        /* Casilla iluminada (caos / luz saltando) */
         .cell.lit {
             background: linear-gradient(135deg, #ff2d78, #ff6ba0) !important;
             color: #fff !important;
@@ -445,14 +442,12 @@
             z-index: 5;
         }
 
-        /* Casilla ganadora anulada (ya no participa más) */
         .cell.usada { position: relative; opacity: 0.92; }
         .cell.usada::after {
             content: '🏆'; position: absolute; top: -7px; right: -3px; font-size: 11px;
             filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
         }
 
-        /* Mensaje flotante del ganador */
         .mensaje-ganador {
             position: fixed; left: 50%; bottom: 8%;
             transform: translateX(-50%) scale(0.5);
@@ -467,15 +462,61 @@
         }
         .mensaje-ganador.visible { opacity: 1; transform: translateX(-50%) scale(1); }
 
-        /* Confeti del sorteo */
         @keyframes caerConfetiSorteo {
             to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ===================================================== */
+        /* ===== BOTÓN + PANTALLA DE SIMULACRO ================= */
+        /* ===================================================== */
+        .btn-simular {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; border: none; padding: 10px 26px; border-radius: 20px;
+            font-weight: bold; font-size: 0.95rem; cursor: pointer; margin-bottom: 8px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s ease;
+        }
+        .btn-simular:hover { transform: translateY(-2px); }
+
+        .simulacro-overlay {
+            position: fixed; inset: 0; z-index: 99998;
+            background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            padding: 20px; overflow-y: auto;
+        }
+        .simulacro-overlay.hidden { display: none; }
+        .simulacro-parpadeo {
+            position: absolute; inset: 0; background: #000; pointer-events: none;
+            animation: parpadeoFondo 1.2s ease-in-out infinite;
+        }
+        .simulacro-header {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; max-width: 700px; color: #ffb3d1; font-weight: bold;
+            margin-bottom: 20px; position: relative; z-index: 2;
+        }
+        .simulacro-header span { font-size: 1.05rem; letter-spacing: 1px; }
+        .simulacro-close {
+            background: #ef4444; color: #fff; border: none; padding: 9px 18px;
+            border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem;
+        }
+        .simulacro-grid {
+            display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px;
+            max-width: 700px; width: 100%; padding: 15px;
+            background: #1b0d14; border-radius: 20px; border: 4px solid #ff2d78;
+            box-shadow: 0 0 45px rgba(255, 45, 120, 0.4);
+            position: relative; z-index: 2;
+        }
+        .simulacro-grid .cell { background-color: #4a1130; border-color: #7a1f4d; color: #ffb3d1; }
+        @media (max-width: 768px) {
+            .simulacro-grid { gap: 3px; padding: 10px; }
+            .simulacro-grid .cell { font-size: 0.7rem; }
+            .simulacro-header span { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Fondo oscuro parpadeante del sorteo (invisible hasta que se ejecuta) -->
+    <!-- Fondo oscuro parpadeante del sorteo real -->
     <div id="fondoParpadeo"></div>
 
     <header>
@@ -546,6 +587,12 @@
     <div style="text-align:center;">
         <div class="counter-badge" id="casillas-counter">Números: 0 / 100</div>
     </div>
+
+    <!-- 🎭 BOTÓN SIMULAR SORTEO -->
+    <div style="text-align:center;">
+        <button class="btn-simular" onclick="abrirSimulacro()">🎭 Simular sorteo</button>
+    </div>
+
     <div class="progress-bar">
         <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
     </div>
@@ -663,27 +710,22 @@
         <p>✨ Ruleta: 1 tiro por semana por teléfono</p>
     </footer>
 
-    <!-- Mensaje flotante del ganador -->
+    <!-- Mensaje flotante del ganador (real y simulacro) -->
     <div id="mensajeGanador" class="mensaje-ganador"></div>
+
+    <!-- 🎭 PANTALLA DE SIMULACRO -->
+    <div id="simulacroOverlay" class="simulacro-overlay hidden">
+        <div class="simulacro-parpadeo"></div>
+        <div class="simulacro-header">
+            <span>🎭 SIMULACRO • 100 participantes de prueba</span>
+            <button class="simulacro-close" onclick="cerrarSimulacro()">✖ Salir</button>
+        </div>
+        <div class="simulacro-grid" id="simGrid"></div>
+    </div>
 
     <div id="admin-panel" class="hidden">
         <button class="close-btn" onclick="toggleAdmin()">✖</button>
         <h3>🔐 Panel Admin</h3>
-
-        <!-- 🧪 MODO PRUEBA -->
-        <div class="admin-section" style="border: 2px solid #10b981; background: #ecfdf5;">
-            <h4 style="color:#065f46;">🧪 Modo Prueba</h4>
-            <p id="test-mode-status" style="font-size:12px;color:#047857;margin-bottom:10px;"></p>
-            <div id="test-controls-prod">
-                <button class="btn-secondary" onclick="activarModoPrueba()" style="background:linear-gradient(135deg,#10b981,#34d399);color:white;border-color:#10b981;">🧪 Activar Modo Prueba</button>
-                <p style="font-size:11px;color:#6b7280;margin-top:6px;">Copia tus casillas a una zona aislada para probar el sorteo sin tocar los datos reales.</p>
-            </div>
-            <div id="test-controls-test" style="display:none;">
-                <button class="btn-secondary" onclick="reiniciarPrueba()" style="background:linear-gradient(135deg,#db2777,#f472b6);color:white;border-color:#db2777;margin-bottom:6px;">🔄 Reiniciar prueba (sortear de nuevo)</button>
-                <button class="btn-secondary" onclick="desactivarModoPrueba()" style="background:#6b7280;color:white;border-color:#6b7280;">🚪 Salir del Modo Prueba</button>
-                <button class="btn-secondary" onclick="limpiarZonaPrueba()" style="background:transparent;color:#9ca3af;border:1px solid #d1d5db;margin-top:6px;font-size:12px;">🧹 Vaciar zona de prueba</button>
-            </div>
-        </div>
 
         <div class="admin-section">
             <h4>➕ Registrar participante (venta manual)</h4>
@@ -735,19 +777,6 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
-        // ===== MODO PRUEBA: redirige el sorteo a una zona aislada =====
-        const LOTTERY_PATHS = ['casillas', 'ganadores', 'configuracion', 'tokens'];
-        function isTestMode() { return localStorage.getItem('sorteoTestMode') === '1'; }
-        const _realRef = db.ref.bind(db);
-        db.ref = function (path) {
-            path = path || '';
-            if (isTestMode() && path.indexOf('test/') !== 0) {
-                const raiz = path.split('/')[0];
-                if (LOTTERY_PATHS.indexOf(raiz) !== -1) return _realRef('test/' + path);
-            }
-            return _realRef(path);
-        };
 
         // ---- UTILIDADES Y SANITIZACIÓN (BLINDAJE XSS) ----
         function escapeHtml(str) {
@@ -802,7 +831,6 @@
         let fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
         let ganadoresAnimados = new Set();
 
-        // Estado de la animación del sorteo
         let sorteoEnCurso = false;
         let modoSorteoActivo = false;
         let sorteoTerminado = false;
@@ -873,7 +901,6 @@
             renderizarGanadores();
             actualizarAdminPanel();
             numerosYaGanadores = new Set(Object.keys(ganadoresLista).map(Number));
-            // Si el sorteo no está en curso, marcar las casillas ganadoras directamente
             if (!sorteoEnCurso) {
                 numerosYaGanadores.forEach(n => {
                     const cell = document.getElementById('cell-' + n);
@@ -1018,7 +1045,6 @@
             pintarTimer();
         }
 
-        // Listener del estado del sorteo: sincroniza a TODOS los dispositivos
         db.ref('configuracion/estadoSorteo').on('value', (snap) => {
             const estado = snap.val();
             if (estado === 'girando') {
@@ -1044,12 +1070,18 @@
             el.classList.add('visible');
         }
 
+        function mostrarMensajeTexto(html) {
+            const el = document.getElementById('mensajeGanador');
+            if (!el) return;
+            el.innerHTML = html;
+            el.classList.add('visible');
+        }
+
         function ocultarMensajeGanador() {
             const el = document.getElementById('mensajeGanador');
             if (el) el.classList.remove('visible');
         }
 
-        // Animación completa de UN ganador sobre la grilla
         async function animarGanadorGrilla(num, dataGanador) {
             const premioTxt = (dataGanador.premio || '');
             const nivel = premioTxt.includes('BOX 1') ? 3 : (premioTxt.includes('BOX 2') ? 2 : 1);
@@ -1057,7 +1089,6 @@
 
             detenerCaosAmbiente();
 
-            // FASE 1: CAOS — muchas casillas iluminadas al mismo tiempo
             const durCaos = nivel === 3 ? 1600 : (nivel === 2 ? 2200 : 2800);
             const cantCaos = nivel === 3 ? 16 : 14;
             const finCaos = Date.now() + durCaos;
@@ -1066,33 +1097,29 @@
                 await dormir(120);
             }
 
-            // FASE 2: REDUCCIÓN — van quedando cada vez menos luces
             const pasosReduccion = nivel === 3 ? [12, 9, 7, 5, 4, 3] : (nivel === 2 ? [12, 9, 6, 4, 3] : [11, 8, 5, 3]);
             for (const c of pasosReduccion) {
                 pintarLuces(c);
                 await dormir(400 + nivel * 70);
             }
 
-            // FASE 3: LUZ ÚNICA — salta de casilla en casilla frenando de a poco
             const pool = poolDisponibles();
             if (pool.indexOf(num) === -1) pool.push(num);
             let pos = Math.floor(Math.random() * pool.length);
-            const saltos = 18 + nivel * 9;   // 27 / 36 / 45 saltos (más drama cada vez)
+            const saltos = 18 + nivel * 9;
             for (let i = 0; i < saltos; i++) {
                 document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
                 const cell = document.getElementById('cell-' + pool[pos]);
                 if (cell) cell.classList.add('lit');
-                if (i === saltos - 1) break; // la última luz queda clavada
+                if (i === saltos - 1) break;
                 const prog = i / (saltos - 1);
                 let delay = 55 + Math.pow(prog, 2.3) * (300 + nivel * 130);
-                // Falsas frenadas: parece que para... y arranca de nuevo
                 if (nivel >= 2 && (i === Math.floor(saltos * 0.55) || i === Math.floor(saltos * 0.78))) delay += 600;
                 await dormir(delay);
                 if (i === saltos - 2) pos = pool.indexOf(num);
                 else pos = (pos + 1 + Math.floor(Math.random() * 3)) % pool.length;
             }
 
-            // FASE 4: REVEAL — la casilla ganadora se enciende en dorado
             await dormir(500);
             document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
             const cellGanadora = document.getElementById('cell-' + num);
@@ -1107,10 +1134,9 @@
             await dormir(4200 + nivel * 500);
             ocultarMensajeGanador();
             await dormir(600);
-            iniciarCaosAmbiente(); // mantiene el suspenso hasta el próximo ganador
+            iniciarCaosAmbiente();
         }
 
-        // Cola de animación (un ganador a la vez, en orden)
         async function procesarColaAnimacion() {
             if (animandoGanador) return;
             animandoGanador = true;
@@ -1121,14 +1147,12 @@
             animandoGanador = false;
         }
 
-        // Cuando llega un ganador por Firebase
         db.ref('ganadores').on('child_added', async (snap) => {
             const num = parseInt(snap.key);
             if (ganadoresAnimados.has(num)) return;
             ganadoresAnimados.add(num);
             const dataGanador = snap.val() || {};
 
-            // Si no hay sorteo en curso (recarga posterior) o llegué tarde: marcar directo
             if (!sorteoEnCurso || (dataGanador.fechaSorteo && Date.now() - dataGanador.fechaSorteo > 25000)) {
                 numerosYaGanadores.add(num);
                 const cell = document.getElementById('cell-' + num);
@@ -1143,7 +1167,6 @@
             procesarColaAnimacion();
         });
 
-        // El admin ejecuta el sorteo: escribe los ganadores con pausas dramáticas
         async function sortearDeVerdad() {
             const lock = await db.ref('configuracion/sorteoBloqueado').transaction(v => {
                 if (v === true) return;
@@ -1157,13 +1180,12 @@
             const casillas = Object.keys(participantesRegistrados).map(Number);
             if (!casillas.length) { alert('No hay casillas ocupadas.'); return; }
 
-            // Semilla pública (auditable)
             const semilla = Date.now();
             await db.ref('configuracion/semillaSorteo').set(semilla);
             const rng = mulberry32(semilla);
             let bolsa = casillas.slice();
             const ganadoresCalculados = [];
-            for (const p of [...premios].reverse()) {   // BOX 3 primero, BOX 1 al final
+            for (const p of [...premios].reverse()) {
                 for (let i = 1; i <= p.cantidad; i++) {
                     if (!bolsa.length) break;
                     const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
@@ -1171,17 +1193,13 @@
                 }
             }
 
-            // FASE CAOS: todos los dispositivos oscurecen y parpadean
             await db.ref('configuracion/estadoSorteo').set('girando');
             await new Promise(r => setTimeout(r, 6000));
 
-            // 3er premio
             await escribirGanador(ganadoresCalculados[0]);
             await new Promise(r => setTimeout(r, 17000));
-            // 2do premio
             await escribirGanador(ganadoresCalculados[1]);
             await new Promise(r => setTimeout(r, 22000));
-            // 1er premio
             await escribirGanador(ganadoresCalculados[2]);
             await new Promise(r => setTimeout(r, 26000));
 
@@ -1195,6 +1213,147 @@
                 casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
                 telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
             });
+        }
+
+        // ============================================================
+        // ===== 🎭 SIMULACRO DE SORTEO (no toca Firebase) ============
+        // ============================================================
+        let simParticipantes = {};
+        let simYaGanadores = new Set();
+        let simCaosInterval = null;
+        let simulandoActivo = false;
+
+        function abrirSimulacro() {
+            if (simulandoActivo) return;
+            simulandoActivo = true;
+
+            const nombres = ['Ana','Luis','Marta','Jorge','Sofía','Pedro','Lucía','Diego','Valentina','Camila','Franco','Rocío','Nicolás','Julieta','Mateo','Abril','Thiago','Emma','Bautista','Isabela'];
+            const apellidos = ['García','López','Martínez','Pérez','Gómez','Fernández','Rodríguez','Silva','Torres','Ramírez','Castro','Morales'];
+            simParticipantes = {};
+            simYaGanadores = new Set();
+            for (let i = 1; i <= 100; i++) {
+                simParticipantes[i] = {
+                    nombre: nombres[Math.floor(Math.random() * nombres.length)] + ' ' + apellidos[Math.floor(Math.random() * apellidos.length)]
+                };
+            }
+
+            const simGrid = document.getElementById('simGrid');
+            simGrid.innerHTML = '';
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell sim-cell occupied';
+                cell.id = 'sim-cell-' + i;
+                cell.innerText = String(i).padStart(2, '0');
+                cell.title = simParticipantes[i].nombre;
+                simGrid.appendChild(cell);
+            }
+
+            document.getElementById('simulacroOverlay').classList.remove('hidden');
+            correrSimulacro();
+        }
+
+        function simPoolDisponibles() {
+            return Object.keys(simParticipantes).map(Number).filter(n => !simYaGanadores.has(n));
+        }
+
+        function simPintarLuces(cant) {
+            document.querySelectorAll('.sim-cell.lit').forEach(c => c.classList.remove('lit'));
+            const pool = simPoolDisponibles();
+            const mezcladas = pool.slice().sort(() => Math.random() - 0.5).slice(0, cant);
+            mezcladas.forEach(n => {
+                const cell = document.getElementById('sim-cell-' + n);
+                if (cell) cell.classList.add('lit');
+            });
+        }
+
+        function simIniciarCaos() {
+            if (simCaosInterval) clearInterval(simCaosInterval);
+            simCaosInterval = setInterval(() => simPintarLuces(16 + Math.floor(Math.random() * 4)), 130);
+        }
+
+        function simDetenerCaos() {
+            if (simCaosInterval) { clearInterval(simCaosInterval); simCaosInterval = null; }
+        }
+
+        async function correrSimulacro() {
+            const pool = simPoolDisponibles().slice().sort(() => Math.random() - 0.5);
+            const winners = [
+                { numero: pool[0], premio: 'BOX 3' },
+                { numero: pool[1], premio: 'BOX 2' },
+                { numero: pool[2], premio: 'BOX 1' }
+            ];
+
+            simIniciarCaos();
+            await dormir(3500);
+
+            for (const w of winners) {
+                await simAnimarGanador(w.numero, w.premio);
+                await dormir(800);
+            }
+
+            simDetenerCaos();
+            mostrarMensajeTexto('✅ Simulación completa<br>El sorteo real se verá exactamente así');
+            await dormir(3000);
+            ocultarMensajeGanador();
+        }
+
+        async function simAnimarGanador(num, premioTxt) {
+            const nivel = premioTxt.includes('BOX 1') ? 3 : (premioTxt.includes('BOX 2') ? 2 : 1);
+            const nombre = simParticipantes[num] ? simParticipantes[num].nombre : 'Ganador';
+
+            simDetenerCaos();
+
+            const durCaos = nivel === 3 ? 1600 : (nivel === 2 ? 2200 : 2800);
+            const cantCaos = nivel === 3 ? 18 : 16;
+            const finCaos = Date.now() + durCaos;
+            while (Date.now() < finCaos) {
+                simPintarLuces(cantCaos);
+                await dormir(120);
+            }
+
+            const pasos = nivel === 3 ? [14, 11, 8, 6, 4, 3] : (nivel === 2 ? [14, 11, 8, 5, 3] : [13, 10, 6, 3]);
+            for (const c of pasos) {
+                simPintarLuces(c);
+                await dormir(400 + nivel * 70);
+            }
+
+            const pool = simPoolDisponibles();
+            if (pool.indexOf(num) === -1) pool.push(num);
+            let pos = Math.floor(Math.random() * pool.length);
+            const saltos = 18 + nivel * 9;
+            for (let i = 0; i < saltos; i++) {
+                document.querySelectorAll('.sim-cell.lit').forEach(c => c.classList.remove('lit'));
+                const cell = document.getElementById('sim-cell-' + pool[pos]);
+                if (cell) cell.classList.add('lit');
+                if (i === saltos - 1) break;
+                const prog = i / (saltos - 1);
+                let delay = 55 + Math.pow(prog, 2.3) * (300 + nivel * 130);
+                if (nivel >= 2 && (i === Math.floor(saltos * 0.55) || i === Math.floor(saltos * 0.78))) delay += 600;
+                await dormir(delay);
+                if (i === saltos - 2) pos = pool.indexOf(num);
+                else pos = (pos + 1 + Math.floor(Math.random() * 3)) % pool.length;
+            }
+
+            await dormir(500);
+            document.querySelectorAll('.sim-cell.lit').forEach(c => c.classList.remove('lit'));
+            const cellG = document.getElementById('sim-cell-' + num);
+            if (cellG) {
+                cellG.classList.add('winner');
+                cellG.classList.add('usada');
+            }
+            simYaGanadores.add(num);
+            lanzarConfetti();
+            if (navigator.vibrate) navigator.vibrate([80, 50, 120]);
+            mostrarMensajeGanador(num, nombre, etiquetaPremio(premioTxt));
+            await dormir(4200 + nivel * 500);
+            ocultarMensajeGanador();
+        }
+
+        function cerrarSimulacro() {
+            simDetenerCaos();
+            ocultarMensajeGanador();
+            document.getElementById('simulacroOverlay').classList.add('hidden');
+            simulandoActivo = false;
         }
 
         // ============ RULETA ============
@@ -1671,7 +1830,6 @@
             document.getElementById('admin-telefono').value = '';
         }
 
-        // FORZAR SORTEO (manual, con doble confirmación)
         async function forceSorteo() {
             const ocupadas = Object.keys(participantesRegistrados).length;
             if (!ocupadas) { alert('No hay casillas ocupadas para sortear.'); return; }
@@ -1682,7 +1840,6 @@
             await sortearDeVerdad();
         }
 
-        // RESETEAR TODO
         async function resetSorteo() {
             if (!confirm("⚠️ BORRAR TODO?")) return;
             if (!confirm("¿100% seguro?")) return;
@@ -1923,56 +2080,6 @@
             }
         }
 
-        // ===== CONTROLES DEL MODO PRUEBA =====
-        async function activarModoPrueba() {
-            const snap = await _realRef('casillas').once('value');
-            const casillas = snap.val();
-            const n = casillas ? Object.keys(casillas).length : 0;
-            if (!confirm('🧪 ACTIVAR MODO PRUEBA\n\n• Se copiarán tus ' + n + ' casillas reales a una zona aislada (test/).\n• Vas a poder ejecutar el sorteo completo las veces que quieras.\n• TUS DATOS REALES NO SE TOCAN.\n\n¿Activar?')) return;
-            if (casillas) await _realRef('test/casillas').set(casillas);
-            localStorage.setItem('sorteoTestMode', '1');
-            location.reload();
-        }
-
-        async function reiniciarPrueba() {
-            if (!isTestMode()) return;
-            if (!confirm('🔄 ¿Reiniciar la prueba?\nSe borran los ganadores de prueba y se recargan tus casillas para sortear de nuevo.')) return;
-            const snap = await _realRef('casillas').once('value');
-            const casillas = snap.val();
-            await _realRef('test/ganadores').remove();
-            await _realRef('test/configuracion').remove();
-            if (casillas) await _realRef('test/casillas').set(casillas);
-            location.reload();
-        }
-
-        async function limpiarZonaPrueba() {
-            if (!confirm('🧹 ¿Vaciar toda la zona de prueba? (Tus datos reales no se tocan)')) return;
-            await _realRef('test').remove();
-            alert('✅ Zona de prueba vaciada.');
-            if (isTestMode()) location.reload();
-        }
-
-        function desactivarModoPrueba() {
-            localStorage.removeItem('sorteoTestMode');
-            location.reload();
-        }
-
-        function actualizarUItestMode() {
-            const status = document.getElementById('test-mode-status');
-            const prod = document.getElementById('test-controls-prod');
-            const test = document.getElementById('test-controls-test');
-            if (!status) return;
-            if (isTestMode()) {
-                status.innerHTML = '🔴 <b>MODO PRUEBA ACTIVADO</b> — todo va a la zona aislada.';
-                if (prod) prod.style.display = 'none';
-                if (test) test.style.display = 'block';
-            } else {
-                status.innerHTML = '🟢 Modo producción (datos reales).';
-                if (prod) prod.style.display = 'block';
-                if (test) test.style.display = 'none';
-            }
-        }
-
         // ===== CONFETI DEL SORTEO =====
         function lanzarConfetti() {
             const colores = ['#ffd700', '#ff5f8f', '#a86bff', '#5fd2ff', '#7cfc9a', '#ffffff'];
@@ -1984,15 +2091,6 @@
                 setTimeout(() => c.remove(), (dur + 1) * 1000);
             }
         }
-
-        // ===== MODO PRUEBA: banner e inicialización =====
-        if (isTestMode()) {
-            const bannerTest = document.createElement('div');
-            bannerTest.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:#fff;text-align:center;padding:8px 10px;font-weight:bold;z-index:100001;font-size:13px;';
-            bannerTest.textContent = '🧪 MODO PRUEBA — nada de esto afecta tus datos reales';
-            document.body.appendChild(bannerTest);
-        }
-        actualizarUItestMode();
     </script>
 </body>
 </html>
