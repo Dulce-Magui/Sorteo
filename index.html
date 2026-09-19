@@ -588,12 +588,7 @@
         <div class="counter-badge" id="casillas-counter">Números: 0 / 100</div>
     </div>
 
-    <!-- 🎭 BOTÓN SIMULAR SORTEO -->
-    <div style="text-align:center;">
-        <button class="btn-simular" onclick="abrirSimulacro()">🎭 Simular sorteo</button>
-    </div>
-
-    <div class="progress-bar">
+    <div class="progress-bar" id="progress-trigger">
         <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
     </div>
 
@@ -1763,7 +1758,18 @@
                 if (logoTapCount >= 5) { logoTapCount = 0; toggleAdmin(); }
             });
         }
-
+// 🎭 5 clics en la barra de progreso = simulacro oculto
+        const progressTrigger = document.getElementById('progress-trigger');
+        if (progressTrigger) {
+            let progressTapCount = 0;
+            let progressTapTimer = null;
+            progressTrigger.addEventListener('click', () => {
+                progressTapCount++;
+                if (progressTapTimer) clearTimeout(progressTapTimer);
+                progressTapTimer = setTimeout(() => { progressTapCount = 0; }, 2000);
+                if (progressTapCount >= 5) { progressTapCount = 0; abrirSimulacro(); }
+            });
+        }
         function actualizarAdminPanel() {
             const ocupadas = Object.keys(participantesRegistrados).length;
             const s = document.getElementById('admin-status');
