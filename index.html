@@ -636,7 +636,7 @@
 
     <div class="separator"></div>
 
-    <section class="ruleta-section">
+    <section class="ruleta-section" id="ruleta">
         <h2>🎡 Ruleta de Descuentos</h2>
         <p class="ruleta-subtitle">¡GRATIS! Registrate con tu teléfono y tirá 1 vez por semana</p>
         <p class="ruleta-subtitle" style="margin-top:-15px;font-size:0.85rem;color:#db2777;font-weight:600;">
@@ -740,6 +740,7 @@
             <h4>📊 Sorteo Día de la Madre</h4>
             <p id="admin-status">Cargando...</p>
             <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
+            <button class="btn-secondary" onclick="continuarSorteo()" style="background:#fffbeb;color:#92400e;border-color:#f59e0b;">🔁 Continuar sorteo (si quedó a medias)</button>
             <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
         </div>
 
@@ -1867,6 +1868,38 @@
             alert("✅ Reseteado");
             location.reload();
         }
+        // 🔁 RECUPERACIÓN: si el sorteo quedó a medias, retoma sin perder ventas
+        async function continuarSorteo() {
+            if (!confirm('⚠️ ¿El sorteo quedó a medias?\n\nEsta función retoma desde donde se frenó usando la misma semilla (mismos ganadores). Tus ventas NO se tocan.\n\n¿Continuar?')) return;
+
+            const semillaSnap = await db.ref('configuracion/semillaSorteo').once('value');
+            if (!semillaSnap.exists()) { alert('No hay semilla guardada. El sorteo nunca arrancó. Usá "Forzar Sorteo".'); return; }
+
+            const ganadoresSnap = await db.ref('ganadores').once('value');
+            const yaEscritos = ganadoresSnap.exists() ? ganadoresSnap.val() : {};
+            if (Object.keys(yaEscritos).length >= 3) { alert('El sorteo ya está completo (3 ganadores).'); return; }
+
+            // Recomputar los MISMOS ganadores con la misma semilla
+            const rng = mulberry32(semillaSnap.val());
+            let bolsa = Object.keys(participantesRegistrados).map(Number);
+            const ganadoresCalculados = [];
+            for (const p of [...premios].reverse()) {
+                for (let i = 1; i <= p.cantidad; i++) {
+                    if (!bolsa.length) break;
+                    const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
+                }
+            }
+
+            await db.ref('configuracion/estadoSorteo').set('girando');
+            const faltantes = ganadoresCalculados.filter(g => !yaEscritos[g.numero]);
+            for (const g of faltantes) {
+                await escribirGanador(g);
+                await new Promise(r => setTimeout(r, 22000));
+            }
+            await db.ref('configuracion/estadoSorteo').set('finalizado');
+            alert('✅ Sorteo completado.');
+        }
 
         function exportarGanadoresWA() {
             if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
@@ -2097,6 +2130,15 @@
                 setTimeout(() => c.remove(), (dur + 1) * 1000);
             }
         }
+        // Scroll automático si la URL tiene #ruleta
+if (window.location.hash === '#ruleta') {
+    setTimeout(() => {
+        const ruletaSection = document.getElementById('ruleta');
+        if (ruletaSection) {
+            ruletaSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 300);
+}
     </script>
 </body>
 </html>
