@@ -336,30 +336,63 @@
         /* ===================================================== */
         #sorteoLiveOverlay {
             position: fixed; inset: 0; z-index: 100000;
-            background: #000;
-            color: #fff;
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: flex-start; overflow: auto;
-            padding: 14px 12px 28px;
+            background: #000; color:#fff;
+            display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+            overflow:hidden; padding:12px 10px max(10px, env(safe-area-inset-bottom));
+            box-sizing:border-box;
         }
         #sorteoLiveOverlay.hidden { display:none !important; }
-        .live-topbar { width:100%; max-width:900px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; position:relative; z-index:3; }
-        .live-badge { background:#e11d48; color:#fff; border-radius:999px; padding:8px 13px; font-weight:900; letter-spacing:1px; font-size:12px; box-shadow:0 0 20px rgba(225,29,72,.65); animation: livePulse 1.1s infinite; }
+        .live-topbar { width:100%; max-width:900px; display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; position:relative; z-index:3; flex:0 0 auto; }
+        .live-badge { background:#e11d48; color:#fff; border-radius:999px; padding:7px 11px; font-weight:900; letter-spacing:1px; font-size:11px; box-shadow:0 0 20px rgba(225,29,72,.65); animation: livePulse 1.1s infinite; }
         .live-title { font-size:clamp(14px,3.5vw,24px); font-weight:900; text-align:center; flex:1; }
-        .live-status { width:100%; max-width:900px; text-align:center; color:#f9a8d4; font-weight:800; font-size:clamp(12px,2.8vw,18px); margin-bottom:10px; min-height:24px; }
-        .live-progress { width:100%; max-width:900px; height:7px; background:#251018; border-radius:999px; overflow:hidden; margin-bottom:14px; border:1px solid #4a1830; }
-        .live-progress > div { height:100%; width:0%; background:linear-gradient(90deg,#ec4899,#fbbf24); transition:width .35s ease; box-shadow:0 0 15px #ec4899; }
-        .live-grid-wrap { width:100%; max-width:900px; display:flex; justify-content:center; }
-        #liveGrid { display:grid; grid-template-columns:repeat(10, minmax(25px,1fr)); gap:5px; width:min(900px,100%); padding:12px; background:#090909; border:3px solid #ec4899; border-radius:18px; box-shadow:0 0 35px rgba(236,72,153,.35); }
-        #liveGrid .cell { background:#160c12; border-color:#432033; color:#8f5f76; }
+        .live-status { width:100%; max-width:900px; text-align:center; color:#f9a8d4; font-weight:800; font-size:clamp(11px,2.6vw,18px); margin-bottom:6px; min-height:22px; flex:0 0 auto; }
+        .live-progress { width:100%; max-width:900px; height:6px; background:#251018; border-radius:999px; overflow:hidden; margin-bottom:8px; border:1px solid #4a1830; flex:0 0 auto; }
+        .live-progress > div { height:100%; width:0%; background:linear-gradient(90deg,#ec4899,#fbbf24); transition:width .2s linear; box-shadow:0 0 15px #ec4899; }
+        .live-grid-wrap { width:100%; max-width:900px; flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; }
+        #liveGrid { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:clamp(2px,.55vw,5px); width:min(900px,92vw,calc(100vh - 245px)); aspect-ratio:1; padding:clamp(6px,1.2vw,12px); box-sizing:border-box; background:#090909; border:3px solid #ec4899; border-radius:18px; box-shadow:0 0 35px rgba(236,72,153,.35); contain:layout paint; }
+        #liveGrid .cell { min-width:0; min-height:0; aspect-ratio:1; background:#160c12; border-color:#432033; color:#8f5f76; transition:none; }
         #liveGrid .cell.occupied { background:#3b1027; border-color:#7a1f4d; color:#ffb3d1; }
-        #liveGrid .cell.lit { background:linear-gradient(135deg,#ff2d78,#ff6ba0)!important; color:#fff!important; border-color:#fff!important; box-shadow:0 0 14px #ff2d78,0 0 32px rgba(255,45,120,.85); transform:scale(1.15); z-index:5; }
+        #liveGrid .cell.lit { background:linear-gradient(135deg,#ff2d78,#ff6ba0)!important; color:#fff!important; border-color:#fff!important; box-shadow:0 0 10px #ff2d78,0 0 20px rgba(255,45,120,.7); transform:scale(1.12); z-index:5; }
         #liveGrid .cell.winner { background:linear-gradient(135deg,#fbbf24,#d97706)!important; color:#241200!important; border-color:#fff!important; box-shadow:0 0 25px rgba(251,191,36,.9); }
-        #liveWinner { position:fixed; left:50%; bottom:7%; transform:translateX(-50%) scale(.6); width:min(92%,650px); background:linear-gradient(135deg,#fbbf24,#d97706); color:#3b2405; padding:17px 25px; border-radius:18px; border:3px solid #fff; box-shadow:0 0 55px rgba(251,191,36,.9); font-size:clamp(16px,4vw,27px); font-weight:900; text-align:center; line-height:1.35; opacity:0; pointer-events:none; transition:all .4s cubic-bezier(.2,1.8,.4,1); z-index:100003; }
-        #liveWinner.visible { opacity:1; transform:translateX(-50%) scale(1); }
-        .live-footer { width:100%; max-width:900px; text-align:center; color:#6b5360; margin-top:10px; font-size:11px; }
+
+        /* Podio olímpico: siempre debajo del tablero, nunca encima de él. */
+        .live-podium {
+            width:min(900px,96vw); height:clamp(82px,11vh,112px); flex:0 0 auto;
+            display:grid; grid-template-columns:1fr 1.12fr 1fr; align-items:end; gap:7px;
+            margin:6px auto 0; position:relative; z-index:20; pointer-events:none;
+        }
+        .podium-card { min-width:0; height:78%; border:1px solid rgba(255,255,255,.18); border-radius:12px 12px 8px 8px; padding:7px 6px 6px; box-sizing:border-box; background:linear-gradient(180deg,#171017,#0d0a0d); text-align:center; box-shadow:0 5px 18px rgba(0,0,0,.45); display:flex; flex-direction:column; justify-content:center; overflow:hidden; }
+        .podium-first { height:100%; order:2; border-color:#fbbf24; box-shadow:0 0 20px rgba(251,191,36,.24); }
+        .podium-second { height:86%; order:1; border-color:#cbd5e1; }
+        .podium-third { height:72%; order:3; border-color:#d97706; }
+        .podium-card.confirmado { background:linear-gradient(180deg,#33250b,#171006); }
+        .podium-card.activo { animation:podiumPulse .8s ease-in-out infinite alternate; }
+        .podium-place { font-size:clamp(9px,1.9vw,14px); font-weight:1000; letter-spacing:.5px; white-space:nowrap; }
+        .podium-result { margin-top:3px; color:#f9a8d4; font-size:clamp(9px,1.8vw,13px); font-weight:800; line-height:1.15; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .podium-card.confirmado .podium-result { color:#fff; }
+        @keyframes podiumPulse { from{transform:translateY(0);filter:brightness(1)} to{transform:translateY(-2px);filter:brightness(1.25)} }
+        #liveWinner { display:none !important; }
+        .live-footer { width:100%; max-width:900px; text-align:center; color:#6b5360; margin-top:3px; font-size:9px; flex:0 0 auto; }
         @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(.96)} }
-        @media(max-width:768px){ #liveGrid{gap:3px;padding:8px;border-width:2px} #liveGrid .cell{font-size:.7rem} .live-topbar{flex-wrap:wrap;justify-content:center} }
+        @media(max-width:768px){
+            #sorteoLiveOverlay{padding-left:6px;padding-right:6px;}
+            #liveGrid{border-width:2px;border-radius:13px;width:min(94vw,calc(100vh - 220px));padding:6px;}
+            #liveGrid .cell{font-size:clamp(7px,2.2vw,11px);border-width:1px;border-radius:5px;}
+            .live-topbar{flex-wrap:nowrap;}
+            .live-badge{padding:5px 8px;font-size:9px;}
+            .live-title{font-size:13px;}
+            .live-podium{width:98vw;height:76px;gap:4px;margin-top:4px;}
+            .podium-card{padding:5px 3px;border-radius:9px 9px 6px 6px;}
+            .podium-place{font-size:8px;}
+            .podium-result{font-size:8px;}
+            .live-footer{font-size:8px;}
+        }
+        @media(max-height:650px){
+            .live-status{min-height:17px;margin-bottom:3px;}
+            .live-progress{margin-bottom:4px;}
+            .live-podium{height:62px;}
+            #liveGrid{width:min(92vw,calc(100vh - 185px));}
+        }
 
         /* ===================================================== */
         /* ===== PANTALLA DE SIMULACRO PRIVADA ================= */
@@ -548,7 +581,24 @@
         <div id="liveStatus" class="live-status">Preparando la transmisión...</div>
         <div class="live-progress"><div id="liveProgressFill"></div></div>
         <div class="live-grid-wrap"><div id="liveGrid"></div></div>
-        <div id="liveWinner"></div>
+
+        <!-- Podio sincronizado: queda fuera del tablero y visible en PC/celular -->
+        <div id="livePodium" class="live-podium" aria-live="polite">
+            <div class="podium-card podium-second" data-podium="BOX 2">
+                <div class="podium-place">🥈 2DO PREMIO</div>
+                <div class="podium-result">Esperando ganador…</div>
+            </div>
+            <div class="podium-card podium-first" data-podium="BOX 1">
+                <div class="podium-place">🥇 1ER PREMIO</div>
+                <div class="podium-result">Esperando ganador…</div>
+            </div>
+            <div class="podium-card podium-third" data-podium="BOX 3">
+                <div class="podium-place">🥉 3ER PREMIO</div>
+                <div class="podium-result">Esperando ganador…</div>
+            </div>
+        </div>
+
+        <div id="liveWinner" aria-hidden="true"></div>
         <div class="live-footer">Sorteo en vivo • Resultados sincronizados con Firebase</div>
     </div>
 
@@ -731,6 +781,7 @@
             db.ref('ganadores').on('value', (snap) => {
                 ganadoresLista = snap.val() || {};
                 renderizarGanadores();
+                actualizarPodioLive();
                 actualizarAdminPanel();
                 numerosYaGanadores = new Set(Object.keys(ganadoresLista).map(Number));
                 if (!sorteoEnCurso) {
@@ -858,14 +909,16 @@
         function construirLiveGrid() {
             const liveGrid = document.getElementById('liveGrid');
             if (!liveGrid) return;
-            liveGrid.innerHTML = '';
+            if (liveGrid.children.length === TOTAL_CASILLAS) return;
+            const frag = document.createDocumentFragment();
             for (let i = 1; i <= TOTAL_CASILLAS; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell occupied';
                 cell.id = 'live-cell-' + i;
                 cell.innerText = String(i).padStart(2, '0');
-                liveGrid.appendChild(cell);
+                frag.appendChild(cell);
             }
+            liveGrid.replaceChildren(frag);
         }
 
         function actualizarLiveStatus(texto, indice, total) {
@@ -875,22 +928,59 @@
             if (fill) fill.style.width = ((Math.max(0, indice) / Math.max(1, total)) * 100) + '%';
         }
 
-        function entrarModoSorteoVisual() {
-            construirLiveGrid();
-            document.body.classList.add('modo-sorteo');
-            const fondo = document.getElementById('fondoParpadeo');
-            if (fondo) fondo.classList.add('activo');
-            const overlay = document.getElementById('sorteoLiveOverlay');
-            if (overlay) overlay.classList.remove('hidden');
-            modoSorteoActivo = true;
-            sorteoEnCurso = true;
-            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
-            pintarTimer();
-            detenerCaosAmbiente();
+        function textoCortoGanador(g) {
+            if (!g) return 'Esperando ganador…';
+            const n = String(g.casilla || '').padStart(2, '0');
+            const nombre = String(g.nombre || 'Ganador/a').trim();
+            return '#' + n + ' · ' + nombre;
         }
 
-        function salirModoSorteoVisual() {
+        function actualizarPodioLive(animActual = null) {
+            const podio = document.getElementById('livePodium');
+            if (!podio) return;
+            const cards = {
+                'BOX 3': podio.querySelector('[data-podium="BOX 3"]'),
+                'BOX 2': podio.querySelector('[data-podium="BOX 2"]'),
+                'BOX 1': podio.querySelector('[data-podium="BOX 1"]')
+            };
+            Object.values(cards).forEach(card => {
+                if (!card) return;
+                card.classList.remove('confirmado','activo');
+                const result = card.querySelector('.podium-result');
+                if (result) result.textContent = 'Esperando ganador…';
+            });
+
+            Object.values(ganadoresLista || {}).forEach(g => {
+                const premio = String(g.premio || '');
+                const key = premio.includes('BOX 3') ? 'BOX 3' : premio.includes('BOX 2') ? 'BOX 2' : premio.includes('BOX 1') ? 'BOX 1' : null;
+                const card = key ? cards[key] : null;
+                if (!card) return;
+                card.classList.add('confirmado');
+                const result = card.querySelector('.podium-result');
+                if (result) result.textContent = textoCortoGanador(g);
+            });
+
+            if (animActual && animActual.premio) {
+                const premio = String(animActual.premio);
+                const key = premio.includes('BOX 3') ? 'BOX 3' : premio.includes('BOX 2') ? 'BOX 2' : premio.includes('BOX 1') ? 'BOX 1' : null;
+                const card = key ? cards[key] : null;
+                if (card) card.classList.add('activo');
+            }
+        }
+
+        function limpiarCeldasLive() {
+            for (const c of liveLitCells) c.classList.remove('lit');
+            liveLitCells = [];
+        }
+
+        function restaurarPantallaPrincipal() {
+            liveAnimacionToken++;
+            liveAnimacionClave = '';
+            liveAnimacionActiva = false;
+            if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
+            limpiarCeldasLive();
             document.body.classList.remove('modo-sorteo');
+            document.body.style.overflow = '';
             const fondo = document.getElementById('fondoParpadeo');
             if (fondo) fondo.classList.remove('activo');
             const overlay = document.getElementById('sorteoLiveOverlay');
@@ -899,7 +989,38 @@
             if (liveWinner) liveWinner.classList.remove('visible');
             modoSorteoActivo = false;
             detenerCaosAmbiente();
-            document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+            renderizarGanadores();
+            pintarTimer();
+        }
+
+        function entrarModoSorteoVisual() {
+            construirLiveGrid();
+            document.body.classList.add('modo-sorteo');
+            document.body.style.overflow = 'hidden';
+            const fondo = document.getElementById('fondoParpadeo');
+            if (fondo) fondo.classList.add('activo');
+            const overlay = document.getElementById('sorteoLiveOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+            modoSorteoActivo = true;
+            sorteoEnCurso = true;
+            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
+            actualizarPodioLive();
+            pintarTimer();
+            detenerCaosAmbiente();
+        }
+
+        function salirModoSorteoVisual() {
+            document.body.classList.remove('modo-sorteo');
+            document.body.style.overflow = '';
+            const fondo = document.getElementById('fondoParpadeo');
+            if (fondo) fondo.classList.remove('activo');
+            const overlay = document.getElementById('sorteoLiveOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            const liveWinner = document.getElementById('liveWinner');
+            if (liveWinner) liveWinner.classList.remove('visible');
+            modoSorteoActivo = false;
+            detenerCaosAmbiente();
+            limpiarCeldasLive();
             renderizarGanadores();
             pintarTimer();
         }
@@ -1012,6 +1133,8 @@
         let liveAnimacionToken = 0;
         let liveAnimacionActiva = false;
         let liveAnimacionIntervalo = null;
+        let liveLitCells = [];
+        let liveEstadoLectura = 'desconocido';
 
         if (db) {
             db.ref('.info/serverTimeOffset').on('value', snap => {
@@ -1042,10 +1165,8 @@
         }
 
         function aplicarFrameLive(g, indice, transcurrido, semilla) {
+            limpiarCeldasLive();
             const getCell = n => document.getElementById('live-cell-' + n);
-            const cells = document.querySelectorAll('#liveGrid .cell.lit');
-            cells.forEach(c => c.classList.remove('lit'));
-
             const pool = poolLiveDeterministico();
             if (!pool.includes(g.numero)) pool.push(g.numero);
 
@@ -1058,26 +1179,23 @@
                 cantidad = reduccion[paso];
                 faseSeed += 50000 + paso * 997;
             } else if (transcurrido >= 21000 && transcurrido < 29000) {
-                // Fase final: cada vez quedan menos saltos y finalmente cae en el ganador.
                 const saltos = indice === 0 ? 10 : (indice === 1 ? 15 : 20);
                 const delays = [];
                 for (let i = 0; i < saltos; i++) delays.push(220 + i * 35 + (i >= saltos - 3 ? 300 : 0));
-                const total = delays.reduce((a,b) => a+b, 0) + 600;
                 let acumulado = 0, pos = saltos - 1;
                 for (let i = 0; i < delays.length; i++) {
                     acumulado += delays[i];
                     if (transcurrido - 21000 < acumulado) { pos = i; break; }
                 }
-                if (pos === saltos - 1 && transcurrido - 21000 >= total - 600) {
+                if (pos === saltos - 1 && transcurrido - 21000 >= delays.reduce((a,b)=>a+b,0) - 600) {
                     const c = getCell(g.numero);
-                    if (c) c.classList.add('lit');
+                    if (c) { c.classList.add('lit'); liveLitCells = [c]; }
                     return;
                 }
                 const candidatos = pool.filter(n => n !== g.numero);
                 const elegidos = seleccionarDeterministico(candidatos.length ? candidatos : pool, 1, faseSeed + pos * 1231);
-                const n = elegidos[0] || g.numero;
-                const c = getCell(n);
-                if (c) c.classList.add('lit');
+                const c = getCell(elegidos[0] || g.numero);
+                if (c) { c.classList.add('lit'); liveLitCells = [c]; }
                 return;
             } else if (transcurrido >= 29000) {
                 const c = getCell(g.numero);
@@ -1085,16 +1203,25 @@
                 return;
             }
 
+            const next = [];
             seleccionarDeterministico(pool, cantidad, faseSeed).forEach(n => {
                 const c = getCell(n);
-                if (c) c.classList.add('lit');
+                if (c) { c.classList.add('lit'); next.push(c); }
             });
+            liveLitCells = next;
         }
 
         const DURACION_ANIMACION_LIVE = 37000;
 
         async function reproducirAnimacionLiveSincronizada(anim) {
             if (!anim || !anim.numero || !anim.inicioMs) return;
+
+            // Nunca reproducir una animación vieja cuando Firebase ya terminó/pausó el sorteo.
+            const estadoSnap = await firebaseConTimeout(db.ref('configuracion/estadoSorteo').once('value'), 8000, 'validar estado de transmisión');
+            const estadoActual = estadoSnap.val();
+            liveEstadoLectura = estadoActual || 'desconocido';
+            if (estadoActual !== 'girando') return;
+
             const clave = String(anim.id || (anim.indice + '-' + anim.numero + '-' + anim.inicioMs));
             if (clave === liveAnimacionClave) return;
             liveAnimacionClave = clave;
@@ -1104,6 +1231,7 @@
             entrarModoSorteoVisual();
             construirLiveGrid();
             actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(anim.premio || ''), Number(anim.indice || 0), Number(anim.total || 3));
+            actualizarPodioLive(anim);
 
             const inicio = Number(anim.inicioMs);
             const semilla = Number(anim.semilla || 1);
@@ -1124,25 +1252,29 @@
                 aplicarFrameLive(g, indice, transcurrido, semilla);
 
                 if (transcurrido >= 29000) {
-                    const liveWinner = document.getElementById('liveWinner');
-                    if (liveWinner) {
-                        const nombre = (participantesRegistrados[numero] || {}).nombre || 'Ganador/a';
-                        liveWinner.innerHTML = '🎉 ¡CASILLA #' + String(numero).padStart(2, '0') + '!<br>👤 ' + escapeHtml(nombre) + '<br>🏆 ' + escapeHtml(etiquetaPremio(anim.premio || ''));
-                        liveWinner.classList.add('visible');
+                    actualizarPodioLive(anim);
+                    const podio = document.getElementById('livePodium');
+                    if (podio) {
+                        podio.querySelectorAll('.podium-card').forEach(c => c.classList.remove('activo'));
+                        const premio = String(anim.premio || '');
+                        const key = premio.includes('BOX 3') ? 'BOX 3' : premio.includes('BOX 2') ? 'BOX 2' : 'BOX 1';
+                        const card = podio.querySelector('[data-podium="' + key + '"]');
+                        if (card) card.classList.add('activo');
                     }
-                    const winnerCell = document.getElementById('live-cell-' + numero);
-                    if (winnerCell) winnerCell.classList.add('winner');
                 }
 
                 if (transcurrido >= DURACION_ANIMACION_LIVE) {
                     clearInterval(liveAnimacionIntervalo);
                     liveAnimacionIntervalo = null;
-                    if (navigator.vibrate) navigator.vibrate([150,100,200,100,300]);
                     liveAnimacionActiva = false;
+                    const podio = document.getElementById('livePodium');
+                    if (podio) podio.querySelectorAll('.podium-card').forEach(c => c.classList.remove('activo'));
+                    if (navigator.vibrate) navigator.vibrate([150,100,200,100,300]);
                 }
             };
             tick();
-            liveAnimacionIntervalo = setInterval(tick, 90);
+            // 110ms reduce trabajo en móviles económicos sin alterar la sincronización: cada frame se calcula por reloj absoluto.
+            liveAnimacionIntervalo = setInterval(tick, 110);
         }
 
         async function sincronizarTransmisionDesdeFirebase() {
@@ -1241,7 +1373,8 @@
                 sorteoEjecutado = true;
                 sorteoEnCurso = false;
                 sorteoTerminado = true;
-                salirModoSorteoVisual();
+                liveEstadoLectura = 'finalizado';
+                restaurarPantallaPrincipal();
                 renderizarGanadores();
                 alert('✅ SORTEO COMPLETADO.\n\nLos 3 ganadores quedaron confirmados y sincronizados en todos los dispositivos.');
                 return true;
@@ -1264,6 +1397,7 @@
             db.ref('configuracion/estadoSorteo').on('value', async snap => {
                 const estado = snap.val();
                 if (estado === 'girando') {
+                    liveEstadoLectura = 'girando';
                     sorteoEnCurso = true;
                     sorteoTerminado = false;
                     entrarModoSorteoVisual();
@@ -1271,11 +1405,15 @@
                 } else if (estado === 'finalizado') {
                     sorteoEnCurso = false;
                     sorteoTerminado = true;
-                    if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
-                    liveAnimacionToken++;
-                    salirModoSorteoVisual();
+                    liveEstadoLectura = 'finalizado';
+                    restaurarPantallaPrincipal();
+                    // El estado final tiene prioridad sobre cualquier evento tardío de animacionActual.
+                    setTimeout(() => {
+                        if (liveEstadoLectura === 'finalizado') restaurarPantallaPrincipal();
+                    }, 250);
                     renderizarGanadores();
                 } else if (estado === 'pausado' || estado === 'error') {
+                    liveEstadoLectura = estado;
                     sorteoEnCurso = false;
                     liveAnimacionToken++;
                     if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
@@ -1283,9 +1421,21 @@
                 }
             });
 
+            // Salvaguarda: al cargar una página que ya terminó, forzar pantalla principal incluso si un evento llega tarde.
+            db.ref('configuracion/estadoSorteo').once('value').then(snap => {
+                if (snap.val() === 'finalizado' || snap.val() === null) {
+                    sorteoEnCurso = false;
+                    sorteoTerminado = snap.val() === 'finalizado';
+                    liveEstadoLectura = snap.val() || 'inicio';
+                    restaurarPantallaPrincipal();
+                }
+            }).catch(() => {});
+
             db.ref('configuracion/animacionActual').on('value', snap => {
                 const anim = snap.val();
                 if (!anim || !anim.numero || !anim.inicioMs) return;
+                // Si el estado local ya es finalizado/pausado, no revivir una animación vieja.
+                if (liveEstadoLectura === 'finalizado' || liveEstadoLectura === 'pausado') return;
                 reproducirAnimacionLiveSincronizada(anim).catch(e => console.warn('Animación sincronizada:', e));
             });
         }
@@ -1939,6 +2089,8 @@
                     'configuracion/heartbeatSorteo': null,
                     'configuracion/animacionActual': null
                 }), 10000, 'resetear estado del sorteo');
+                liveEstadoLectura = 'inicio';
+                restaurarPantallaPrincipal();
                 alert('✅ Sorteo reseteado. Participantes y tokens permanecen intactos.');
                 location.reload();
             } catch (error) {
