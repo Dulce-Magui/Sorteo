@@ -1027,6 +1027,27 @@
             pintarTimer();
         }
 
+        function mostrarErrorSorteo(titulo, error) {
+            const code = error && error.code ? '\nCódigo Firebase: ' + error.code : '';
+            const msg = error && error.message ? error.message : String(error || 'Error desconocido');
+            console.error(titulo, error);
+            alert('❌ ' + titulo + '\n\n' + msg + code + '\n\nSi aparece PERMISSION_DENIED, revisá las reglas de Firebase Realtime Database.');
+        }
+
+        function firebaseConTimeout(promise, ms, operacion) {
+            let timer;
+            const timeout = new Promise((_, reject) => {
+                timer = setTimeout(() => reject(new Error('Tiempo agotado (' + (ms / 1000) + ' s) al realizar: ' + operacion + '. Verificá conexión y reglas de Firebase.')), ms);
+            });
+            return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+        }
+
+        function obtenerCasillasValidas() {
+            return Object.keys(participantesRegistrados || {})
+                .map(Number)
+                .filter(n => Number.isInteger(n) && n > 0 && n <= TOTAL_CASILLAS && participantesRegistrados[n] !== null && participantesRegistrados[n] !== undefined);
+        }
+
         async function adquirirControladorSorteoReal() {
             if (!db) return false;
             const ref = db.ref('configuracion/controladorSorteo');
@@ -1456,6 +1477,19 @@
             });
         }
 
+        // Carga inicial: evita que el panel admin quede en “Cargando…” mientras Firebase conecta.
+        if (db) {
+            db.ref('casillas').once('value').then(snap => {
+                participantesRegistrados = snap.val() || {};
+                renderizarBoletosAdmin();
+                actualizarAdminPanel();
+            }).catch(err => {
+                const el = document.getElementById('admin-boletos-list');
+                if (el) el.innerHTML = '<p style=\"color:#b91c1c;font-size:13px;\">❌ Error Firebase: ' + escapeHtml(err.message || String(err)) + '</p>';
+                console.error('Carga inicial de casillas:', err);
+            });
+        }
+
         function etiquetaPremio(premioTxt) {
             if (premioTxt.includes('BOX 1')) return 'el 1er PREMIO 🥇 (¡BOX 1 GIGANTE!)';
             if (premioTxt.includes('BOX 2')) return 'el 2do PREMIO 🥈 (¡BOX 2 ESPECIAL!)';
@@ -1780,6 +1814,29 @@
             });
         }
 
+        function renderizarBoletosAdmin() {
+            const cont = document.getElementById('admin-boletos-list');
+            const cnt = document.getElementById('admin-boletos-count');
+            const entradas = Object.entries(participantesRegistrados || {})
+                .filter(([k, v]) => Number(k) > 0 && Number(k) <= TOTAL_CASILLAS && v !== null && v !== undefined)
+                .sort((a, b) => Number(a[0]) - Number(b[0]));
+            if (cnt) cnt.textContent = String(entradas.length);
+            if (!cont) return;
+            if (!entradas.length) {
+                cont.innerHTML = '<p style=\"color:#666;font-size:13px;\">Sin boletos vendidos aún</p>';
+                return;
+            }
+            cont.innerHTML = entradas.map(([num, d]) =>
+                '<div style=\"border:1px solid #fbcfe8;border-left:4px solid #ec4899;border-radius:8px;padding:8px;margin:6px 0;background:#fff5f7;\">' +
+                '<div style=\"display:flex;justify-content:space-between;align-items:center;gap:8px;\">' +
+                '<strong style=\"color:#be185d;font-size:1.05rem;\">Casilla #' + String(num).padStart(2, '0') + '</strong>' +
+                '<span style=\"font-size:0.75rem;color:#8b5a6b;\">🔑 ' + escapeHtml(d.token || '—') + '</span>' +
+                '</div>' +
+                '<div style=\"font-size:0.85rem;margin:5px 0;\">👤 ' + escapeHtml(d.nombre || 'Sin nombre') + '<br>📱 ' + escapeHtml(d.telefono || '—') + '</div>' +
+                '</div>'
+            ).join('');
+        }
+
         function actualizarAdminPanel() {
             const ocupadas = Object.keys(participantesRegistrados).filter(k => Number(k) > 0 && participantesRegistrados[k] !== null).length;
             const s = document.getElementById('admin-status');
@@ -1824,6 +1881,71 @@
             document.getElementById('admin-casilla').value = '';
             document.getElementById('admin-nombre').value = '';
             document.getElementById('admin-telefono').value = '';
+        }
+
+        async function sortearDeVerdad(opciones = {}) {
+            if (sorteoOperando || window.__MOTOR_SORTEO_ACTIVO__) { alert('⏳ El sorteo ya está ejecutándose.'); return false; }
+            if (!db) { alert('⚠️ Firebase no está conectado.'); return false; }
+            const forzado = opciones.forzado === true;
+            if (!forzado && Date.now() < fechaObjetivo) { alert('⏰ El sorteo oficial todavía no está habilitado.'); return false; }
+            let adquirio = false;
+            try {
+                const casSnap = await firebaseConTimeout(db.ref('casillas').once('value'), 10000, 'leer boletos vendidos');
+                participantesRegistrados = casSnap.val() || {};
+                renderizarBoletosAdmin();
+                actualizarAdminPanel();
+
+                const prev = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores existentes');
+                if (prev.exists() && Object.keys(prev.val() || {}).length) throw new Error('Ya existen ganadores en Firebase. Para una nueva prueba usá “Resetear todo”.');
+
+                const casillas = obtenerCasillasValidas();
+                const totalPremios = premios.reduce((s,p) => s + Number(p.cantidad || 0), 0);
+                if (casillas.length < totalPremios) throw new Error('No hay suficientes casillas ocupadas. Ocupadas: ' + casillas.length + '. Necesarias: ' + totalPremios + '.');
+
+                adquirio = await adquirirControladorSorteoReal();
+                if (!adquirio) throw new Error('Otro dispositivo ya controla el sorteo.');
+                sorteoOperando = true;
+
+                const reval = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'revalidar ganadores');
+                if (reval.exists() && Object.keys(reval.val() || {}).length) throw new Error('Otro proceso ya generó ganadores.');
+
+                const semilla = (Date.now() ^ Math.floor(Math.random() * 0x7fffffff)) >>> 0;
+                const rng = mulberry32(semilla);
+                const bolsa = casillas.slice();
+                const plan = [];
+                for (const p of [...premios].reverse()) {
+                    for (let i = 0; i < Number(p.cantidad || 0); i++) {
+                        const numero = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                        plan.push({ catId: p.catId, nombrePremio: p.nombre, numero });
+                    }
+                }
+
+                await firebaseConTimeout(db.ref('configuracion').update({
+                    semillaSorteo: semilla, planGanadores: plan, indiceAnimacion: 0,
+                    premioEnProceso: null, numeroEnProceso: null, ultimoPremioConfirmado: null,
+                    ultimoNumeroGanador: null, faseSorteo: 'preparando', estadoSorteo: 'girando',
+                    sorteoBloqueado: true, modoForzado: forzado, inicioSorteo: Date.now(),
+                    finalizacionSorteo: null, heartbeatSorteo: Date.now(), animacionActual: null
+                }), 10000, 'guardar estado inicial del sorteo');
+
+                planGanadoresReal = plan;
+                sorteoEnCurso = true;
+                sorteoTerminado = false;
+                entrarModoSorteoVisual();
+                actualizarLiveStatus('🎬 Preparando la transmisión en vivo...', 0, plan.length);
+                await dormir(350);
+
+                // El listener de estado puede haber iniciado ya el motor. Si no, lo iniciamos nosotros.
+                if (!window.__MOTOR_SORTEO_ACTIVO__) return await iniciarSeguimientoSorteoReal();
+                return true;
+            } catch (error) {
+                console.error('Error al iniciar sorteo:', error);
+                try { await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() }); } catch (_) {}
+                if (adquirio && !window.__MOTOR_SORTEO_ACTIVO__) await liberarControladorSorteoReal();
+                sorteoOperando = false;
+                mostrarErrorSorteo('No se pudo iniciar el sorteo', error);
+                return false;
+            }
         }
 
         async function forceSorteo() {
