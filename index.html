@@ -904,40 +904,197 @@
             pintarTimer();
         }
 
-        async function iniciarSeguimientoSorteoReal() {
-            if (!db || animacionRealEjecutandose || sorteoOperando) return;
-            animacionRealEjecutandose = true;
-            try {
-                const planSnap = await firebaseConTimeout(db.ref('configuracion/planGanadores').once('value'), 10000, 'leer plan del sorteo');
-                const plan = planSnap.val() || [];
-                if (!Array.isArray(plan) || !plan.length) return;
-                planGanadoresReal = plan;
+        async function adquirirControladorSorteoReal() {
+            if (!db) return false;
+            const ref = db.ref('configuracion/controladorSorteo');
+            const owner = (window.__SORTEO_OWNER_ID__ ||= 'web-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+            const ahora = Date.now();
+            const LEASE_MS = 15000;
+            const tx = await firebaseConTimeout(ref.transaction(actual => {
+                if (!actual || typeof actual !== 'object' || !actual.owner || !actual.timestamp || (ahora - Number(actual.timestamp)) > LEASE_MS || actual.owner === owner) {
+                    return { owner, timestamp: ahora };
+                }
+                return undefined;
+            }), 10000, 'adquirir controlador del sorteo');
+            if (!tx.committed) return false;
+            controladorSorteoId = owner;
+            controladorSorteoActivo = true;
+            iniciarHeartbeatControlador();
+            return true;
+        }
 
-                const ganSnap = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores del sorteo');
+        function iniciarHeartbeatControlador() {
+            if (window.__SORTEO_HEARTBEAT__) clearInterval(window.__SORTEO_HEARTBEAT__);
+            if (!db || !controladorSorteoActivo) return;
+            const owner = controladorSorteoId;
+            window.__SORTEO_HEARTBEAT__ = setInterval(() => {
+                if (!controladorSorteoActivo || !db) return;
+                db.ref('configuracion/controladorSorteo').transaction(actual => {
+                    if (actual && actual.owner === owner) return { owner, timestamp: Date.now() };
+                    return undefined;
+                }).catch(() => {});
+            }, 5000);
+        }
+
+        async function liberarControladorSorteoReal() {
+            if (window.__SORTEO_HEARTBEAT__) {
+                clearInterval(window.__SORTEO_HEARTBEAT__);
+                window.__SORTEO_HEARTBEAT__ = null;
+            }
+            if (!db || !controladorSorteoId) {
+                controladorSorteoActivo = false;
+                return;
+            }
+            const owner = controladorSorteoId;
+            try {
+                await db.ref('configuracion/controladorSorteo').transaction(actual => {
+                    if (actual && actual.owner === owner) return null;
+                    return undefined;
+                });
+            } catch (_) {}
+            controladorSorteoActivo = false;
+        }
+
+        async function obtenerPlanSorteoPersistente() {
+            let snap = await firebaseConTimeout(db.ref('configuracion/planGanadores').once('value'), 10000, 'leer plan del sorteo');
+            let plan = snap.val();
+            if (Array.isArray(plan) && plan.length) return plan;
+
+            const semSnap = await firebaseConTimeout(db.ref('configuracion/semillaSorteo').once('value'), 10000, 'leer semilla del sorteo');
+            if (!semSnap.exists()) throw new Error('No existe un plan ni una semilla guardada para continuar el sorteo.');
+            const rng = mulberry32(Number(semSnap.val()));
+            const bolsa = obtenerCasillasValidas().slice();
+            plan = [];
+            for (const p of [...premios].reverse()) {
+                for (let i = 1; i <= Number(p.cantidad || 0); i++) {
+                    if (!bolsa.length) break;
+                    const numero = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                    plan.push({ catId: p.catId, nombrePremio: p.nombre, numero });
+                }
+            }
+            if (!plan.length) throw new Error('No se pudo reconstruir el plan del sorteo.');
+            await firebaseConTimeout(db.ref('configuracion/planGanadores').set(plan), 10000, 'guardar plan reconstruido');
+            return plan;
+        }
+
+        async function confirmarGanadorPersistente(g, indice) {
+            const d = participantesRegistrados[g.numero] || {};
+            const ahora = Date.now();
+            const ganador = {
+                casilla: g.numero,
+                premio: g.nombrePremio,
+                nombre: d.nombre || '',
+                telefono: d.telefono || '',
+                token: d.token || '',
+                catId: g.catId,
+                fechaSorteo: ahora
+            };
+            const updates = {};
+            updates['ganadores/' + g.numero] = ganador;
+            updates['configuracion/indiceAnimacion'] = indice + 1;
+            updates['configuracion/ultimoPremioConfirmado'] = indice;
+            updates['configuracion/ultimoNumeroGanador'] = g.numero;
+            updates['configuracion/faseSorteo'] = 'confirmado';
+            updates['configuracion/heartbeatSorteo'] = ahora;
+            await firebaseConTimeout(db.ref().update(updates), 10000, 'confirmar ganador ' + (indice + 1));
+
+            const verificacion = await firebaseConTimeout(db.ref('ganadores/' + g.numero).once('value'), 10000, 'verificar ganador ' + (indice + 1));
+            if (!verificacion.exists()) throw new Error('Firebase no confirmó el ganador de la posición ' + (indice + 1) + '.');
+        }
+
+        async function iniciarSeguimientoSorteoReal() {
+            if (!db || animacionRealEjecutandose) return false;
+            if (window.__MOTOR_SORTEO_ACTIVO__) return false;
+
+            const estadoSnap = await firebaseConTimeout(db.ref('configuracion/estadoSorteo').once('value'), 10000, 'leer estado del sorteo');
+            if (estadoSnap.val() !== 'girando') return false;
+
+            const adquirido = await adquirirControladorSorteoReal();
+            if (!adquirido) return false;
+
+            window.__MOTOR_SORTEO_ACTIVO__ = true;
+            animacionRealEjecutandose = true;
+            sorteoOperando = true;
+            sorteoEnCurso = true;
+            sorteoTerminado = false;
+
+            try {
+                const plan = await obtenerPlanSorteoPersistente();
+                planGanadoresReal = plan;
+                entrarModoSorteoVisual();
+
+                const ganSnap = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores confirmados');
                 const escritos = ganSnap.val() || {};
-                let indice = 0;
-                const indiceSnap = await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').once('value'), 10000, 'leer progreso de animación');
-                if (Number.isFinite(Number(indiceSnap.val()))) indice = Number(indiceSnap.val());
+                let indiceSnap = await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').once('value'), 10000, 'leer índice del sorteo');
+                let indice = Number(indiceSnap.val());
+                if (!Number.isFinite(indice) || indice < 0) indice = 0;
+
+                // El índice es la única posición que se debe animar a continuación.
+                // Si Firebase ya tiene ese ganador, avanzamos sin repetirlo.
                 while (indice < plan.length && escritos[plan[indice].numero]) indice++;
-                indiceAnimacionReal = indice;
+                await db.ref('configuracion/indiceAnimacion').set(indice);
 
                 for (let i = indice; i < plan.length; i++) {
-                    if (!sorteoEnCurso) break;
+                    if (!controladorSorteoActivo) throw new Error('El controlador del sorteo fue perdido. La ejecución quedó pausada para evitar duplicados.');
                     const g = plan[i];
+
+                    const existente = await firebaseConTimeout(db.ref('ganadores/' + g.numero).once('value'), 10000, 'comprobar ganador actual');
+                    if (existente.exists()) {
+                        await db.ref('configuracion').update({ indiceAnimacion: i + 1, ultimoPremioConfirmado: i, ultimoNumeroGanador: g.numero, faseSorteo: 'confirmado', heartbeatSorteo: Date.now() });
+                        continue;
+                    }
+
+                    await firebaseConTimeout(db.ref('configuracion').update({
+                        indiceAnimacion: i,
+                        premioEnProceso: i,
+                        numeroEnProceso: g.numero,
+                        faseSorteo: 'animando',
+                        heartbeatSorteo: Date.now()
+                    }), 10000, 'marcar premio en proceso');
+
                     actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, plan.length);
                     await animarGanadorUltraDramatico(g.numero, { premio: g.nombrePremio, nombre: (participantesRegistrados[g.numero] || {}).nombre || '' }, false, null, 'live');
+
+                    // Confirmación atómica: ganador + avance del índice.
+                    await confirmarGanadorPersistente(g, i);
                     indiceAnimacionReal = i + 1;
-                    if (controladorSorteoActivo) await db.ref('configuracion/indiceAnimacion').set(i + 1).catch(() => {});
-                    const actualSnap = await db.ref('ganadores/' + g.numero).once('value');
-                    if (!actualSnap.exists() && controladorSorteoActivo) {
-                        await escribirGanador(g);
-                    }
+
                     if (i < plan.length - 1) await dormir(1200);
                 }
-            } catch (e) {
-                console.error('Error en seguimiento de animación real:', e);
+
+                const finales = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'verificar todos los ganadores');
+                const finalObj = finales.val() || {};
+                const faltantes = plan.filter(g => !finalObj[g.numero]);
+                if (faltantes.length) throw new Error('El sorteo no se cerró porque faltan ' + faltantes.length + ' ganador(es) por confirmar.');
+
+                await firebaseConTimeout(db.ref('configuracion').update({
+                    estadoSorteo: 'finalizado',
+                    sorteoBloqueado: true,
+                    finalizacionSorteo: Date.now(),
+                    faseSorteo: 'finalizado',
+                    heartbeatSorteo: Date.now()
+                }), 10000, 'finalizar sorteo');
+
+                sorteoEjecutado = true;
+                sorteoEnCurso = false;
+                sorteoTerminado = true;
+                salirModoSorteoVisual();
+                alert('✅ SORTEO COMPLETADO.\n\nSe confirmaron ' + plan.length + ' ganadores en Firebase.');
+                return true;
+            } catch (error) {
+                console.error('Motor de sorteo pausado:', error);
+                try {
+                    await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() });
+                } catch (_) {}
+                sorteoEnCurso = false;
+                salirModoSorteoVisual();
+                mostrarErrorSorteo('El sorteo quedó pausado y puede continuar sin perder los ganadores confirmados', error);
+                return false;
             } finally {
+                await liberarControladorSorteoReal();
+                sorteoOperando = false;
                 animacionRealEjecutandose = false;
+                window.__MOTOR_SORTEO_ACTIVO__ = false;
             }
         }
 
@@ -1140,121 +1297,82 @@
         }
 
         async function sortearDeVerdad(opciones = {}) {
-            if (sorteoOperando) {
-                alert('⏳ El sorteo ya está ejecutándose en esta pantalla.');
+            if (sorteoOperando || window.__MOTOR_SORTEO_ACTIVO__) {
+                alert('⏳ El sorteo ya está ejecutándose.');
                 return false;
             }
             if (!db) {
                 alert('⚠️ Firebase no está conectado.');
                 return false;
             }
-
             const forzado = opciones.forzado === true;
-            sorteoOperando = true;
-            let lockRef = null;
+            if (!forzado && Date.now() < fechaObjetivo) {
+                alert('⏰ El sorteo oficial todavía no está habilitado.');
+                return false;
+            }
 
             try {
-                // IMPORTANTE: forzado=true permite probar antes de FECHA_SORTEO_FIJA.
-                if (!forzado && Date.now() < fechaObjetivo) {
-                    const f = new Date(fechaObjetivo).toLocaleString('es-AR');
-                    alert('⏰ El sorteo oficial todavía no está habilitado.\n\nFecha: ' + f);
-                    return false;
-                }
-
                 const previo = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores existentes');
-                const prevVal = previo.val() || {};
-                if (previo.exists() && Object.keys(prevVal).length > 0) {
-                    throw new Error('Ya existen ganadores en Firebase. Para una prueba nueva, restaurá el backup JSON o usá "Resetear sorteo".');
+                if (previo.exists() && Object.keys(previo.val() || {}).length) {
+                    throw new Error('Ya existen ganadores en Firebase. Para una prueba nueva, usá "Resetear sorteo".');
                 }
 
                 const casillas = obtenerCasillasValidas();
-                if (casillas.length < premios.reduce((s, p) => s + Number(p.cantidad || 0), 0)) {
-                    throw new Error('No hay suficientes casillas ocupadas para completar todos los premios. Ocupadas: ' + casillas.length + '.');
-                }
+                const totalPremios = premios.reduce((s, p) => s + Number(p.cantidad || 0), 0);
+                if (casillas.length < totalPremios) throw new Error('No hay suficientes casillas ocupadas. Ocupadas: ' + casillas.length + '. Necesarias: ' + totalPremios + '.');
 
-                // El lock se adquiere DESPUÉS de comprobar que realmente hay que sortear.
-                lockRef = await adquirirBloqueoSorteo();
+                const adquirido = await adquirirControladorSorteoReal();
+                if (!adquirido) throw new Error('Otro dispositivo ya controla el sorteo.');
+                sorteoOperando = true;
 
-                // Revalidar después del lock para evitar carreras entre administradores.
-                const previo2 = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'verificar ganadores después del bloqueo');
-                const prevVal2 = previo2.val() || {};
-                if (previo2.exists() && Object.keys(prevVal2).length > 0) {
-                    throw new Error('Otro proceso ya generó ganadores mientras se adquiría el bloqueo.');
-                }
+                // Revalidación después del lock.
+                const previo2 = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'revalidar ganadores');
+                if (previo2.exists() && Object.keys(previo2.val() || {}).length) throw new Error('Otro proceso ya generó ganadores.');
 
                 const semilla = Date.now();
                 const rng = mulberry32(semilla);
-                let bolsa = casillas.slice();
-                const ganadoresCalculados = [];
-
-                // Se conserva exactamente la lógica original: reverse() para sortear BOX 3, 2 y 1.
+                const bolsa = casillas.slice();
+                const plan = [];
                 for (const p of [...premios].reverse()) {
-                    for (let i = 1; i <= p.cantidad; i++) {
-                        if (!bolsa.length) break;
-                        const indexRnd = Math.floor(rng() * bolsa.length);
-                        const numGanador = bolsa.splice(indexRnd, 1)[0];
-                        ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
+                    for (let i = 1; i <= Number(p.cantidad || 0); i++) {
+                        if (!bolsa.length) throw new Error('Se agotaron las casillas disponibles.');
+                        const numero = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
+                        plan.push({ catId: p.catId, nombrePremio: p.nombre, numero });
                     }
                 }
 
-                if (ganadoresCalculados.length !== premios.reduce((s, p) => s + Number(p.cantidad || 0), 0)) {
-                    throw new Error('No se pudieron calcular todos los ganadores.');
-                }
-
-                controladorSorteoActivo = true;
-                controladorSorteoId = 'controlador-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-                localStorage.setItem('dulceMaguiSorteoControlador', '1');
-
                 await firebaseConTimeout(db.ref('configuracion').update({
                     semillaSorteo: semilla,
-                    planGanadores: ganadoresCalculados,
+                    planGanadores: plan,
                     indiceAnimacion: 0,
+                    premioEnProceso: null,
+                    numeroEnProceso: null,
+                    ultimoPremioConfirmado: null,
+                    ultimoNumeroGanador: null,
+                    faseSorteo: 'preparando',
                     estadoSorteo: 'girando',
                     sorteoBloqueado: true,
                     modoForzado: forzado,
-                    inicioSorteo: Date.now()
+                    inicioSorteo: Date.now(),
+                    heartbeatSorteo: Date.now()
                 }), 10000, 'guardar estado inicial del sorteo');
 
+                // El listener de estado puede intentar arrancar también, pero el lock de controlador evita duplicación.
                 sorteoEnCurso = true;
                 sorteoTerminado = false;
                 entrarModoSorteoVisual();
-                planGanadoresReal = ganadoresCalculados;
-                actualizarLiveStatus('🎬 Preparando la transmisión en vivo...', 0, ganadoresCalculados.length);
+                planGanadoresReal = plan;
+                actualizarLiveStatus('🎬 Preparando la transmisión en vivo...', 0, plan.length);
                 await dormir(1200);
 
-                for (let i = 0; i < ganadoresCalculados.length; i++) {
-                    const g = ganadoresCalculados[i];
-                    await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').set(i), 10000, 'guardar progreso de animación');
-                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, ganadoresCalculados.length);
-                    await animarGanadorUltraDramatico(g.numero, { premio: g.nombrePremio }, false, null, 'live');
-                    await firebaseConTimeout(escribirGanador(g), 10000, 'guardar ganador ' + (i + 1));
-                    await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').set(i + 1), 10000, 'guardar ganador revelado');
-                    if (i < ganadoresCalculados.length - 1) await dormir(1200);
-                }
-
-                await firebaseConTimeout(db.ref('configuracion').update({
-                    estadoSorteo: 'finalizado',
-                    finalizacionSorteo: Date.now(),
-                    sorteoBloqueado: true
-                }), 10000, 'finalizar sorteo');
-
-                sorteoEjecutado = true;
-                sorteoEnCurso = false;
-                controladorSorteoActivo = false;
-                localStorage.removeItem('dulceMaguiSorteoControlador');
-                sorteoTerminado = true;
-                salirModoSorteoVisual();
-                alert('✅ SORTEO COMPLETADO.\n\nSe generaron ' + ganadoresCalculados.length + ' ganadores en Firebase.');
-                return true;
+                // El motor continúa usando el mismo controlador. No liberar el lock aquí.
+                return await iniciarSeguimientoSorteoReal();
             } catch (error) {
-                // NO borramos la semilla ni los ganadores parciales: así "Continuar sorteo" puede recuperar la ejecución.
                 try {
-                    await db.ref('configuracion/estadoSorteo').set('pausado');
+                    await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() });
                 } catch (_) {}
-                mostrarErrorSorteo('Error al ejecutar el sorteo', error);
+                mostrarErrorSorteo('Error al iniciar el sorteo', error);
                 return false;
-            } finally {
-                sorteoOperando = false;
             }
         }
 
@@ -1292,6 +1410,13 @@
                     updates['configuracion/semillaSorteo'] = null;
                     updates['configuracion/planGanadores'] = null;
                     updates['configuracion/indiceAnimacion'] = null;
+                    updates['configuracion/controladorSorteo'] = null;
+                    updates['configuracion/faseSorteo'] = null;
+                    updates['configuracion/premioEnProceso'] = null;
+                    updates['configuracion/numeroEnProceso'] = null;
+                    updates['configuracion/ultimoPremioConfirmado'] = null;
+                    updates['configuracion/ultimoNumeroGanador'] = null;
+                    updates['configuracion/heartbeatSorteo'] = null;
 
                     await db.ref().update(updates);
                     alert("✅ ¡Backup restaurado con éxito! Participantes cargados y ganadores borrados.");
@@ -1565,7 +1690,14 @@
                     'configuracion/inicioSorteo': null,
                     'configuracion/finalizacionSorteo': null,
                     'configuracion/planGanadores': null,
-                    'configuracion/indiceAnimacion': null
+                    'configuracion/indiceAnimacion': null,
+                    'configuracion/controladorSorteo': null,
+                    'configuracion/faseSorteo': null,
+                    'configuracion/premioEnProceso': null,
+                    'configuracion/numeroEnProceso': null,
+                    'configuracion/ultimoPremioConfirmado': null,
+                    'configuracion/ultimoNumeroGanador': null,
+                    'configuracion/heartbeatSorteo': null
                 }), 10000, 'resetear estado del sorteo');
                 alert('✅ Sorteo reseteado. Participantes y tokens permanecen intactos.');
                 location.reload();
@@ -1577,53 +1709,20 @@
         async function continuarSorteo() {
             if (!db) { alert('⚠️ Base de datos no conectada.'); return; }
             if (!confirm('⚠️ ¿Continuar el sorteo pendiente?\n\nSe reutilizará exactamente la semilla y el plan guardados.')) return;
-            if (sorteoOperando) { alert('⏳ Ya hay una operación de sorteo en curso.'); return; }
-            sorteoOperando = true;
-            controladorSorteoActivo = true;
-            localStorage.setItem('dulceMaguiSorteoControlador', '1');
+            if (sorteoOperando || window.__MOTOR_SORTEO_ACTIVO__) { alert('⏳ Ya hay una operación de sorteo en curso.'); return; }
             try {
-                let planSnap = await firebaseConTimeout(db.ref('configuracion/planGanadores').once('value'), 10000, 'leer plan guardado');
-                let plan = planSnap.val() || [];
-                if (!Array.isArray(plan) || !plan.length) {
-                    const semillaSnap = await firebaseConTimeout(db.ref('configuracion/semillaSorteo').once('value'), 10000, 'leer semilla');
-                    if (!semillaSnap.exists()) throw new Error('No hay plan ni semilla guardada.');
-                    const rng = mulberry32(Number(semillaSnap.val()));
-                    const bolsa = obtenerCasillasValidas().slice();
-                    plan = [];
-                    for (const p of [...premios].reverse()) for (let i=1;i<=p.cantidad;i++) {
-                        if (!bolsa.length) break;
-                        const numero = bolsa.splice(Math.floor(rng()*bolsa.length),1)[0];
-                        plan.push({catId:p.catId,nombrePremio:p.nombre,numero});
-                    }
-                    await db.ref('configuracion/planGanadores').set(plan);
-                }
+                const plan = await obtenerPlanSorteoPersistente();
                 planGanadoresReal = plan;
-                await db.ref('configuracion').update({estadoSorteo:'girando',sorteoBloqueado:true});
-                sorteoEnCurso = true; sorteoTerminado = false; entrarModoSorteoVisual();
-                const ganSnap = await db.ref('ganadores').once('value');
-                const escritos = ganSnap.val() || {};
-                let idxSnap = await db.ref('configuracion/indiceAnimacion').once('value');
-                let indice = Number(idxSnap.val());
-                if (!Number.isFinite(indice)) indice = 0;
-                while (indice < plan.length && escritos[plan[indice].numero]) indice++;
-                for (let i=indice;i<plan.length;i++) {
-                    const g=plan[i];
-                    await db.ref('configuracion/indiceAnimacion').set(i);
-                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, plan.length);
-                    await animarGanadorUltraDramatico(g.numero,{premio:g.nombrePremio},false,null,'live');
-                    await escribirGanador(g);
-                    await db.ref('configuracion/indiceAnimacion').set(i+1);
-                    if (i<plan.length-1) await dormir(1200);
-                }
-                await db.ref('configuracion').update({estadoSorteo:'finalizado',sorteoBloqueado:true,finalizacionSorteo:Date.now()});
-                sorteoEnCurso=false; sorteoTerminado=true; controladorSorteoActivo=false;
-                localStorage.removeItem('dulceMaguiSorteoControlador');
-                salirModoSorteoVisual();
-                alert('✅ Sorteo pendiente completado correctamente.');
-            } catch(error) {
-                try { await db.ref('configuracion/estadoSorteo').set('pausado'); } catch(_) {}
-                mostrarErrorSorteo('No se pudo continuar el sorteo',error);
-            } finally { sorteoOperando=false; }
+                await db.ref('configuracion').update({ estadoSorteo: 'girando', sorteoBloqueado: true, faseSorteo: 'continuando', heartbeatSorteo: Date.now() });
+                sorteoEnCurso = true;
+                sorteoTerminado = false;
+                entrarModoSorteoVisual();
+                const ok = await iniciarSeguimientoSorteoReal();
+                if (ok) alert('✅ Sorteo pendiente completado correctamente.');
+            } catch (error) {
+                try { await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() }); } catch (_) {}
+                mostrarErrorSorteo('No se pudo continuar el sorteo', error);
+            }
         }
     </script>
 </body>
