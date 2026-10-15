@@ -248,10 +248,6 @@
             font-size: 0.9rem; padding: 10px 14px; border-radius: 10px; text-align: left;
             animation: slideIn 0.4s ease forwards; border: 2px solid #fbbf24;
         }
-        .winner-item .wa-btn {
-            display: inline-block; background: var(--whatsapp); color: white; padding: 5px 10px;
-            border-radius: 5px; text-decoration: none; font-size: 0.8rem; margin-top: 5px; font-weight: bold;
-        }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
         footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; position: relative; z-index: 1; }
@@ -335,17 +331,8 @@
         }
 
         /* ===================================================== */
-        /* ===== BOTÓN + PANTALLA DE SIMULACRO ================= */
+        /* ===== PANTALLA DE SIMULACRO PRIVADA ================= */
         /* ===================================================== */
-        .btn-simular {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff; border: none; padding: 10px 26px; border-radius: 20px;
-            font-weight: bold; font-size: 0.95rem; cursor: pointer; margin-bottom: 8px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            transition: transform 0.2s ease;
-        }
-        .btn-simular:hover { transform: translateY(-2px); }
-
         .simulacro-overlay {
             position: fixed; inset: 0; z-index: 99998;
             background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
@@ -517,14 +504,14 @@
         <p>💐 Dulce Magui - Todos los derechos reservados</p>
     </footer>
 
-    <!-- Mensaje flotante del ganador (real y simulacro) -->
+    <!-- Mensaje flotante del ganador -->
     <div id="mensajeGanador" class="mensaje-ganador"></div>
 
-    <!-- 🎭 PANTALLA DE SIMULACRO -->
+    <!-- 🎭 PANTALLA DE SIMULACRO PRIVADA -->
     <div id="simulacroOverlay" class="simulacro-overlay hidden">
         <div class="simulacro-parpadeo"></div>
         <div class="simulacro-header">
-            <span>🎭 SIMULACRO • Animación de Alta Tensión (3 Minutos)</span>
+            <span>🎭 Panel de Demostración del Sorteo</span>
             <button class="simulacro-close" onclick="cerrarSimulacro()">✖ Salir</button>
         </div>
         <div class="simulacro-grid" id="simGrid"></div>
@@ -568,7 +555,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
-        // Inicialización segura de Firebase con manejo de errores y respaldo offline
         let db = null;
         try {
             if (typeof firebase !== 'undefined') {
@@ -652,12 +638,9 @@
             }
             const nombre = (data.nombre || '?').trim();
             const nombreOculto = escapeHtml(nombre.charAt(0).toUpperCase() + '*****');
-            const tel = (data.telefono || '').replace(/\D/g, '');
-            const telOculto = '****' + tel.slice(-4);
-            alert('🎀 Casilla #' + numTxt + '\n👤 ' + nombreOculto + '\n📱 ' + telOculto);
+            alert('🎀 Casilla #' + numTxt + '\n👤 ' + nombreOculto + '\n🔒 [Ocupado y protegido]');
         }
 
-        // Conexión segura a Firebase (si está disponible)
         if (db) {
             db.ref('casillas').on('value', (snapshot) => {
                 participantesRegistrados = snapshot.val() || {};
@@ -675,7 +658,7 @@
                     if (cell) {
                         if (participantesRegistrados[i]) {
                             cell.classList.add('occupied');
-                            cell.title = 'Reservado por: ' + (participantesRegistrados[i].nombre || '');
+                            cell.title = 'Reservado';
                         } else {
                             cell.classList.remove('occupied');
                             cell.title = '';
@@ -707,6 +690,9 @@
             });
         }
 
+        // =========================================================================
+        // RENDERIZADO DE GANADORES (SIN EXPONER TELÉFONOS NI WHATSAPP PÚBLICO)
+        // =========================================================================
         function renderizarGanadores() {
             document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
             const agrupado = {};
@@ -723,10 +709,8 @@
                         gs.forEach(g => {
                             const item = document.createElement('div');
                             item.className = 'winner-item';
-                            const waMsg = encodeURIComponent('🎉 ¡Felicitaciones ' + (g.nombre || '') + '! 🎉\nGanaste: *' + (g.premio || '') + '*\nNúmero #' + g.casilla);
-                            const cleanTel = (g.telefono || '').replace(/\D/g, '');
-                            const waLink = 'https://wa.me/' + cleanTel + '?text=' + waMsg;
-                            item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> ' + escapeHtml(g.nombre || '') + '<br><a href="' + waLink + '" target="_blank" rel="noopener noreferrer" class="wa-btn">📱 Notificar</a>';
+                            // PRIVACIDAD TOTAL: Se muestra casilla y nombre sin enlaces externos de WhatsApp
+                            item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> — ' + escapeHtml(g.nombre || 'Ganador/a');
                             lista.appendChild(item);
                         });
                     }
@@ -778,10 +762,6 @@
 
         iniciarTimerLocal();
         sincronizarFecha();
-
-        // ============================================================
-        // ===== ANIMACIÓN DE ALTA TENSIÓN (3 TRAMOS Y REBOTES EXACTOS) ===
-        // ============================================================
 
         function mulberry32(a) {
             return function() {
@@ -887,7 +867,7 @@
 
             detenerCaosAmbiente();
 
-            // FASE 1: Caos inicial y suspenso muy dinámico y alusivo
+            // FASE 1: Caos inicial y suspenso dinámico
             const finFase1 = Date.now() + 10000;
             while (Date.now() < finFase1) {
                 document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
@@ -907,8 +887,7 @@
                 await dormir(2200);
             }
 
-            // FASE 3: Queda una sola casilla iluminada individualmente (Rebotes finales exactos)
-            // 3er Lugar (BOX 3) = 10 rebotes | 2do Premio (BOX 2) = 15 rebotes | 1er Premio (BOX 1) = 20 rebotes
+            // FASE 3: Rebotes exactos (10 para Box 3, 15 para Box 2, 20 para Box 1)
             let totalSaltosFinales = 10;
             if (premioTxt.includes('BOX 2')) totalSaltosFinales = 15;
             if (premioTxt.includes('BOX 1')) totalSaltosFinales = 20;
@@ -1046,7 +1025,7 @@
         }
 
         // ============================================================
-        // ===== 🎭 SIMULACRO DE SORTEO ===============================
+        // ===== SIMULACRO PRIVADO (ACCESO DESDE BARRA DE PROGRESO) ===
         // ============================================================
         let simulandoActivo = false;
 
@@ -1090,7 +1069,7 @@
             }
 
             if (simulandoActivo) {
-                mostrarMensajeTexto('🎉 ¡Simulación completada con éxito!<br>Tensión y rebotes configurados.');
+                mostrarMensajeTexto('🎉 ¡Demostración completada con éxito!');
                 await dormir(4000);
                 ocultarMensajeGanador();
                 cerrarSimulacro();
@@ -1103,7 +1082,6 @@
             document.getElementById('simulacroOverlay').classList.add('hidden');
         }
 
-        // 🎭 5 clics en la barra de progreso = simulacro
         const progressTrigger = document.getElementById('progress-trigger');
         if (progressTrigger) {
             let progressTapCount = 0;
@@ -1116,7 +1094,6 @@
             });
         }
 
-        // Panel Admin trigered by 5 clicks on logo
         let adminSessionExpires = 0;
         let sessionCheckInterval = null;
         let logoTapCount = 0;
