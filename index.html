@@ -1187,55 +1187,84 @@
             return copia.slice(0, Math.min(cantidad, copia.length));
         }
 
-        function aplicarFrameLive(g, indice, transcurrido, semilla) {
+        // ============================================================
+        // ANIMACIÓN REAL DEL SORTEO — MOTOR SINCRONIZADO
+        // Solo modifica la experiencia visual. La lógica de selección,
+        // confirmación, Firebase y orden de premios permanece intacta.
+        // BOX 3 = 40s | BOX 2 = 40s | BOX 1 = 140s.
+        // TOTAL = 220s = 3m40s.
+        // ============================================================
+        function duracionAnimacionPremio(premio) {
+            const texto = String(premio || '').toUpperCase();
+            return texto.includes('BOX 1') ? 140000 : 40000;
+        }
+
+        function progresoFaseLive(transcurrido, duracion) {
+            return Math.max(0, Math.min(1, transcurrido / Math.max(1, duracion)));
+        }
+
+        function semillaFrameLive(semilla, indice, fase, ciclo) {
+            return (Number(semilla) | 0) ^ ((indice + 1) * 7919) ^ (fase * 104729) ^ (ciclo * 379);
+        }
+
+        function obtenerSaltoDramaticoLive(progreso, semilla, indice, duracion) {
+            // En la última fase los saltos empiezan relativamente ágiles y
+            // se frenan progresivamente. El tiempo se deriva del reloj absoluto,
+            // por lo que todos los teléfonos ven exactamente la misma secuencia.
+            const aceleracion = Math.max(0, Math.min(1, (progreso - 0.60) / 0.34));
+            const eased = aceleracion * aceleracion * (3 - 2 * aceleracion);
+            const intervalo = 320 + Math.round(3500 * eased);
+            const t = Math.max(0, progreso - 0.61) * Math.max(1, Number(duracion) || 40000);
+            const ciclo = Math.floor(t / Math.max(1, intervalo));
+            const faseSeed = semillaFrameLive(semilla, indice, 3, ciclo);
+            return { intervalo, ciclo, faseSeed };
+        }
+
+        function aplicarFrameLive(g, indice, transcurrido, semilla, duracion) {
             limpiarCeldasLive();
             const getCell = n => document.getElementById('live-cell-' + n);
             const pool = poolLiveDeterministico();
             if (!pool.includes(g.numero)) pool.push(g.numero);
 
-            // Animación elegante y progresiva. El reloj absoluto + semilla
-            // garantizan exactamente la misma secuencia en todos los dispositivos.
-            let cantidad = 14;
-            let faseSeed = semilla + indice * 7919;
+            const total = Math.max(1, Number(duracion) || 40000);
+            const t = Math.max(0, Math.min(transcurrido, total));
+            const p = progresoFaseLive(t, total);
 
-            if (transcurrido < 9000) {
-                // Ambiente: luces tranquilas que cambian cada ~700 ms.
-                const ciclo = Math.floor(transcurrido / 700);
-                faseSeed += 10000 + ciclo * 379;
+            // Las proporciones son deliberadamente distintas para 40s y 140s:
+            // el BOX 1 necesita mucho más espacio para construir tensión sin
+            // parecer una animación repetida o acelerada artificialmente.
+            let cantidad;
+            let faseSeed;
+
+            if (p < 0.30) {
+                // 0–30%: calma inquietante. Muchas luces, pero con cambios limpios.
+                const ciclo = Math.floor(t / Math.max(520, total * 0.0175));
                 cantidad = 14;
-            } else if (transcurrido < 21000) {
-                // Reducción progresiva: 12 → 9 → 6 → 4 → 2.
-                const paso = Math.min(4, Math.floor((transcurrido - 9000) / 2400));
-                const reduccion = [12, 9, 6, 4, 2];
+                faseSeed = semillaFrameLive(semilla, indice, 1, ciclo);
+            } else if (p < 0.61) {
+                // 30–61%: la masa se reduce gradualmente.
+                const reduccion = [12, 11, 9, 8, 6, 5, 4, 3, 2];
+                const paso = Math.min(reduccion.length - 1, Math.floor((p - 0.30) / 0.035));
                 cantidad = reduccion[paso];
-                faseSeed += 50000 + paso * 997;
-            } else if (transcurrido < 29000) {
-                // Una sola casilla: saltos cada vez más lentos.
-                const delays = [220,240,270,310,360,430,520,640,780,950,1150,1400];
-                let acumulado = 0;
-                let pos = delays.length - 1;
-                for (let i = 0; i < delays.length; i++) {
-                    acumulado += delays[i];
-                    if (transcurrido - 21000 < acumulado) { pos = i; break; }
-                }
-
-                const tiempoFinal = transcurrido - 21000;
-                const totalSaltos = delays.reduce((a,b) => a + b, 0);
-                if (tiempoFinal >= totalSaltos + 500) {
-                    // Silencio de tensión antes del golpe final.
-                    const c = getCell(g.numero);
-                    if (c) { c.classList.add('lit'); liveLitCells = [c]; }
-                    return;
-                }
-
+                faseSeed = semillaFrameLive(semilla, indice, 2, paso);
+            } else if (p < 0.95) {
+                // 61–95%: una sola luz. Cada salto dura más que el anterior.
+                const salto = obtenerSaltoDramaticoLive(p, semilla, indice, total);
                 const candidatos = pool.filter(n => n !== g.numero);
                 const elegidos = seleccionarDeterministico(
-                    candidatos.length ? candidatos : pool, 1, faseSeed + pos * 1231
+                    candidatos.length ? candidatos : pool,
+                    1,
+                    salto.faseSeed
                 );
                 const c = getCell(elegidos[0] || g.numero);
                 if (c) { c.classList.add('lit'); liveLitCells = [c]; }
                 return;
+            } else if (p < 0.985) {
+                // 95–98.5%: silencio visual. Se deja respirar la pantalla antes
+                // de revelar el ganador; no se mueve ninguna otra casilla.
+                return;
             } else {
+                // Último 1.5%: el ganador aparece, sin cambiar de posición.
                 const c = getCell(g.numero);
                 if (c) c.classList.add('winner');
                 return;
@@ -1248,7 +1277,8 @@
             });
             liveLitCells = next;
         }
-        const DURACION_ANIMACION_LIVE = 38000;
+
+        const DURACION_ANIMACION_LIVE = 40000;
 
         async function reproducirAnimacionLiveSincronizada(anim) {
             if (!anim || !anim.numero || !anim.inicioMs) return;
@@ -1275,6 +1305,9 @@
             const indice = Number(anim.indice || 0);
             const numero = Number(anim.numero);
             const g = { numero, nombrePremio: anim.premio || '', catId: anim.catId || '' };
+            const duracion = Number(anim.duracionMs) > 0
+                ? Number(anim.duracionMs)
+                : duracionAnimacionPremio(anim.premio || '');
             const espera = inicio - ahoraServidorLocal();
             if (espera > 0) await dormir(espera);
             if (token !== liveAnimacionToken) return;
@@ -1286,9 +1319,11 @@
                 if (token !== liveAnimacionToken) return;
                 const transcurrido = ahoraServidorLocal() - inicio;
                 if (transcurrido < 0) return;
-                aplicarFrameLive(g, indice, transcurrido, semilla);
+                aplicarFrameLive(g, indice, transcurrido, semilla, duracion);
 
-                if (transcurrido >= 29000) {
+                // La tarjeta del premio queda activa solo durante su propia fase final.
+                const progreso = Math.max(0, Math.min(1, transcurrido / duracion));
+                if (progreso >= 0.985) {
                     actualizarPodioLive(anim);
                     const podio = document.getElementById('livePodium');
                     if (podio) {
@@ -1300,7 +1335,7 @@
                     }
                 }
 
-                if (transcurrido >= DURACION_ANIMACION_LIVE) {
+                if (transcurrido >= duracion) {
                     clearInterval(liveAnimacionIntervalo);
                     liveAnimacionIntervalo = null;
                     liveAnimacionActiva = false;
@@ -1310,8 +1345,9 @@
                 }
             };
             tick();
-            // 110ms reduce trabajo en móviles económicos sin alterar la sincronización: cada frame se calcula por reloj absoluto.
-            liveAnimacionIntervalo = setInterval(tick, 110);
+            // 100ms: refresco suficientemente suave en móviles sin depender de
+            // la frecuencia del dispositivo. La posición siempre sale del reloj absoluto.
+            liveAnimacionIntervalo = setInterval(tick, 100);
         }
 
         async function sincronizarTransmisionDesdeFirebase() {
@@ -1370,7 +1406,7 @@
                         premio: g.nombrePremio,
                         catId: g.catId,
                         inicioMs,
-                        duracionMs: DURACION_ANIMACION_LIVE,
+                        duracionMs: duracionAnimacionPremio(g.nombrePremio),
                         semilla: Number((await db.ref('configuracion/semillaSorteo').once('value')).val()) || Date.now()
                     };
 
@@ -1384,7 +1420,7 @@
                     }), 10000, 'publicar animación del premio ' + (i + 1));
 
                     // El controlador también escucha animacionActual, exactamente igual que los espectadores.
-                    await dormir(Math.max(0, (inicioMs + DURACION_ANIMACION_LIVE + 800) - ahoraServidorLocal()));
+                    await dormir(Math.max(0, (inicioMs + Number(animacion.duracionMs) + 800) - ahoraServidorLocal()));
                     if (!controladorSorteoActivo) throw new Error('Se perdió el control durante la animación.');
 
                     await confirmarGanadorPersistente(g, i);
