@@ -351,11 +351,54 @@
         .live-progress { width:100%; max-width:900px; height:6px; background:#251018; border-radius:999px; overflow:hidden; margin-bottom:8px; border:1px solid #4a1830; flex:0 0 auto; }
         .live-progress > div { height:100%; width:0%; background:linear-gradient(90deg,#ec4899,#fbbf24); transition:width .2s linear; box-shadow:0 0 15px #ec4899; }
         .live-grid-wrap { width:100%; max-width:900px; flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; }
-        #liveGrid { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:clamp(2px,.55vw,5px); width:min(900px,92vw,calc(100vh - 245px)); aspect-ratio:1; padding:clamp(6px,1.2vw,12px); box-sizing:border-box; background:#090909; border:3px solid #ec4899; border-radius:18px; box-shadow:0 0 35px rgba(236,72,153,.35); contain:layout paint; }
+        #liveGrid { position:relative; display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:clamp(2px,.55vw,5px); width:min(900px,92vw,calc(100vh - 245px)); aspect-ratio:1; padding:clamp(6px,1.2vw,12px); box-sizing:border-box; background:#090909; border:3px solid #ec4899; border-radius:18px; box-shadow:0 0 35px rgba(236,72,153,.35); contain:layout paint; }
         #liveGrid .cell { min-width:0; min-height:0; aspect-ratio:1; background:#160c12; border-color:#432033; color:#8f5f76; transition:none; }
         #liveGrid .cell.occupied { background:#3b1027; border-color:#7a1f4d; color:#ffb3d1; }
         #liveGrid .cell.lit { background:linear-gradient(135deg,#ff2d78,#ff6ba0)!important; color:#fff!important; border-color:#fff!important; box-shadow:0 0 10px #ff2d78,0 0 20px rgba(255,45,120,.7); transform:scale(1.12); z-index:5; }
         #liveGrid .cell.winner { background:linear-gradient(135deg,#fbbf24,#d97706)!important; color:#241200!important; border-color:#fff!important; box-shadow:0 0 25px rgba(251,191,36,.9); }
+
+        /* ===================================================== */
+        /* ===== LUCES DE ALERTA DURANTE LA ANIMACIÓN ========= */
+        /* ===================================================== */
+        #liveGrid.live-alert {
+            animation: liveGridAlertSoft 1.6s ease-in-out infinite;
+        }
+        #liveGrid.live-alert-intensa {
+            animation: liveGridAlertIntense 0.75s ease-in-out infinite;
+        }
+        @keyframes liveGridAlertSoft {
+            0%, 100% { border-color:#ec4899; box-shadow:0 0 35px rgba(236,72,153,.45), inset 0 0 0 rgba(255,45,120,0); }
+            50%      { border-color:#f43f5e; box-shadow:0 0 55px rgba(244,63,94,.7), 0 0 90px rgba(244,63,94,.35), inset 0 0 20px rgba(244,63,94,.15); }
+        }
+        @keyframes liveGridAlertIntense {
+            0%   { border-color:#ff2d78; box-shadow:0 0 40px rgba(255,45,120,.65), 0 0 80px rgba(255,45,120,.35), inset 0 0 25px rgba(255,45,120,.2); }
+            50%  { border-color:#ef4444; box-shadow:0 0 70px rgba(239,68,68,.95), 0 0 120px rgba(239,68,68,.6), 0 0 170px rgba(251,191,36,.4), inset 0 0 35px rgba(239,68,68,.28); }
+            100% { border-color:#ff2d78; box-shadow:0 0 40px rgba(255,45,120,.65), 0 0 80px rgba(255,45,120,.35), inset 0 0 25px rgba(255,45,120,.2); }
+        }
+        .live-alert-lights {
+            position:absolute; inset:0; pointer-events:none; z-index:30;
+            opacity:0; transition:opacity .35s ease;
+        }
+        .live-alert-lights.active { opacity:1; }
+        .live-alert-lights.intensa .alert-dot { animation-duration:.42s; }
+        .alert-dot {
+            position:absolute;
+            width:clamp(9px,1.35vw,15px);
+            height:clamp(9px,1.35vw,15px);
+            border-radius:50%;
+            background:radial-gradient(circle at 32% 30%, #ffd0e2 0%, #ff2d78 55%, #a30d44 100%);
+            box-shadow:0 0 10px #ff2d78, 0 0 24px rgba(255,45,120,.75), 0 0 38px rgba(255,45,120,.45);
+            animation:alertDotFlash .72s ease-in-out infinite alternate;
+            will-change:opacity, transform;
+        }
+        .alert-dot-tl { top: 4px; left: 4px; }
+        .alert-dot-tr { top: 4px; right: 4px; animation-delay: .18s; }
+        .alert-dot-bl { bottom: 4px; left: 4px; animation-delay: .36s; }
+        .alert-dot-br { bottom: 4px; right: 4px; animation-delay: .54s; }
+        @keyframes alertDotFlash {
+            from { opacity:.35; transform:scale(.8); filter:brightness(1); }
+            to   { opacity:1; transform:scale(1.18); filter:brightness(1.45) hue-rotate(-8deg); }
+        }
 
         /* Podio olímpico: siempre debajo del tablero, nunca encima de él. */
         .live-podium {
@@ -388,12 +431,119 @@
             .podium-place{font-size:8px;}
             .podium-result{font-size:8px;}
             .live-footer{font-size:8px;}
+            .alert-dot{width:8px;height:8px;}
+            .alert-dot-tl{top:3px;left:3px;} .alert-dot-tr{top:3px;right:3px;}
+            .alert-dot-bl{bottom:3px;left:3px;} .alert-dot-br{bottom:3px;right:3px;}
         }
         @media(max-height:650px){
             .live-status{min-height:17px;margin-bottom:3px;}
             .live-progress{margin-bottom:4px;}
             .live-podium{height:62px;}
             #liveGrid{width:min(92vw,calc(100vh - 185px));}
+        }
+
+        /* ===================================================== */
+        /* ===== TARJETA EMERGENTE DEL GANADOR ================ */
+        /* ===================================================== */
+        .winner-reveal-card {
+            position: fixed; inset: 0; z-index: 100050;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none; opacity: 0;
+            background: radial-gradient(circle at 50% 45%, rgba(0,0,0,0) 25%, rgba(0,0,0,0.55) 78%);
+            transition: opacity .45s ease;
+        }
+        .winner-reveal-card.visible { opacity: 1; }
+        .winner-reveal-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 45%, #ffffff 0%, rgba(255,255,255,0) 55%);
+            opacity: 0; pointer-events: none;
+            animation: wrcFlash .55s ease-out;
+        }
+        @keyframes wrcFlash {
+            0%   { opacity: .85; }
+            100% { opacity: 0; }
+        }
+        .wrc-inner {
+            position: relative;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #fde68a 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 30px;
+            padding: clamp(20px, 4vw, 34px) clamp(26px, 5vw, 48px);
+            text-align: center;
+            box-shadow:
+                0 0 60px rgba(251,191,36,.9),
+                0 0 130px rgba(251,191,36,.55),
+                0 22px 60px rgba(0,0,0,.55),
+                inset 0 0 34px rgba(255,255,255,.55);
+            min-width: min(80vw, 440px);
+            max-width: 92vw;
+            transform-origin: 50% 50%;
+            animation: wrcPop .72s cubic-bezier(.2, 1.6, .4, 1) forwards;
+            overflow: hidden;
+        }
+        .wrc-inner::after {
+            content: '';
+            position: absolute; top: -60%; left: -60%;
+            width: 220%; height: 220%;
+            background: conic-gradient(from 0deg, rgba(255,255,255,0) 0deg, rgba(255,255,255,.75) 40deg, rgba(255,255,255,0) 90deg, rgba(255,255,255,0) 360deg);
+            animation: wrcShine 2.4s linear infinite;
+            pointer-events: none;
+            opacity: .55;
+            mix-blend-mode: screen;
+        }
+        @keyframes wrcShine {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes wrcPop {
+            0%   { transform: scale(.32) rotate(-14deg); opacity: 0; }
+            55%  { transform: scale(1.10) rotate(4deg);  opacity: 1; }
+            78%  { transform: scale(.97) rotate(-1.5deg); }
+            100% { transform: scale(1) rotate(0deg);      opacity: 1; }
+        }
+        .wrc-crown {
+            font-size: clamp(38px, 8.5vw, 66px); line-height: 1;
+            filter: drop-shadow(0 6px 14px rgba(217,119,6,.65));
+            animation: wrcCrown 1.05s ease-in-out infinite alternate;
+            transform-origin: 50% 80%;
+        }
+        @keyframes wrcCrown {
+            from { transform: translateY(0) rotate(-7deg) scale(1); }
+            to   { transform: translateY(-7px) rotate(7deg) scale(1.04); }
+        }
+        .wrc-label {
+            font-size: clamp(12px, 2.6vw, 18px); font-weight: 1000;
+            color: #92400e; letter-spacing: 5px; margin-top: 2px;
+            text-shadow: 0 1px 0 #fff, 0 2px 6px rgba(146,64,14,.35);
+        }
+        .wrc-number {
+            font-size: clamp(48px, 12vw, 92px); font-weight: 1000;
+            color: #be185d; line-height: 1; margin: 8px 0 6px;
+            letter-spacing: 3px;
+            text-shadow:
+                0 3px 0 #fbcfe8,
+                0 6px 18px rgba(190,24,93,.45),
+                0 0 30px rgba(236,72,153,.55);
+        }
+        .wrc-name {
+            font-size: clamp(18px, 4.2vw, 30px); font-weight: 900;
+            color: #4a3038; margin-bottom: 12px;
+            word-break: break-word;
+            text-shadow: 0 1px 0 #fff;
+        }
+        .wrc-prize {
+            display: inline-block;
+            background: linear-gradient(135deg, #be185d, #ec4899);
+            color: #fff;
+            padding: 9px 24px; border-radius: 999px;
+            font-size: clamp(13px, 2.5vw, 18px); font-weight: 900;
+            letter-spacing: 1.2px;
+            box-shadow: 0 6px 22px rgba(190,24,93,.6), inset 0 0 14px rgba(255,255,255,.2);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .wrc-crown, .wrc-inner::after { animation: none; }
+            #liveGrid.live-alert, #liveGrid.live-alert-intensa, .alert-dot { animation-duration: 2s; }
         }
 
         /* ===================================================== */
@@ -602,6 +752,17 @@
 
         <div id="liveWinner" aria-hidden="true"></div>
         <div class="live-footer">Sorteo en vivo • Resultados sincronizados con Firebase</div>
+    </div>
+
+    <!-- 🏆 TARJETA EMERGENTE DEL GANADOR (aparece antes de continuar) -->
+    <div id="winnerRevealCard" class="winner-reveal-card" aria-hidden="true">
+        <div class="wrc-inner">
+            <div class="wrc-crown">👑</div>
+            <div class="wrc-label">¡¡¡ GANADOR !!!</div>
+            <div class="wrc-number" id="wrcNumber">#00</div>
+            <div class="wrc-name" id="wrcName">—</div>
+            <div class="wrc-prize" id="wrcPrize">🏆</div>
+        </div>
     </div>
 
     <!-- 🎭 PANTALLA DE SIMULACRO PRIVADA -->
@@ -911,7 +1072,8 @@
         function construirLiveGrid() {
             const liveGrid = document.getElementById('liveGrid');
             if (!liveGrid) return;
-            if (liveGrid.children.length === TOTAL_CASILLAS) return;
+            // Ya construido (100 celdas + capa de alerta)
+            if (liveGrid.children.length >= TOTAL_CASILLAS) return;
             const frag = document.createDocumentFragment();
             for (let i = 1; i <= TOTAL_CASILLAS; i++) {
                 const cell = document.createElement('div');
@@ -920,6 +1082,17 @@
                 cell.innerText = String(i).padStart(2, '0');
                 frag.appendChild(cell);
             }
+            // Capa de luces de alerta (posicionada, no participa del grid).
+            const lights = document.createElement('div');
+            lights.id = 'liveAlertLights';
+            lights.className = 'live-alert-lights';
+            lights.setAttribute('aria-hidden', 'true');
+            lights.innerHTML =
+                '<span class="alert-dot alert-dot-tl"></span>' +
+                '<span class="alert-dot alert-dot-tr"></span>' +
+                '<span class="alert-dot alert-dot-bl"></span>' +
+                '<span class="alert-dot alert-dot-br"></span>';
+            frag.appendChild(lights);
             liveGrid.replaceChildren(frag);
         }
 
@@ -981,6 +1154,8 @@
             liveAnimacionActiva = false;
             if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
             limpiarCeldasLive();
+            desactivarLucesAlerta();
+            ocultarWinnerRevealCard();
             document.body.classList.remove('modo-sorteo');
             document.body.style.overflow = '';
             const fondo = document.getElementById('fondoParpadeo');
@@ -1020,6 +1195,8 @@
             if (overlay) overlay.classList.add('hidden');
             const liveWinner = document.getElementById('liveWinner');
             if (liveWinner) liveWinner.classList.remove('visible');
+            desactivarLucesAlerta();
+            ocultarWinnerRevealCard();
             modoSorteoActivo = false;
             detenerCaosAmbiente();
             limpiarCeldasLive();
@@ -1159,6 +1336,7 @@
         let liveLitCells = [];
         let liveEstadoLectura = 'desconocido';
         let liveRevelacionToken = -1;
+        let liveAlertState = 0; // 0=none, 1=soft, 2=intense
 
         if (db) {
             db.ref('.info/serverTimeOffset').on('value', snap => {
@@ -1193,10 +1371,10 @@
         // 3er premio: 40 s · 2do premio: 40 s · 1er premio: 60 s.
         // Cada animación se compone de 5 fases deterministas:
         //   1) Ambiente caótico (14 luces rotando).
-        //   2) Reducción progresiva (12 → 9 → 6 → 4 → 2).
-        //   3) Luz única saltando cada vez más lento.
+        //   2) Reducción progresiva (12 → 9 → 6 → 4 → 2) + luces de alerta SUAVES.
+        //   3) Luz única saltando cada vez más lento + luces de alerta INTENSAS.
         //   4) Silencio de tensión: la luz queda clavada sobre el ganador real.
-        //   5) Revelación dorada (confetti + vibración).
+        //   5) Revelación dorada: aparece la TARJETA EMERGENTE + confetti + vibración.
         // ============================================================
         function duracionParaPremio(premioTxt) {
             const p = String(premioTxt || '');
@@ -1277,6 +1455,72 @@
             liveLitCells = next;
         }
 
+        // ============================================================
+        // LUCES DE ALERTA (controladas por fase, idempotentes)
+        // ============================================================
+        function activarLucesAlerta(intensa) {
+            const target = intensa ? 2 : 1;
+            if (liveAlertState === target) return;
+            liveAlertState = target;
+
+            const grid = document.getElementById('liveGrid');
+            const wrap = document.getElementById('liveAlertLights');
+            if (wrap) {
+                wrap.classList.add('active');
+                wrap.classList.toggle('intensa', !!intensa);
+            }
+            if (grid) {
+                grid.classList.add('live-alert');
+                grid.classList.toggle('live-alert-intensa', !!intensa);
+            }
+        }
+
+        function desactivarLucesAlerta() {
+            if (liveAlertState === 0) return;
+            liveAlertState = 0;
+            const grid = document.getElementById('liveGrid');
+            const wrap = document.getElementById('liveAlertLights');
+            if (wrap) wrap.classList.remove('active', 'intensa');
+            if (grid) grid.classList.remove('live-alert', 'live-alert-intensa');
+        }
+
+        // ============================================================
+        // TARJETA EMERGENTE DEL GANADOR
+        // ============================================================
+        function mostrarWinnerRevealCard(anim) {
+            const card = document.getElementById('winnerRevealCard');
+            if (!card) return;
+            const numero = Number(anim.numero);
+            const data = participantesRegistrados[numero] || {};
+            const nombre = (data.nombre || 'Ganador/a').trim();
+            const premio = String(anim.premio || '');
+
+            const numEl = document.getElementById('wrcNumber');
+            const nameEl = document.getElementById('wrcName');
+            const prizeEl = document.getElementById('wrcPrize');
+
+            if (numEl) numEl.textContent = '#' + String(numero).padStart(2, '0');
+            if (nameEl) nameEl.textContent = nombre;
+            if (prizeEl) {
+                let emoji = '🏆', txt = premio;
+                if (premio.includes('BOX 1')) { emoji = '🥇'; txt = '1ER PREMIO · BOX 1'; }
+                else if (premio.includes('BOX 2')) { emoji = '🥈'; txt = '2DO PREMIO · BOX 2'; }
+                else if (premio.includes('BOX 3')) { emoji = '🥉'; txt = '3ER PREMIO · BOX 3'; }
+                prizeEl.textContent = emoji + '  ' + txt;
+            }
+
+            // Forzar reinicio de animaciones (flash + pop)
+            card.classList.remove('visible');
+            // Reflow para reiniciar keyframes
+            void card.offsetWidth;
+            card.classList.add('visible');
+        }
+
+        function ocultarWinnerRevealCard() {
+            const card = document.getElementById('winnerRevealCard');
+            if (card) card.classList.remove('visible');
+        }
+
         async function reproducirAnimacionLiveSincronizada(anim) {
             if (!anim || !anim.numero || !anim.inicioMs) return;
 
@@ -1291,6 +1535,8 @@
             liveAnimacionClave = clave;
             const token = ++liveAnimacionToken;
             liveAnimacionActiva = true;
+            liveRevelacionToken = -1;
+            liveAlertState = 0;
 
             entrarModoSorteoVisual();
             construirLiveGrid();
@@ -1306,6 +1552,8 @@
 
             const f4End = duracionMs - REVELACION_MS;
             const f3End = f4End - SILENCIO_TENSION_MS;
+            const f1End = f3End * 0.30;
+            const f2End = f3End * 0.62;
 
             const espera = inicio - ahoraServidorLocal();
             if (espera > 0) await dormir(espera);
@@ -1318,9 +1566,22 @@
                 if (token !== liveAnimacionToken) return;
                 const transcurrido = ahoraServidorLocal() - inicio;
                 if (transcurrido < 0) return;
+
                 aplicarFrameLive(g, indice, transcurrido, semilla);
 
-                if (transcurrido >= f3End) {
+                // ---- Luces de alerta sincronizadas por fase ----
+                if (transcurrido < f1End) {
+                    desactivarLucesAlerta();
+                } else if (transcurrido < f2End) {
+                    activarLucesAlerta(false);
+                } else if (transcurrido < f3End) {
+                    activarLucesAlerta(true);
+                } else if (transcurrido < f4End) {
+                    activarLucesAlerta(true);
+                }
+
+                // ---- Podio activo desde el silencio de tensión ----
+                if (transcurrido >= f3End && transcurrido < f4End) {
                     actualizarPodioLive(anim);
                     const podio = document.getElementById('livePodium');
                     if (podio) {
@@ -1332,8 +1593,11 @@
                     }
                 }
 
+                // ---- Golpe de dopamina: tarjeta emergente + confetti ----
                 if (transcurrido >= f4End && liveRevelacionToken !== token) {
                     liveRevelacionToken = token;
+                    desactivarLucesAlerta();
+                    mostrarWinnerRevealCard(anim);
                     lanzarConfetti();
                     if (navigator.vibrate) navigator.vibrate([150,100,200,100,400]);
                 }
@@ -1342,6 +1606,8 @@
                     clearInterval(liveAnimacionIntervalo);
                     liveAnimacionIntervalo = null;
                     liveAnimacionActiva = false;
+                    desactivarLucesAlerta();
+                    ocultarWinnerRevealCard();
                     const podio = document.getElementById('livePodium');
                     if (podio) podio.querySelectorAll('.podium-card').forEach(c => c.classList.remove('activo'));
                 }
@@ -1564,7 +1830,7 @@
                 canvas.style.width = '100%';
                 canvas.style.height = '100%';
                 canvas.style.pointerEvents = 'none';
-                canvas.style.zIndex = '99999';
+                canvas.style.zIndex = '100060';
                 document.body.appendChild(canvas);
 
                 const ctx = canvas.getContext('2d');
@@ -1574,20 +1840,20 @@
                 canvas.height = Math.floor(innerHeight * dpr);
                 ctx.scale(dpr, dpr);
 
-                const colores = ['#ec4899','#f59e0b','#f43f5e','#8b5cf6','#10b981','#ffffff'];
+                const colores = ['#ec4899','#f59e0b','#f43f5e','#8b5cf6','#10b981','#ffffff','#fbbf24'];
                 const piezas = [];
-                const cantidad = Math.min(110, Math.max(60, Math.floor(innerWidth / 4)));
+                const cantidad = Math.min(140, Math.max(80, Math.floor(innerWidth / 3.4)));
                 for (let i = 0; i < cantidad; i++) {
                     piezas.push({
-                        x: innerWidth * 0.5 + (Math.random() - 0.5) * innerWidth * 0.75,
-                        y: innerHeight * 0.30 + (Math.random() - 0.5) * 40,
-                        vx: (Math.random() - 0.5) * 9,
-                        vy: -Math.random() * 9 - 3,
-                        g: 0.18 + Math.random() * 0.10,
-                        r: 3 + Math.random() * 5,
+                        x: innerWidth * 0.5 + (Math.random() - 0.5) * innerWidth * 0.85,
+                        y: innerHeight * 0.35 + (Math.random() - 0.5) * 60,
+                        vx: (Math.random() - 0.5) * 11,
+                        vy: -Math.random() * 11 - 4,
+                        g: 0.20 + Math.random() * 0.10,
+                        r: 3 + Math.random() * 6,
                         a: 1,
                         rot: Math.random() * Math.PI,
-                        vr: (Math.random() - 0.5) * 0.35,
+                        vr: (Math.random() - 0.5) * 0.4,
                         color: colores[Math.floor(Math.random() * colores.length)]
                     });
                 }
