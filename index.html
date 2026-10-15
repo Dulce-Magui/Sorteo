@@ -288,6 +288,7 @@
             background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
         }
         body.modo-sorteo::before, body.modo-sorteo::after { opacity: 0.04; }
+        body.modo-sorteo .prizes-section, body.modo-sorteo footer, body.modo-sorteo main > *:not(.grid-container) { visibility:hidden !important; }
         body.modo-sorteo .grid-container {
             background: #1b0d14; border-color: #ff2d78;
             box-shadow: 0 0 45px rgba(255, 45, 120, 0.4);
@@ -329,6 +330,36 @@
         @keyframes caerConfetiSorteo {
             to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
+
+        /* ===================================================== */
+        /* ===== TRANSMISIÓN EN VIVO DEL SORTEO REAL ========== */
+        /* ===================================================== */
+        #sorteoLiveOverlay {
+            position: fixed; inset: 0; z-index: 100000;
+            background: #000;
+            color: #fff;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: flex-start; overflow: auto;
+            padding: 14px 12px 28px;
+        }
+        #sorteoLiveOverlay.hidden { display:none !important; }
+        .live-topbar { width:100%; max-width:900px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; position:relative; z-index:3; }
+        .live-badge { background:#e11d48; color:#fff; border-radius:999px; padding:8px 13px; font-weight:900; letter-spacing:1px; font-size:12px; box-shadow:0 0 20px rgba(225,29,72,.65); animation: livePulse 1.1s infinite; }
+        .live-title { font-size:clamp(14px,3.5vw,24px); font-weight:900; text-align:center; flex:1; }
+        .live-status { width:100%; max-width:900px; text-align:center; color:#f9a8d4; font-weight:800; font-size:clamp(12px,2.8vw,18px); margin-bottom:10px; min-height:24px; }
+        .live-progress { width:100%; max-width:900px; height:7px; background:#251018; border-radius:999px; overflow:hidden; margin-bottom:14px; border:1px solid #4a1830; }
+        .live-progress > div { height:100%; width:0%; background:linear-gradient(90deg,#ec4899,#fbbf24); transition:width .35s ease; box-shadow:0 0 15px #ec4899; }
+        .live-grid-wrap { width:100%; max-width:900px; display:flex; justify-content:center; }
+        #liveGrid { display:grid; grid-template-columns:repeat(10, minmax(25px,1fr)); gap:5px; width:min(900px,100%); padding:12px; background:#090909; border:3px solid #ec4899; border-radius:18px; box-shadow:0 0 35px rgba(236,72,153,.35); }
+        #liveGrid .cell { background:#160c12; border-color:#432033; color:#8f5f76; }
+        #liveGrid .cell.occupied { background:#3b1027; border-color:#7a1f4d; color:#ffb3d1; }
+        #liveGrid .cell.lit { background:linear-gradient(135deg,#ff2d78,#ff6ba0)!important; color:#fff!important; border-color:#fff!important; box-shadow:0 0 14px #ff2d78,0 0 32px rgba(255,45,120,.85); transform:scale(1.15); z-index:5; }
+        #liveGrid .cell.winner { background:linear-gradient(135deg,#fbbf24,#d97706)!important; color:#241200!important; border-color:#fff!important; box-shadow:0 0 25px rgba(251,191,36,.9); }
+        #liveWinner { position:fixed; left:50%; bottom:7%; transform:translateX(-50%) scale(.6); width:min(92%,650px); background:linear-gradient(135deg,#fbbf24,#d97706); color:#3b2405; padding:17px 25px; border-radius:18px; border:3px solid #fff; box-shadow:0 0 55px rgba(251,191,36,.9); font-size:clamp(16px,4vw,27px); font-weight:900; text-align:center; line-height:1.35; opacity:0; pointer-events:none; transition:all .4s cubic-bezier(.2,1.8,.4,1); z-index:100003; }
+        #liveWinner.visible { opacity:1; transform:translateX(-50%) scale(1); }
+        .live-footer { width:100%; max-width:900px; text-align:center; color:#6b5360; margin-top:10px; font-size:11px; }
+        @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(.96)} }
+        @media(max-width:768px){ #liveGrid{gap:3px;padding:8px;border-width:2px} #liveGrid .cell{font-size:.7rem} .live-topbar{flex-wrap:wrap;justify-content:center} }
 
         /* ===================================================== */
         /* ===== PANTALLA DE SIMULACRO PRIVADA ================= */
@@ -507,6 +538,20 @@
     <!-- Mensaje flotante del ganador -->
     <div id="mensajeGanador" class="mensaje-ganador"></div>
 
+    <!-- 🔴 TRANSMISIÓN EN VIVO DEL SORTEO REAL -->
+    <div id="sorteoLiveOverlay" class="hidden">
+        <div class="live-topbar">
+            <span class="live-badge">🔴 EN VIVO</span>
+            <div class="live-title">🎰 SORTEO DULCE MAGUI</div>
+            <span class="live-badge">TRANSMISIÓN</span>
+        </div>
+        <div id="liveStatus" class="live-status">Preparando la transmisión...</div>
+        <div class="live-progress"><div id="liveProgressFill"></div></div>
+        <div class="live-grid-wrap"><div id="liveGrid"></div></div>
+        <div id="liveWinner"></div>
+        <div class="live-footer">Sorteo en vivo • Resultados sincronizados con Firebase</div>
+    </div>
+
     <!-- 🎭 PANTALLA DE SIMULACRO PRIVADA -->
     <div id="simulacroOverlay" class="simulacro-overlay hidden">
         <div class="simulacro-parpadeo"></div>
@@ -618,8 +663,16 @@
         let animandoGanador = false;
         let colaAnimacion = [];
         let numerosYaGanadores = new Set();
+        let planGanadoresReal = [];
+        let animacionRealEjecutandose = false;
+        let controladorSorteoActivo = false;
+        let controladorSorteoId = null;
+        let indiceAnimacionReal = 0;
 
         const dormir = ms => new Promise(r => setTimeout(r, ms));
+        // Si esta misma pantalla inició el sorteo, conserva el rol de controlador tras recargar.
+        controladorSorteoActivo = localStorage.getItem('dulceMaguiSorteoControlador') === '1';
+
 
         function crearGrid() {
             if (!grid) return;
@@ -698,6 +751,9 @@
 
         function renderizarGanadores() {
             document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
+            // Durante la transmisión NO se muestran ganadores en las tarjetas.
+            // Los resultados aparecen únicamente cuando la transmisión termina.
+            if (sorteoEnCurso || modoSorteoActivo) return;
             const agrupado = {};
             Object.values(ganadoresLista).forEach(g => {
                 if (!agrupado[g.premio]) agrupado[g.premio] = [];
@@ -708,14 +764,12 @@
                 premios.forEach(p => { if (premio.startsWith(p.nombre)) catId = p.catId; });
                 if (catId) {
                     const lista = document.getElementById(catId);
-                    if (lista) {
-                        gs.forEach(g => {
-                            const item = document.createElement('div');
-                            item.className = 'winner-item';
-                            item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> — ' + escapeHtml(g.nombre || 'Ganador/a');
-                            lista.appendChild(item);
-                        });
-                    }
+                    if (lista) gs.forEach(g => {
+                        const item = document.createElement('div');
+                        item.className = 'winner-item';
+                        item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> — ' + escapeHtml(g.nombre || 'Ganador/a');
+                        lista.appendChild(item);
+                    });
                 }
             });
         }
@@ -801,25 +855,90 @@
             if (intervaloCaosGlobal) { clearInterval(intervaloCaosGlobal); intervaloCaosGlobal = null; }
         }
 
+        function construirLiveGrid() {
+            const liveGrid = document.getElementById('liveGrid');
+            if (!liveGrid) return;
+            liveGrid.innerHTML = '';
+            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell occupied';
+                cell.id = 'live-cell-' + i;
+                cell.innerText = String(i).padStart(2, '0');
+                liveGrid.appendChild(cell);
+            }
+        }
+
+        function actualizarLiveStatus(texto, indice, total) {
+            const el = document.getElementById('liveStatus');
+            if (el) el.textContent = texto || 'Sorteo en vivo...';
+            const fill = document.getElementById('liveProgressFill');
+            if (fill) fill.style.width = ((Math.max(0, indice) / Math.max(1, total)) * 100) + '%';
+        }
+
         function entrarModoSorteoVisual() {
+            construirLiveGrid();
             document.body.classList.add('modo-sorteo');
             const fondo = document.getElementById('fondoParpadeo');
             if (fondo) fondo.classList.add('activo');
+            const overlay = document.getElementById('sorteoLiveOverlay');
+            if (overlay) overlay.classList.remove('hidden');
             modoSorteoActivo = true;
+            sorteoEnCurso = true;
+            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
             pintarTimer();
-            const gridEl = document.getElementById('grid');
-            if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            iniciarCaosAmbiente();
+            detenerCaosAmbiente();
         }
 
         function salirModoSorteoVisual() {
             document.body.classList.remove('modo-sorteo');
             const fondo = document.getElementById('fondoParpadeo');
             if (fondo) fondo.classList.remove('activo');
+            const overlay = document.getElementById('sorteoLiveOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            const liveWinner = document.getElementById('liveWinner');
+            if (liveWinner) liveWinner.classList.remove('visible');
             modoSorteoActivo = false;
             detenerCaosAmbiente();
             document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
+            renderizarGanadores();
             pintarTimer();
+        }
+
+        async function iniciarSeguimientoSorteoReal() {
+            if (!db || animacionRealEjecutandose || sorteoOperando) return;
+            animacionRealEjecutandose = true;
+            try {
+                const planSnap = await firebaseConTimeout(db.ref('configuracion/planGanadores').once('value'), 10000, 'leer plan del sorteo');
+                const plan = planSnap.val() || [];
+                if (!Array.isArray(plan) || !plan.length) return;
+                planGanadoresReal = plan;
+
+                const ganSnap = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores del sorteo');
+                const escritos = ganSnap.val() || {};
+                let indice = 0;
+                const indiceSnap = await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').once('value'), 10000, 'leer progreso de animación');
+                if (Number.isFinite(Number(indiceSnap.val()))) indice = Number(indiceSnap.val());
+                while (indice < plan.length && escritos[plan[indice].numero]) indice++;
+                indiceAnimacionReal = indice;
+
+                for (let i = indice; i < plan.length; i++) {
+                    if (!sorteoEnCurso) break;
+                    const g = plan[i];
+                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, plan.length);
+                    await animarGanadorUltraDramatico(g.numero, { premio: g.nombrePremio, nombre: (participantesRegistrados[g.numero] || {}).nombre || '' }, false, null, 'live');
+                    indiceAnimacionReal = i + 1;
+                    if (controladorSorteoActivo) await db.ref('configuracion/indiceAnimacion').set(i + 1).catch(() => {});
+                    const actualSnap = await db.ref('ganadores/' + g.numero).once('value');
+                    if (!actualSnap.exists() && controladorSorteoActivo) {
+                        await escribirGanador(g);
+                    }
+                    if (i < plan.length - 1) await dormir(1200);
+                }
+            } catch (e) {
+                console.error('Error en seguimiento de animación real:', e);
+            } finally {
+                animacionRealEjecutandose = false;
+            }
         }
 
         if (db) {
@@ -829,9 +948,14 @@
                     sorteoEnCurso = true;
                     sorteoTerminado = false;
                     entrarModoSorteoVisual();
+                    // Al recargar, la transmisión se reconstruye desde el plan guardado.
+                    setTimeout(() => iniciarSeguimientoSorteoReal(), 50);
                 } else if (estado === 'finalizado') {
                     sorteoEnCurso = false;
                     sorteoTerminado = true;
+                    salirModoSorteoVisual();
+                } else if (estado === 'pausado' || estado === 'error') {
+                    sorteoEnCurso = false;
                     salirModoSorteoVisual();
                 }
             });
@@ -862,10 +986,11 @@
             if (el) el.classList.remove('visible');
         }
 
-        async function animarGanadorUltraDramatico(num, dataGanador, isSimulacro = false, simParticipants = null) {
+        async function animarGanadorUltraDramatico(num, dataGanador, isSimulacro = false, simParticipants = null, modo = 'auto') {
             const premioTxt = (dataGanador.premio || '');
-            const cellSelector = isSimulacro ? '.sim-cell' : '.cell';
-            const getCell = (n) => document.getElementById((isSimulacro ? 'sim-cell-' : 'cell-') + n);
+            const esLive = modo === 'live';
+            const cellSelector = isSimulacro ? '.sim-cell' : (esLive ? '#liveGrid .cell' : '.cell');
+            const getCell = (n) => document.getElementById((isSimulacro ? 'sim-cell-' : (esLive ? 'live-cell-' : 'cell-')) + n);
 
             detenerCaosAmbiente();
 
@@ -933,12 +1058,25 @@
             if (navigator.vibrate) navigator.vibrate([150, 100, 200, 100, 300]);
 
             const nombreGanador = isSimulacro ? simParticipants[num].name : (participantesRegistrados[num] ? participantesRegistrados[num].nombre : 'Ganador/a');
-            mostrarMensajeGanador(num, nombreGanador, etiquetaPremio(premioTxt));
+            if (esLive) {
+                const liveWinner = document.getElementById('liveWinner');
+                if (liveWinner) {
+                    liveWinner.innerHTML = '🎉 ¡CASILLA #' + String(num).padStart(2, '0') + '!<br>👤 ' + escapeHtml(nombreGanador) + '<br>🏆 ' + escapeHtml(etiquetaPremio(premioTxt));
+                    liveWinner.classList.add('visible');
+                }
+            } else {
+                mostrarMensajeGanador(num, nombreGanador, etiquetaPremio(premioTxt));
+            }
 
             await dormir(8000);
-            ocultarMensajeGanador();
+            if (esLive) {
+                const liveWinner = document.getElementById('liveWinner');
+                if (liveWinner) liveWinner.classList.remove('visible');
+            } else {
+                ocultarMensajeGanador();
+            }
             await dormir(1000);
-            if (!isSimulacro) iniciarCaosAmbiente();
+            if (!isSimulacro && !esLive) iniciarCaosAmbiente();
         }
 
         async function procesarColaAnimacion() {
@@ -952,24 +1090,17 @@
         }
 
         if (db) {
-            db.ref('ganadores').on('child_added', async (snap) => {
+            db.ref('ganadores').on('child_added', (snap) => {
                 const num = parseInt(snap.key);
-                if (ganadoresAnimados.has(num)) return;
                 ganadoresAnimados.add(num);
-                const dataGanador = snap.val() || {};
-
+                numerosYaGanadores.add(num);
+                // Durante el sorteo real NO arrancamos la animación desde child_added.
+                // La animación se controla por planGanadores + estadoSorteo para evitar
+                // que el ganador aparezca antes de la animación.
                 if (!sorteoEnCurso) {
-                    numerosYaGanadores.add(num);
                     const cell = document.getElementById('cell-' + num);
-                    if (cell) {
-                        cell.classList.add('winner');
-                        cell.classList.add('usada');
-                    }
-                    return;
+                    if (cell) { cell.classList.add('winner'); cell.classList.add('usada'); }
                 }
-
-                colaAnimacion.push({ num: num, data: dataGanador });
-                procesarColaAnimacion();
             });
         }
 
@@ -1070,25 +1201,35 @@
                     throw new Error('No se pudieron calcular todos los ganadores.');
                 }
 
+                controladorSorteoActivo = true;
+                controladorSorteoId = 'controlador-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+                localStorage.setItem('dulceMaguiSorteoControlador', '1');
+
                 await firebaseConTimeout(db.ref('configuracion').update({
                     semillaSorteo: semilla,
+                    planGanadores: ganadoresCalculados,
+                    indiceAnimacion: 0,
                     estadoSorteo: 'girando',
                     sorteoBloqueado: true,
                     modoForzado: forzado,
                     inicioSorteo: Date.now()
                 }), 10000, 'guardar estado inicial del sorteo');
 
-                // Garantiza que la pantalla entre en modo sorteo incluso si el listener tarda.
                 sorteoEnCurso = true;
                 sorteoTerminado = false;
                 entrarModoSorteoVisual();
-
-                await dormir(4000);
+                planGanadoresReal = ganadoresCalculados;
+                actualizarLiveStatus('🎬 Preparando la transmisión en vivo...', 0, ganadoresCalculados.length);
+                await dormir(1200);
 
                 for (let i = 0; i < ganadoresCalculados.length; i++) {
                     const g = ganadoresCalculados[i];
+                    await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').set(i), 10000, 'guardar progreso de animación');
+                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, ganadoresCalculados.length);
+                    await animarGanadorUltraDramatico(g.numero, { premio: g.nombrePremio }, false, null, 'live');
                     await firebaseConTimeout(escribirGanador(g), 10000, 'guardar ganador ' + (i + 1));
-                    if (i < ganadoresCalculados.length - 1) await dormir(10000);
+                    await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').set(i + 1), 10000, 'guardar ganador revelado');
+                    if (i < ganadoresCalculados.length - 1) await dormir(1200);
                 }
 
                 await firebaseConTimeout(db.ref('configuracion').update({
@@ -1099,6 +1240,8 @@
 
                 sorteoEjecutado = true;
                 sorteoEnCurso = false;
+                controladorSorteoActivo = false;
+                localStorage.removeItem('dulceMaguiSorteoControlador');
                 sorteoTerminado = true;
                 salirModoSorteoVisual();
                 alert('✅ SORTEO COMPLETADO.\n\nSe generaron ' + ganadoresCalculados.length + ' ganadores en Firebase.');
@@ -1147,6 +1290,8 @@
                     updates['configuracion/sorteoBloqueado'] = null;
                     updates['configuracion/estadoSorteo'] = null;
                     updates['configuracion/semillaSorteo'] = null;
+                    updates['configuracion/planGanadores'] = null;
+                    updates['configuracion/indiceAnimacion'] = null;
 
                     await db.ref().update(updates);
                     alert("✅ ¡Backup restaurado con éxito! Participantes cargados y ganadores borrados.");
@@ -1418,7 +1563,9 @@
                     'configuracion/semillaSorteo': null,
                     'configuracion/modoForzado': null,
                     'configuracion/inicioSorteo': null,
-                    'configuracion/finalizacionSorteo': null
+                    'configuracion/finalizacionSorteo': null,
+                    'configuracion/planGanadores': null,
+                    'configuracion/indiceAnimacion': null
                 }), 10000, 'resetear estado del sorteo');
                 alert('✅ Sorteo reseteado. Participantes y tokens permanecen intactos.');
                 location.reload();
@@ -1429,95 +1576,54 @@
 
         async function continuarSorteo() {
             if (!db) { alert('⚠️ Base de datos no conectada.'); return; }
-            if (!confirm('⚠️ ¿Continuar el sorteo pendiente?\n\nSe reutilizará exactamente la semilla guardada para no cambiar los ganadores.')) return;
+            if (!confirm('⚠️ ¿Continuar el sorteo pendiente?\n\nSe reutilizará exactamente la semilla y el plan guardados.')) return;
             if (sorteoOperando) { alert('⏳ Ya hay una operación de sorteo en curso.'); return; }
-
             sorteoOperando = true;
+            controladorSorteoActivo = true;
+            localStorage.setItem('dulceMaguiSorteoControlador', '1');
             try {
-                const semillaSnap = await firebaseConTimeout(db.ref('configuracion/semillaSorteo').once('value'), 10000, 'leer semilla');
-                if (!semillaSnap.exists()) throw new Error('No hay semilla guardada. No se puede reconstruir el sorteo pendiente.');
-
-                const rng = mulberry32(Number(semillaSnap.val()));
-                const bolsa = obtenerCasillasValidas().slice();
-                const ganadoresCalculados = [];
-                for (const p of [...premios].reverse()) {
-                    for (let i = 1; i <= p.cantidad; i++) {
+                let planSnap = await firebaseConTimeout(db.ref('configuracion/planGanadores').once('value'), 10000, 'leer plan guardado');
+                let plan = planSnap.val() || [];
+                if (!Array.isArray(plan) || !plan.length) {
+                    const semillaSnap = await firebaseConTimeout(db.ref('configuracion/semillaSorteo').once('value'), 10000, 'leer semilla');
+                    if (!semillaSnap.exists()) throw new Error('No hay plan ni semilla guardada.');
+                    const rng = mulberry32(Number(semillaSnap.val()));
+                    const bolsa = obtenerCasillasValidas().slice();
+                    plan = [];
+                    for (const p of [...premios].reverse()) for (let i=1;i<=p.cantidad;i++) {
                         if (!bolsa.length) break;
-                        const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
-                        ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
+                        const numero = bolsa.splice(Math.floor(rng()*bolsa.length),1)[0];
+                        plan.push({catId:p.catId,nombrePremio:p.nombre,numero});
                     }
+                    await db.ref('configuracion/planGanadores').set(plan);
                 }
-
-                const ganadoresSnap = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores parciales');
-                const yaEscritos = ganadoresSnap.val() || {};
-                const faltantes = ganadoresCalculados.filter(g => !yaEscritos[g.numero]);
-                if (!faltantes.length) {
-                    await db.ref('configuracion/estadoSorteo').set('finalizado');
-                    alert('✅ No faltaban ganadores. El sorteo quedó finalizado.');
-                    return;
+                planGanadoresReal = plan;
+                await db.ref('configuracion').update({estadoSorteo:'girando',sorteoBloqueado:true});
+                sorteoEnCurso = true; sorteoTerminado = false; entrarModoSorteoVisual();
+                const ganSnap = await db.ref('ganadores').once('value');
+                const escritos = ganSnap.val() || {};
+                let idxSnap = await db.ref('configuracion/indiceAnimacion').once('value');
+                let indice = Number(idxSnap.val());
+                if (!Number.isFinite(indice)) indice = 0;
+                while (indice < plan.length && escritos[plan[indice].numero]) indice++;
+                for (let i=indice;i<plan.length;i++) {
+                    const g=plan[i];
+                    await db.ref('configuracion/indiceAnimacion').set(i);
+                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, plan.length);
+                    await animarGanadorUltraDramatico(g.numero,{premio:g.nombrePremio},false,null,'live');
+                    await escribirGanador(g);
+                    await db.ref('configuracion/indiceAnimacion').set(i+1);
+                    if (i<plan.length-1) await dormir(1200);
                 }
-
-                await firebaseConTimeout(db.ref('configuracion').update({ estadoSorteo: 'girando', sorteoBloqueado: true }), 10000, 'reanudar estado');
-                sorteoEnCurso = true;
-                entrarModoSorteoVisual();
-
-                for (const g of faltantes) {
-                    await firebaseConTimeout(escribirGanador(g), 10000, 'guardar ganador pendiente');
-                    await dormir(10000);
-                }
-
-                await firebaseConTimeout(db.ref('configuracion').update({ estadoSorteo: 'finalizado', sorteoBloqueado: true, finalizacionSorteo: Date.now() }), 10000, 'finalizar recuperación');
-                sorteoEnCurso = false;
-                sorteoTerminado = true;
+                await db.ref('configuracion').update({estadoSorteo:'finalizado',sorteoBloqueado:true,finalizacionSorteo:Date.now()});
+                sorteoEnCurso=false; sorteoTerminado=true; controladorSorteoActivo=false;
+                localStorage.removeItem('dulceMaguiSorteoControlador');
                 salirModoSorteoVisual();
                 alert('✅ Sorteo pendiente completado correctamente.');
-            } catch (error) {
-                try { await db.ref('configuracion/estadoSorteo').set('pausado'); } catch (_) {}
-                mostrarErrorSorteo('No se pudo continuar el sorteo', error);
-            } finally {
-                sorteoOperando = false;
-            }
-        }
-
-        function exportarGanadoresWA() {
-            if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
-            let txt = "🏆 *GANADORES SORTEO DÍA DE LA MADRE* 🏆\n\n";
-            Object.values(ganadoresLista).forEach(g => {
-                txt += '🎁 *' + g.premio + '*\n👤 ' + g.nombre + '\n📞 ' + g.telefono + '\n🔢 #' + String(g.casilla).padStart(2, '0') + '\n\n';
-            });
-            window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener,noreferrer');
-        }
-
-        function renderizarBoletosAdmin() {
-            const cont = document.getElementById('admin-boletos-list');
-            const cnt = document.getElementById('admin-boletos-count');
-            const entradas = Object.entries(participantesRegistrados).filter(k => Number(k[0]) > 0 && k[1] !== null).sort((a, b) => Number(a[0]) - Number(b[0]));
-            if (cnt) cnt.textContent = entradas.length;
-            if (!cont) return;
-            if (!entradas.length) {
-                cont.innerHTML = '<p style="color:#666;font-size:13px;">Sin boletos vendidos aún</p>';
-                return;
-            }
-            cont.innerHTML = entradas.map(([num, d]) =>
-                '<div style="border:1px solid #fbcfe8;border-left:4px solid #ec4899;border-radius:8px;padding:8px;margin:6px 0;background:#fff5f7;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-                '<strong style="color:#be185d;font-size:1.05rem;">Casilla #' + String(num).padStart(2, '0') + '</strong>' +
-                '<span style="font-size:0.75rem;color:#8b5a6b;">🔑 ' + escapeHtml(d.token || '—') + '</span>' +
-                '</div>' +
-                '<div style="font-size:0.85rem;margin:5px 0;">👤 ' + escapeHtml(d.nombre || 'Sin nombre') + '<br>📱 ' + escapeHtml(d.telefono || '—') + '</div>' +
-                '</div>'
-            ).join('');
-        }
-
-        function lanzarConfetti() {
-            const colores = ['#ffd700', '#ff5f8f', '#a86bff', '#5fd2ff', '#7cfc9a', '#ffffff'];
-            for (let i = 0; i < 90; i++) {
-                const c = document.createElement('div');
-                const dur = 2.2 + Math.random() * 1.8;
-                c.style.cssText = 'position:fixed;top:-12px;left:' + (Math.random() * 100) + 'vw;width:' + (6 + Math.random() * 7) + 'px;height:' + (6 + Math.random() * 7) + 'px;z-index:100000;pointer-events:none;background:' + colores[Math.floor(Math.random() * colores.length)] + ';border-radius:' + (Math.random() > .5 ? '50%' : '2px') + ';animation:caerConfetiSorteo ' + dur + 's linear forwards;animation-delay:' + (Math.random() * .4) + 's;';
-                document.body.appendChild(c);
-                setTimeout(() => c.remove(), (dur + 1) * 1000);
-            }
+            } catch(error) {
+                try { await db.ref('configuracion/estadoSorteo').set('pausado'); } catch(_) {}
+                mostrarErrorSorteo('No se pudo continuar el sorteo',error);
+            } finally { sorteoOperando=false; }
         }
     </script>
 </body>
