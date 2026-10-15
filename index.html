@@ -522,6 +522,12 @@
         <h3>🔐 Panel Admin</h3>
 
         <div class="admin-section">
+            <h4>📁 Restaurar Participantes (Backup JSON)</h4>
+            <input type="file" id="jsonFileInput" accept=".json" style="display:none;" onchange="restaurarBackupJson(event)">
+            <button class="btn-secondary" onclick="document.getElementById('jsonFileInput').click()" style="background:#e0f2fe;color:#0369a1;border-color:#38bdf8;">📥 Cargar Backup JSON</button>
+        </div>
+
+        <div class="admin-section">
             <h4>➕ Registrar participante (venta manual)</h4>
             <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
             <button class="btn-secondary" onclick="verTokenCasilla()" style="margin:4px 0;">🔍 Ver token de esta casilla</button>
@@ -532,7 +538,7 @@
 
         <div class="admin-section">
             <h4>🎫 Boletos vendidos (<span id="admin-boletos-count">0</span>)</h4>
-            <div id="admin-boletos-list" style="max-height:300px;overflow-y:auto;background:white;border-radius:8px;padding:8px;">Cargando...</div>
+            <div id="admin-boletos-list" style="max-height:250px;overflow-y:auto;background:white;border-radius:8px;padding:8px;">Cargando...</div>
         </div>
 
         <div class="admin-section">
@@ -545,7 +551,7 @@
 
         <div class="admin-section">
             <h4>🏆 Ganadores del Sorteo</h4>
-            <div id="admin-ganadores" style="max-height:200px;overflow-y:auto;">Cargando...</div>
+            <div id="admin-ganadores" style="max-height:180px;overflow-y:auto;">Cargando...</div>
             <button class="btn-secondary" onclick="exportarGanadoresWA()">📱 Exportar a WhatsApp</button>
         </div>
     </div>
@@ -608,7 +614,6 @@
         let sorteoEnCurso = false;
         let modoSorteoActivo = false;
         let sorteoTerminado = false;
-        let intervaloCaos = null;
         let animandoGanador = false;
         let colaAnimacion = [];
         let numerosYaGanadores = new Set();
@@ -951,7 +956,8 @@
                 ganadoresAnimados.add(num);
                 const dataGanador = snap.val() || {};
 
-                if (!sorteoEnCurso || (dataGanador.fechaSorteo && Date.now() - dataGanador.fechaSorteo > 35000)) {
+                // Margen de 120 segundos para asegurar que la animación se reproduzca en vivo correctamente
+                if (!sorteoEnCurso || (dataGanador.fechaSorteo && Date.now() - dataGanador.fechaSorteo > 120000)) {
                     numerosYaGanadores.add(num);
                     const cell = document.getElementById('cell-' + num);
                     if (cell) {
@@ -967,14 +973,14 @@
         }
 
         // =========================================================================
-        // FUNCIÓN MEJORADA: FORZAR SORTEO CON MANEJO DE ERRORES VISIBLES (TRY/CATCH)
+        // FUNCIÓN REAL: FORZAR SORTEO (CON TIEMPOS ÓPTIMOS DE 10s POR PREMIO)
         // =========================================================================
         async function sortearDeVerdad() {
             if (!db) { alert('⚠️ Firebase no está conectado.'); return; }
             try {
                 const lockRef = db.ref('configuracion/sorteoBloqueado');
                 const lock = await lockRef.transaction(v => {
-                    if (v === true) return; // Si ya está bloqueado, abortar transacción
+                    if (v === true) return; 
                     return true;
                 });
                 
@@ -985,18 +991,18 @@
 
                 const snapPrevio = await db.ref('ganadores').once('value');
                 if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) { 
-                    alert('El sorteo ya fue realizado.'); 
+                    alert('El sorteo ya fue realizado. Restaura el backup JSON si querés volver a probar.'); 
+                    await lockRef.remove();
                     return; 
                 }
 
-                // Filtrar casillas válidas (excluyendo índice 0 o nulos)
                 const casillas = Object.keys(participantesRegistrados)
                     .map(Number)
                     .filter(n => n > 0 && participantesRegistrados[n] !== null);
 
                 if (!casillas.length) { 
                     alert('No hay casillas ocupadas válidas para sortear.'); 
-                    await lockRef.remove(); // Liberar bloqueo si no hay participantes
+                    await lockRef.remove(); 
                     return; 
                 }
 
@@ -1016,14 +1022,14 @@
                 }
 
                 await db.ref('configuracion/estadoSorteo').set('girando');
-                await new Promise(r => setTimeout(r, 6000));
+                await new Promise(r => setTimeout(r, 4000));
 
                 await escribirGanador(ganadoresCalculados[0]);
-                await new Promise(r => setTimeout(r, 45000));
+                await new Promise(r => setTimeout(r, 10000)); 
                 await escribirGanador(ganadoresCalculados[1]);
-                await new Promise(r => setTimeout(r, 45000));
+                await new Promise(r => setTimeout(r, 10000)); 
                 await escribirGanador(ganadoresCalculados[2]);
-                await new Promise(r => setTimeout(r, 45000));
+                await new Promise(r => setTimeout(r, 10000)); 
 
                 await db.ref('configuracion/estadoSorteo').set('finalizado');
                 sorteoEjecutado = true;
@@ -1031,7 +1037,6 @@
             } catch (error) {
                 console.error("Error crítico en sortearDeVerdad:", error);
                 alert("❌ Error al ejecutar el sorteo en Firebase: " + error.message);
-                // Liberar el bloqueo en caso de fallo técnico
                 await db.ref('configuracion/sorteoBloqueado').remove().catch(() => {});
             }
         }
@@ -1045,6 +1050,43 @@
             });
         }
 
+        // ============================================================
+        // ===== RESTAURAR BACKUP JSON DESDE EL PANEL ADMIN ===========
+        // ============================================================
+        async function restaurarBackupJson(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!confirm("⚠️ ¿Restaurar los participantes y tokens desde este archivo JSON y borrar los ganadores actuales?")) return;
+            if (!db) { alert('Base de datos no conectada'); return; }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    const updates = {};
+                    if (data.casillas) updates['casillas'] = data.casillas;
+                    if (data.tokens) updates['tokens'] = data.tokens;
+                    if (data.configuracion) updates['configuracion'] = data.configuracion;
+
+                    // Limpiar ganadores y bloqueos previos
+                    updates['ganadores'] = null;
+                    updates['configuracion/sorteoBloqueado'] = null;
+                    updates['configuracion/estadoSorteo'] = null;
+                    updates['configuracion/semillaSorteo'] = null;
+
+                    await db.ref().update(updates);
+                    alert("✅ ¡Backup restaurado con éxito! Participantes cargados y ganadores borrados.");
+                    location.reload();
+                } catch (err) {
+                    alert("❌ Error al procesar el JSON: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ============================================================
+        // ===== SIMULACRO PRIVADO (ACCESO DESDE BARRA DE PROGRESO) ===
+        // ============================================================
         let simulandoActivo = false;
 
         async function abrirSimulacro() {
@@ -1248,8 +1290,8 @@
             if (!ocupadas) { alert('No hay casillas ocupadas para sortear.'); return; }
             if (!db) { alert('Base de datos no conectada'); return; }
             const snapG = await db.ref('ganadores').once('value');
-            if (snapG.exists() && Object.keys(snapG.val()).length > 0) { alert('El sorteo ya fue realizado.'); return; }
-            if (!confirm('🎲 ¿Lanzar el sorteo AHORA?\n\nMantén la pantalla abierta.')) return;
+            if (snapG.exists() && Object.keys(snapG.val()).length > 0) { alert('El sorteo ya fue realizado. Cargá tu backup JSON para volver a probar.'); return; }
+            if (!confirm('🎲 ¿Lanzar el sorteo REAL en Firebase AHORA?\n\nMantén la pantalla abierta.')) return;
             await sortearDeVerdad();
         }
 
@@ -1260,7 +1302,7 @@
             await db.ref('configuracion/sorteoBloqueado').remove();
             await db.ref('configuracion/estadoSorteo').remove();
             await db.ref('configuracion/semillaSorteo').remove();
-            alert("✅ Reseteado con éxito. Ya puedes volver a probar.");
+            alert("✅ Reseteado con éxito.");
             location.reload();
         }
 
@@ -1288,7 +1330,7 @@
             const faltantes = ganadoresCalculados.filter(g => !yaEscritos[g.numero]);
             for (const g of faltantes) {
                 await escribirGanador(g);
-                await new Promise(r => setTimeout(r, 45000));
+                await new Promise(r => setTimeout(r, 10000));
             }
             await db.ref('configuracion/estadoSorteo').set('finalizado');
             alert('✅ Sorteo completado.');
