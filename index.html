@@ -3,1346 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta property="og:title" content="💐 Sorteo Día de la Madre - 3 Premios Increíbles" />
-    <meta property="og:description" content="🎟️ 100 números • 3 premios gigantes • Sorteo 17 de octubre 20hs. ¡Conseguí tu número antes de que se agoten!" />
-    <meta property="og:image" content="https://dulce-magui.github.io/Sorteo/share-image.jpg" />
-    <meta property="og:url" content="https://dulce-magui.github.io/Sorteo/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Dulce Magui" />
-    <meta property="og:locale" content="es_AR" />
-    <meta name="theme-color" content="#ec4899" />
-
-    <title>💐 Sorteo Día de la Madre - Dulce Magui</title>
-
+    <title>Sorteo Especial Día de la Madre - Dulce Magui</title>
+    <!-- Tailwind CSS para diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #fff5f7;
-            --card-bg: #ffffff;
-            --primary-pink: #ec4899;
-            --primary-pink-glow: rgba(236, 72, 153, 0.4);
-            --primary-pink-dark: #be185d;
-            --primary-rose: #fb7185;
-            --primary-beige: #fef3c7;
-            --primary-beige-border: #fcd34d;
-            --text-color: #4a3038;
-            --subtitle-color: #8b5a6b;
-            --cell-default: #fce7f3;
-            --cell-border: #fbcfe8;
-            --whatsapp: #25D366;
-            --gold: #d97706;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body {
-            background: linear-gradient(135deg, #fff5f7 0%, #fce7f3 50%, #fbcfe8 100%);
-            color: var(--text-color);
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; padding: 20px;
-            position: relative; overflow-x: hidden;
-            transition: background 0.8s ease;
-        }
-        body::before {
-            content: '🌸 💐  🌺 💮 ';
-            position: fixed; top: 10%; left: -50px; font-size: 30px; opacity: 0.15;
-            transform: rotate(-15deg); letter-spacing: 40px; pointer-events: none; z-index: 0;
-        }
-        body::after {
-            content: '🌸 💐  🌺 💮 ';
-            position: fixed; bottom: 10%; right: -50px; font-size: 30px; opacity: 0.15;
-            transform: rotate(15deg); letter-spacing: 40px; pointer-events: none; z-index: 0;
-        }
-        header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 650px; position: relative; z-index: 1; }
-        .logo-container {
-            width: 150px; height: 150px; border-radius: 50%; overflow: hidden;
-            border: 5px solid var(--primary-pink); margin: 0 auto 15px;
-            box-shadow: 0 0 30px var(--primary-pink-glow);
-            background-color: #fff; animation: logoGlow 3s ease-in-out infinite; position: relative; cursor: pointer;
-        }
-        .logo-container::after {
-            content: '💐'; position: absolute; bottom: -5px; right: -5px; font-size: 40px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-        @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 0 20px var(--primary-pink-glow); }
-            50% { box-shadow: 0 0 40px var(--primary-pink-glow), 0 0 60px rgba(236, 72, 153, 0.4); }
-        }
-        .logo-container img { width: 100%; height: 100%; object-fit: cover; }
-        .pretitle {
-            display: inline-block; background: linear-gradient(135deg, var(--primary-pink), var(--primary-rose));
-            color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
-            letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-        h1 {
-            font-size: 2.5rem; color: var(--primary-pink-dark); text-transform: uppercase;
-            letter-spacing: 2px; text-shadow: 0 0 15px rgba(236, 72, 153, 0.4); margin-bottom: 5px; line-height: 1.1;
-        }
-        .subtitle { color: var(--subtitle-color); font-size: 1.1rem; margin-bottom: 15px; font-weight: 500; }
-        .timer-box {
-            font-size: 1.3rem; font-weight: 900; color: var(--primary-pink-dark);
-            background: white; padding: 12px 25px; border-radius: 25px;
-            border: 3px solid var(--primary-pink); margin-bottom: 20px;
-            display: inline-block; box-shadow: 0 6px 20px rgba(236, 72, 153, 0.25); letter-spacing: 1px;
-        }
-        .info-bubble {
-            max-width: 700px; width: 100%; background: rgba(255, 255, 255, 0.97);
-            border: 3px solid var(--primary-pink); border-radius: 20px; padding: 25px; margin-bottom: 30px;
-            font-size: 0.95rem; box-shadow: 0 10px 35px rgba(236, 72, 153, 0.2); position: relative; z-index: 1;
-        }
-        .bubble-header { text-align: center; margin-bottom: 20px; }
-        .bubble-title {
-            display: inline-block; background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 10px 25px; border-radius: 25px; font-size: 1.15rem; font-weight: 900;
-            letter-spacing: 1px; box-shadow: 0 5px 18px rgba(236, 72, 153, 0.4);
-        }
-        .bubble-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 22px; }
-        .bubble-info-item {
-            display: flex; align-items: center; gap: 10px; background: #fff5f7;
-            border: 2px solid var(--cell-border); border-radius: 12px; padding: 12px; text-align: left;
-        }
-        .bubble-info-item .info-icon { font-size: 1.8rem; }
-        .bubble-info-item strong { display: block; color: var(--primary-pink-dark); font-size: 0.9rem; line-height: 1.2; }
-        .bubble-info-item small { color: var(--subtitle-color); font-size: 0.75rem; }
-        .packs-divider { text-align: center; margin: 20px 0 15px; position: relative; }
-        .packs-divider::before {
-            content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-pink), transparent);
-        }
-        .packs-divider span {
-            position: relative; background: white; padding: 5px 18px; color: var(--primary-pink-dark);
-            font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; border-radius: 20px; border: 2px solid var(--primary-pink);
-        }
-        .packs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-        .pack-card {
-            background: linear-gradient(135deg, #ffffff, #fff5f7); border: 3px solid var(--cell-border);
-            border-radius: 16px; padding: 18px 10px; text-align: center; position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .pack-card:hover { transform: translateY(-5px); }
-        .pack-card.featured {
-            border-color: var(--primary-pink); background: linear-gradient(135deg, #fff, #fce7f3);
-            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.25); transform: scale(1.03);
-        }
-        .pack-card.best {
-            border-color: var(--gold); background: linear-gradient(135deg, #fff, #fef3c7);
-            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.25); transform: scale(1.03);
-        }
-        .pack-badge {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.65rem; font-weight: 900;
-            letter-spacing: 1px; white-space: nowrap; box-shadow: 0 3px 10px rgba(236, 72, 153, 0.4);
-        }
-        .pack-badge.gold { background: linear-gradient(135deg, #92400e, var(--gold)); box-shadow: 0 3px 10px rgba(217, 119, 6, 0.4); }
-        .pack-emojis { font-size: 1.6rem; margin-bottom: 5px; }
-        .pack-count { font-size: 2.2rem; font-weight: 900; color: var(--primary-pink-dark); line-height: 1; }
-        .pack-card.best .pack-count { color: #92400e; }
-        .pack-label { font-size: 0.75rem; font-weight: 700; color: var(--subtitle-color); letter-spacing: 2px; margin-bottom: 8px; }
-        .pack-price { font-size: 1.5rem; font-weight: 900; color: var(--primary-pink-dark); }
-        .pack-card.best .pack-price { color: #92400e; }
-        .pack-save {
-            font-size: 0.72rem; font-weight: 700; color: #16a34a; background: #dcfce7;
-            border-radius: 10px; padding: 3px 8px; margin-top: 6px; display: inline-block; min-height: 18px;
-        }
-        .bubble-footer {
-            text-align: center; background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 2px dashed var(--gold); border-radius: 12px; padding: 12px; color: #78350f; font-size: 0.95rem;
-        }
-        @media (max-width: 600px) {
-            .packs-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .pack-card { padding: 14px 6px; }
-            .pack-count { font-size: 1.7rem; }
-            .pack-price { font-size: 1.15rem; }
-            .pack-emojis { font-size: 1.2rem; }
-            .pack-badge { font-size: 0.55rem; padding: 3px 8px; }
-            .pack-save { font-size: 0.6rem; }
-            .bubble-info-grid { grid-template-columns: 1fr; }
-        }
-        .counter-badge {
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 8px 20px; border-radius: 25px; font-size: 1rem; font-weight: bold;
-            display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-        }
-        .progress-bar {
-            width: 100%; max-width: 650px; height: 25px; background: #f3e8ff; border-radius: 15px;
-            overflow: hidden; margin: 10px auto 20px; border: 2px solid var(--primary-pink);
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--primary-pink), var(--primary-pink-dark));
-            transition: width 0.5s ease; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 13px; font-weight: bold; box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
-        }
-        .cta-button-container { width: 100%; max-width: 650px; text-align: center; margin: 20px auto 30px; position: relative; z-index: 1; }
-        .cta-button {
-            display: inline-block; width: 100%; padding: 25px 30px;
-            background: linear-gradient(135deg, #25D366, #128C7E); color: white; text-decoration: none;
-            border-radius: 25px; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2);
-            transition: all 0.3s ease; position: relative; overflow: hidden; animation: ctaPulse 2s ease-in-out infinite;
-        }
-        @keyframes ctaPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5), 0 0 0 4px rgba(37, 211, 102, 0.2); }
-            50% { transform: scale(1.02); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.7), 0 0 0 8px rgba(37, 211, 102, 0.3); }
-        }
-        .cta-button:hover { transform: translateY(-3px) scale(1.02); }
-        .cta-button::before {
-            content: ''; position: absolute; top: -2px; left: -100%; width: 100%; height: calc(100% + 4px);
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite;
-        }
-        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
-        .cta-button .btn-emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
-        .cta-button .btn-sub { font-size: 0.9rem; font-weight: 500; opacity: 0.9; letter-spacing: 0; text-transform: none; display: block; margin-top: 5px; }
-        .grid-container {
-            display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px;
-            max-width: 700px; width: 100%; margin-bottom: 35px; padding: 15px;
-            background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
-            border: 4px solid var(--primary-pink); position: relative; z-index: 1;
-            transition: background 0.8s ease, border-color 0.8s ease;
-        }
-        .grid-container::before {
-            content: '🌸 100 NÚMEROS • 3 GANADORES 🌸'; position: absolute; top: -15px; left: 50%;
-            transform: translateX(-50%); background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink));
-            color: white; padding: 5px 20px; border-radius: 15px; font-size: 0.85rem; font-weight: bold;
-            letter-spacing: 2px; white-space: nowrap; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-        }
-        .cell {
-            width: 100%; aspect-ratio: 1; background-color: var(--cell-default); border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem;
-            color: var(--primary-pink-dark); border: 2px solid var(--cell-border); user-select: none;
-            transition: all 0.2s ease; cursor: pointer;
-        }
-        .cell.occupied { background-color: #fca5a5; border-color: #f87171; color: #7f1d1d; }
-        .cell.winner {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #ffffff; border-color: #fde68a;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8); animation: winnerReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes winnerReveal { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .prizes-section { width: 100%; max-width: 900px; position: relative; z-index: 1; margin-bottom: 40px; }
-        .prizes-title {
-            text-align: center; color: var(--primary-pink-dark); font-size: 2rem; margin-bottom: 25px;
-            text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
-        }
-        .prizes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .prize-card {
-            background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%); border: 3px solid var(--primary-pink);
-            border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
-            position: relative; transition: transform 0.3s ease;
-        }
-        .prize-card:hover { transform: translateY(-5px); }
-        .prize-card.gold { border-color: var(--gold); background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); box-shadow: 0 15px 40px rgba(217, 119, 6, 0.3); }
-        .prize-badge {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary-pink-dark), var(--primary-pink)); color: white;
-            padding: 5px 15px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-        }
-        .prize-card.gold .prize-badge { background: linear-gradient(135deg, #92400e, var(--gold)); }
-        .prize-emoji { font-size: 4rem; margin: 15px 0 10px; display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15)); }
-        .prize-card h3 { color: var(--primary-pink-dark); font-size: 1.2rem; margin-bottom: 10px; font-weight: 900; }
-        .prize-card.gold h3 { color: #92400e; }
-        .prize-description { font-size: 0.9rem; color: var(--subtitle-color); margin-bottom: 15px; line-height: 1.4; }
-        .prize-winners { display: flex; flex-direction: column; gap: 8px; min-height: 30px; }
-        .winner-item {
-            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%); color: #713f12; font-weight: 700;
-            font-size: 0.9rem; padding: 10px 14px; border-radius: 10px; text-align: left;
-            animation: slideIn 0.4s ease forwards; border: 2px solid #fbbf24;
-        }
-        .winner-item .wa-btn {
-            display: inline-block; background: var(--whatsapp); color: white; padding: 5px 10px;
-            border-radius: 5px; text-decoration: none; font-size: 0.8rem; margin-top: 5px; font-weight: bold;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        footer { text-align: center; color: #5d4037; font-size: 13px; margin-top: 20px; position: relative; z-index: 1; }
-        footer a { color: var(--primary-pink-dark); font-weight: bold; text-decoration: none; }
-        
-        #admin-panel { position: fixed; top: 0; right: 0; width: 380px; max-width: 95vw; height: 100vh; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2); padding: 20px; overflow-y: auto; z-index: 1000; }
-        #admin-panel h3 { color: var(--primary-pink-dark); margin-bottom: 15px; border-bottom: 2px solid var(--primary-pink); padding-bottom: 8px; }
-        #admin-panel .admin-section { margin-bottom: 20px; padding: 12px; background: #f9fafb; border-radius: 8px; }
-        #admin-panel .admin-section h4 { color: var(--primary-pink-dark); margin-bottom: 10px; font-size: 1rem; }
-        #admin-panel .close-btn { float: right; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .admin-item { background: white; padding: 8px; margin: 5px 0; border-radius: 5px; border-left: 3px solid var(--primary-pink); font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
-        .admin-item strong { color: var(--primary-pink-dark); }
-        .admin-item button { background: #ef4444; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-
-        @media (max-width: 768px) {
-            .grid-container { grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 10px; }
-            .cell { font-size: 0.7rem; }
-            .grid-container::before { font-size: 0.7rem; padding: 4px 12px; }
-            #admin-panel { width: 100vw; max-width: 100vw; }
-            h1 { font-size: 2rem; }
-            .cta-button { font-size: 1.2rem; padding: 20px; }
-        }
-
-        /* ===================================================== */
-        /* ===== ANIMACIÓN DEL SORTEO SOBRE LA GRILLA ========== */
-        /* ===================================================== */
-        #fondoParpadeo {
-            position: fixed; inset: 0; background: #000; opacity: 0;
-            pointer-events: none; z-index: 500;
-        }
-        #fondoParpadeo.activo { animation: parpadeoFondo 1.2s ease-in-out infinite; }
-        @keyframes parpadeoFondo {
-            0%, 100% { opacity: 0.28; }
-            50% { opacity: 0.52; }
-        }
-
-        body.modo-sorteo {
-            background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
-        }
-        body.modo-sorteo::before, body.modo-sorteo::after { opacity: 0.04; }
-        body.modo-sorteo .grid-container {
-            background: #1b0d14; border-color: #ff2d78;
-            box-shadow: 0 0 45px rgba(255, 45, 120, 0.4);
-            position: relative; z-index: 600;
-        }
-        body.modo-sorteo .cell { background-color: #241019; border-color: #3d1a2c; color: #8f5f76; }
-        body.modo-sorteo .cell.occupied { background-color: #4a1130; border-color: #7a1f4d; color: #ffb3d1; }
-        body.modo-sorteo .cell.winner { box-shadow: 0 0 22px rgba(251, 191, 36, 0.95); }
-
-        .cell.lit {
-            background: linear-gradient(135deg, #ff2d78, #ff6ba0) !important;
-            color: #fff !important;
-            border-color: #fff !important;
-            box-shadow: 0 0 14px #ff2d78, 0 0 32px rgba(255, 45, 120, 0.8);
-            transform: scale(1.15);
-            z-index: 5;
-        }
-
-        .cell.usada { position: relative; opacity: 0.92; }
-        .cell.usada::after {
-            content: '🏆'; position: absolute; top: -7px; right: -3px; font-size: 11px;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
-        }
-
-        .mensaje-ganador {
-            position: fixed; left: 50%; bottom: 8%;
-            transform: translateX(-50%) scale(0.5);
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #3b2405; padding: 16px 32px; border-radius: 18px;
-            font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-align: center;
-            line-height: 1.4;
-            box-shadow: 0 0 45px rgba(251, 191, 36, 0.85);
-            border: 3px solid #fff;
-            z-index: 99999; opacity: 0; pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.2, 1.8, 0.4, 1);
-        }
-        .mensaje-ganador.visible { opacity: 1; transform: translateX(-50%) scale(1); }
-
-        @keyframes caerConfetiSorteo {
-            to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* ===================================================== */
-        /* ===== BOTÓN + PANTALLA DE SIMULACRO ================= */
-        /* ===================================================== */
-        .btn-simular {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff; border: none; padding: 10px 26px; border-radius: 20px;
-            font-weight: bold; font-size: 0.95rem; cursor: pointer; margin-bottom: 8px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            transition: transform 0.2s ease;
-        }
-        .btn-simular:hover { transform: translateY(-2px); }
-
-        .simulacro-overlay {
-            position: fixed; inset: 0; z-index: 99998;
-            background: linear-gradient(135deg, #12060d 0%, #2a0a1c 50%, #12060d 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            padding: 20px; overflow-y: auto;
-        }
-        .simulacro-overlay.hidden { display: none; }
-        .simulacro-parpadeo {
-            position: absolute; inset: 0; background: #000; pointer-events: none;
-            animation: parpadeoFondo 1.2s ease-in-out infinite;
-        }
-        .simulacro-header {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 700px; color: #ffb3d1; font-weight: bold;
-            margin-bottom: 20px; position: relative; z-index: 2;
-        }
-        .simulacro-header span { font-size: 1.05rem; letter-spacing: 1px; }
-        .simulacro-close {
-            background: #ef4444; color: #fff; border: none; padding: 9px 18px;
-            border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem;
-        }
-        .simulacro-grid {
-            display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px;
-            max-width: 700px; width: 100%; padding: 15px;
-            background: #1b0d14; border-radius: 20px; border: 4px solid #ff2d78;
-            box-shadow: 0 0 45px rgba(255, 45, 120, 0.4);
-            position: relative; z-index: 2;
-        }
-        .simulacro-grid .cell { background-color: #4a1130; border-color: #7a1f4d; color: #ffb3d1; }
-        @media (max-width: 768px) {
-            .simulacro-grid { gap: 3px; padding: 10px; }
-            .simulacro-grid .cell { font-size: 0.7rem; }
-            .simulacro-header span { font-size: 0.8rem; }
-        }
-        .hidden { display: none !important; }
-        input, select {
-            width: 100%; padding: 14px; margin-bottom: 12px; border: 2px solid #ffe0b2;
-            border-radius: 12px; font-size: 16px; outline: none; transition: border 0.2s;
-        }
-        .btn-secondary {
-            width: 100%; background: #f3f4f6; color: var(--text-color); padding: 12px;
-            border: 2px solid #e5e7eb; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;
-        }
-        .btn-secondary:hover { background: #e5e7eb; }
+        body { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-rose-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Fondo oscuro parpadeante del sorteo real -->
-    <div id="fondoParpadeo"></div>
+    <!-- Pantalla de Carga / Overlay con protección contra bloqueos -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-rose-500 border-solid mb-4"></div>
+        <p class="text-lg font-semibold text-rose-600">Conectando con el sistema del sorteo...</p>
+        <p id="loading-subtext" class="text-sm text-slate-400 mt-2">Cargando casillas y cuenta regresiva...</p>
+    </div>
 
-    <header>
-        <div class="logo-container" id="admin-trigger">
-            <img src="logo.png" alt="Logo" onerror="this.parentElement.innerText='LOGO'">
-        </div>
-        <span class="pretitle">💐 Edición Especial 💐</span>
-        <h1>Sorteo Día de<br>la Madre</h1>
-        <p class="subtitle">100 Números • 3 Premios Increíbles</p>
-        <div class="timer-box" id="timer">⏳ Cargando...</div>
+    <!-- Cabecera -->
+    <header class="bg-white shadow-sm py-6 px-4 text-center">
+        <h1 class="text-3xl font-bold text-rose-600">Dulce Magui 🍰</h1>
+        <p class="text-slate-600 mt-1">Gran Sorteo Especial - Día de la Madre</p>
     </header>
 
-    <div class="info-bubble">
-        <div class="bubble-header">
-            <span class="bubble-title">🌸 Premio especial para mamá 🌸</span>
-        </div>
-        <div class="bubble-info-grid">
-            <div class="bubble-info-item">
-                <span class="info-icon">📅</span>
-                <div><strong>SÁBADO 17 DE OCTUBRE</strong><small>20:00 hs en punto</small></div>
-            </div>
-            <div class="bubble-info-item">
-                <span class="info-icon">📺</span>
-                <div><strong>SORTEO EN VIVO</strong><small>Por esta misma página</small></div>
-            </div>
-            <div class="bubble-info-item">
-                <span class="info-icon">🎲</span>
-                <div><strong>100% TRANSPARENTE</strong><small>Selección aleatoria auditada</small></div>
-            </div>
-        </div>
-        <div class="packs-divider"><span>🎟️ ELEGÍ TU PACK DE BOLETOS 🎟️</span></div>
-        <div class="packs-grid">
-            <div class="pack-card">
-                <div class="pack-emojis">🎫</div>
-                <div class="pack-count">1</div>
-                <div class="pack-label">BOLETO</div>
-                <div class="pack-price">$2.500</div>
-                <div class="pack-save"> </div>
-            </div>
-            <div class="pack-card featured">
-                <div class="pack-badge">⭐ MÁS ELEGIDO</div>
-                <div class="pack-emojis">🎫</div>
-                <div class="pack-count">2</div>
-                <div class="pack-label">BOLETOS</div>
-                <div class="pack-price">$4.000</div>
-                <div class="pack-save">Ahorrás $1.000</div>
-            </div>
-            <div class="pack-card best">
-                <div class="pack-badge gold">💎 MEJOR PRECIO</div>
-                <div class="pack-emojis">🎫🎫🎫</div>
-                <div class="pack-count">3</div>
-                <div class="pack-label">BOLETOS</div>
-                <div class="pack-price">$5.000</div>
-                <div class="pack-save">Ahorrás $2.500</div>
-            </div>
-        </div>
-        <div class="bubble-footer">🏆 <strong>Cada número tiene oportunidad de ganar.</strong> ¡No te quedes sin el tuyo!</div>
-    </div>
+    <!-- Contenido Principal -->
+    <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow">
 
-    <div class="cta-button-container">
-        <a href="https://wa.me/541168911377/?text=%F0%9F%8C%B8%20Hola!%20Quiero%20mi%20n%C3%BAmero%20para%20el%20Sorteo%20del%20D%C3%ADa%20de%20la%20Madre%20%F0%9F%92%90" target="_blank" rel="noopener noreferrer" class="cta-button">
-            <span class="btn-emoji">💐🎟️💝</span>
-            CONSEGUÍ TU NÚMERO AHORA
-            <span class="btn-sub">Hacé click y escribinos por WhatsApp</span>
-        </a>
-    </div>
-
-    <div style="text-align:center;">
-        <div class="counter-badge" id="casillas-counter">Números: 0 / 100</div>
-    </div>
-
-    <div class="progress-bar" id="progress-trigger">
-        <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
-    </div>
-
-    <div class="grid-container" id="grid"></div>
-
-    <div class="prizes-section">
-        <h2 class="prizes-title">🏆 3 Premios 🏆</h2>
-        <div class="prizes-grid">
-            <div class="prize-card gold">
-                <span class="prize-badge">🥇 1er PREMIO</span>
-                <span class="prize-emoji">🎁🎂🍰</span>
-                <h3>BOX 1</h3>
-                <p class="prize-description">
-                    ✨ MINI TORTA FLAN 🎂<br>
-                    + 12 SHOTS sabores surtidos<br>
-                    + 3 Porciones a elección<br>
-                    + RAMO rosas de chocolate
-                </p>
-                <div class="prize-winners" id="prize-1"></div>
+        <!-- Cuenta Regresiva -->
+        <section class="bg-white rounded-2xl shadow-md p-6 mb-8 text-center">
+            <h2 class="text-xl font-semibold mb-4 text-slate-700">⏰ Tiempo restante para el sorteo</h2>
+            <div id="countdown" class="grid grid-cols-4 gap-2 max-w-md mx-auto text-white">
+                <div class="bg-rose-500 p-3 rounded-xl shadow">
+                    <span id="days" class="text-2xl font-bold block">00</span>
+                    <span class="text-xs uppercase tracking-wider">Días</span>
+                </div>
+                <div class="bg-rose-500 p-3 rounded-xl shadow">
+                    <span id="hours" class="text-2xl font-bold block">00</span>
+                    <span class="text-xs uppercase tracking-wider">Horas</span>
+                </div>
+                <div class="bg-rose-500 p-3 rounded-xl shadow">
+                    <span id="minutes" class="text-2xl font-bold block">00</span>
+                    <span class="text-xs uppercase tracking-wider">Min</span>
+                </div>
+                <div class="bg-rose-500 p-3 rounded-xl shadow">
+                    <span id="seconds" class="text-2xl font-bold block">00</span>
+                    <span class="text-xs uppercase tracking-wider">Seg</span>
+                </div>
             </div>
-            <div class="prize-card">
-                <span class="prize-badge">🥈 2do PREMIO</span>
-                <span class="prize-emoji">🎁🍰🍧</span>
-                <h3>BOX 2</h3>
-                <p class="prize-description">
-                    ✨ 6 SHOTS sabores surtidos 🍧<br>
-                    + 2 PORCIONES a elección<br>
-                    + RAMO rosas de chocolate
-                </p>
-                <div class="prize-winners" id="prize-2"></div>
+            <!-- Botón de simulación / inicio manual -->
+            <div id="simulation-container" class="mt-4 hidden">
+                <button onclick="startRaffleAnimation()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded-xl shadow transition">
+                    🎲 Iniciar Sorteo en Vivo
+                </button>
             </div>
-            <div class="prize-card">
-                <span class="prize-badge">🥉 3er PREMIO</span>
-                <span class="prize-emoji">🎁🍰🍧</span>
-                <h3>BOX 3</h3>
-                <p class="prize-description">
-                    ✨ 1 PORCIÓN a elección 🍰<br>
-                    + 3 SHOTS sabores surtidos<br>
-                    + RAMO rosas de chocolate
-                </p>
-                <div class="prize-winners" id="prize-3"></div>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <footer>
-        <p>📞 Pedidos: <a href="https://wa.me/541168911377" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
-        <p>💐 Dulce Magui - Todos los derechos reservados</p>
+        <!-- Sección de Ganadores -->
+        <section id="winners-section" class="hidden bg-gradient-to-r from-amber-100 to-rose-100 border-2 border-amber-300 rounded-2xl shadow-lg p-6 mb-8 text-center">
+            <h2 class="text-2xl font-bold text-amber-800 mb-2">🎉 ¡Ganadores Oficiales del Sorteo! 🎉</h2>
+            <p id="winner-status-text" class="text-slate-700 mb-4">El sorteo se está realizando en vivo:</p>
+            <div id="winners-list" class="flex flex-wrap justify-center gap-4">
+                <!-- Se inyecta dinámicamente -->
+            </div>
+        </section>
+
+        <!-- Cuadro de Casillas del Sorteo -->
+        <section class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-xl font-semibold text-slate-700">🎟️ Estado de Casillas (1 - 100)</h2>
+                <div class="flex gap-4 text-sm">
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-100 border border-emerald-400 rounded-full inline-block"></span> Disponible</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-rose-500 rounded-full inline-block"></span> Ocupado</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-amber-400 rounded-full inline-block"></span> Ganador</span>
+                </div>
+            </div>
+            
+            <!-- Grilla dinámica -->
+            <div id="numbers-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                <!-- Las casillas se cargan desde Firebase -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-white border-t py-4 text-center text-xs text-slate-500">
+        © 2026 Dulce Magui - Todos los derechos reservados.
     </footer>
 
-    <!-- Mensaje flotante del ganador (real y simulacro) -->
-    <div id="mensajeGanador" class="mensaje-ganador"></div>
-
-    <!-- 🎭 PANTALLA DE SIMULACRO -->
-    <div id="simulacroOverlay" class="simulacro-overlay hidden">
-        <div class="simulacro-parpadeo"></div>
-        <div class="simulacro-header">
-            <span>🎭 SIMULACRO • Animación de Alta Tensión (3 Minutos)</span>
-            <button class="simulacro-close" onclick="cerrarSimulacro()">✖ Salir</button>
-        </div>
-        <div class="simulacro-grid" id="simGrid"></div>
-    </div>
-
-    <div id="admin-panel" class="hidden">
-        <button class="close-btn" onclick="toggleAdmin()">✖</button>
-        <h3>🔐 Panel Admin</h3>
-
-        <div class="admin-section">
-            <h4>➕ Registrar participante (venta manual)</h4>
-            <input type="number" id="admin-casilla" placeholder="Casilla (1-100)" min="1" max="100" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-            <button class="btn-secondary" onclick="verTokenCasilla()" style="margin:4px 0;">🔍 Ver token de esta casilla</button>
-            <input type="text" id="admin-nombre" placeholder="Nombre del cliente" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-            <input type="tel" id="admin-telefono" placeholder="Teléfono (5411...)" style="width:100%;padding:8px;margin:4px 0;border:1px solid #ddd;border-radius:6px;">
-            <button class="btn-secondary" onclick="registrarManual()" style="background:#dcfce7;color:#166534;border-color:#16a34a;">✅ Registrar y ocupar casilla</button>
-        </div>
-
-        <div class="admin-section">
-            <h4>🎫 Boletos vendidos (<span id="admin-boletos-count">0</span>)</h4>
-            <div id="admin-boletos-list" style="max-height:300px;overflow-y:auto;background:white;border-radius:8px;padding:8px;">Cargando...</div>
-        </div>
-
-        <div class="admin-section">
-            <h4>📊 Sorteo Día de la Madre</h4>
-            <p id="admin-status">Cargando...</p>
-            <button class="btn-secondary" onclick="forceSorteo()">🎲 Forzar Sorteo</button>
-            <button class="btn-secondary" onclick="continuarSorteo()" style="background:#fffbeb;color:#92400e;border-color:#f59e0b;">🔁 Continuar sorteo (si quedó a medias)</button>
-            <button class="btn-secondary" onclick="resetSorteo()" style="background:#fee;color:#c62828;border-color:#ef4444;">⚠️ Resetear todo</button>
-        </div>
-
-        <div class="admin-section">
-            <h4>🏆 Ganadores del Sorteo</h4>
-            <div id="admin-ganadores" style="max-height:200px;overflow-y:auto;">Cargando...</div>
-            <button class="btn-secondary" onclick="exportarGanadoresWA()">📱 Exportar a WhatsApp</button>
-        </div>
-    </div>
-
-    <!-- SDKs de Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+    <!-- Scripts de la Aplicación -->
     <script>
-        // Inicialización segura de Firebase con manejo de errores y respaldo offline
-        let db = null;
-        try {
-            if (typeof firebase !== 'undefined') {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyBAaisU4YkdXcMqazDyK2fx6luazM",
-                    authDomain: "sorteo-01.firebaseapp.com",
-                    databaseURL: "https://sorteo-01-default-rtdb.firebaseio.com",
-                    projectId: "sorteo-01",
-                    storageBucket: "sorteo-01.firebasestorage.app",
-                    messagingSenderId: "719595477279",
-                    appId: "1:719595477279:web:fcb0bebc5965b013f3b82a",
-                    measurementId: "G-8ZG47Q7GTL"
-                };
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                db = firebase.database();
-            }
-        } catch (e) {
-            console.warn("⚠️ Firebase no inicializado o sin conexión:", e);
-        }
+        const FIREBASE_URL = "https://sorteo-01-default-rtdb.firebaseio.com/.json";
+        
+        let targetDate = new Date('2026-10-17T23:00:00Z').getTime(); // Configuración por defecto desde Firebase[span_5](start_span)[span_5](end_span)
+        let globalCasillas = [];
+        let isAnimating = false;
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingSubtext = document.getElementById('loading-subtext');
 
-        const TOTAL_CASILLAS = 100;
-        const grid = document.getElementById('grid');
-
-        const premios = [
-            { catId: 'prize-1', nombre: 'BOX 1', cantidad: 1 },
-            { catId: 'prize-2', nombre: 'BOX 2', cantidad: 1 },
-            { catId: 'prize-3', nombre: 'BOX 3', cantidad: 1 }
-        ];
-
-        const FECHA_SORTEO_FIJA = "2026-10-17T23:00:00Z";
-
-        let participantesRegistrados = {};
-        let sorteoEjecutado = false;
-        let timerInterval = null;
-        let ganadoresLista = {};
-        let fechaObjetivo = new Date(FECHA_SORTEO_FIJA).getTime();
-        let ganadoresAnimados = new Set();
-
-        let sorteoEnCurso = false;
-        let modoSorteoActivo = false;
-        let sorteoTerminado = false;
-        let intervaloCaos = null;
-        let animandoGanador = false;
-        let colaAnimacion = [];
-        let numerosYaGanadores = new Set();
-
-        const dormir = ms => new Promise(r => setTimeout(r, ms));
-
-        function crearGrid() {
-            if (!grid) return;
-            grid.innerHTML = '';
-            for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.id = 'cell-' + i;
-                cell.innerText = String(i).padStart(2, '0');
-                cell.onclick = () => verCasilla(i);
-                grid.appendChild(cell);
+        function hideLoading() {
+            if (loadingOverlay) {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => loadingOverlay.remove(), 300);
             }
         }
-        crearGrid();
 
-        function verCasilla(numero) {
-            const data = participantesRegistrados[numero];
-            const numTxt = String(numero).padStart(2, '0');
-            if (!data) {
-                alert('🎫 La casilla #' + numTxt + ' está LIBRE.\n\n📲 ¡Conseguila por WhatsApp!');
-                return;
-            }
-            const nombre = (data.nombre || '?').trim();
-            const nombreOculto = escapeHtml(nombre.charAt(0).toUpperCase() + '*****');
-            const tel = (data.telefono || '').replace(/\D/g, '');
-            const telOculto = '****' + tel.slice(-4);
-            alert('🎀 Casilla #' + numTxt + '\n👤 ' + nombreOculto + '\n📱 ' + telOculto);
-        }
+        const safetyTimeout = setTimeout(() => {
+            loadingSubtext.textContent = "Usando modo de respaldo local...";
+            hideLoading();
+        }, 4000);
 
-        // Conexión segura a Firebase (si está disponible)
-        if (db) {
-            db.ref('casillas').on('value', (snapshot) => {
-                participantesRegistrados = snapshot.val() || {};
-                const ocupadas = Object.keys(participantesRegistrados).length;
-                const counterEl = document.getElementById('casillas-counter');
-                if (counterEl) counterEl.innerText = 'Números: ' + ocupadas + ' / ' + TOTAL_CASILLAS;
-                const porcentaje = (ocupadas / TOTAL_CASILLAS) * 100;
-                const pf = document.getElementById('progress-fill');
-                if (pf) {
-                    pf.style.width = porcentaje + '%';
-                    pf.innerText = Math.round(porcentaje) + '%';
-                }
-                for (let i = 1; i <= TOTAL_CASILLAS; i++) {
-                    const cell = document.getElementById('cell-' + i);
-                    if (cell) {
-                        if (participantesRegistrados[i]) {
-                            cell.classList.add('occupied');
-                            cell.title = 'Reservado por: ' + (participantesRegistrados[i].nombre || '');
-                        } else {
-                            cell.classList.remove('occupied');
-                            cell.title = '';
-                        }
-                    }
-                }
-                actualizarAdminPanel();
-                renderizarBoletosAdmin();
-            });
-
-            db.ref('ganadores').on('value', (snap) => {
-                ganadoresLista = snap.val() || {};
-                renderizarGanadores();
-                actualizarAdminPanel();
-                numerosYaGanadores = new Set(Object.keys(ganadoresLista).map(Number));
-                if (!sorteoEnCurso) {
-                    numerosYaGanadores.forEach(n => {
-                        const cell = document.getElementById('cell-' + n);
-                        if (cell && !cell.classList.contains('winner')) {
-                            cell.classList.add('winner');
-                            cell.classList.add('usada');
-                        }
-                    });
-                }
-                if (Object.keys(ganadoresLista).length >= 3 && !sorteoEnCurso) {
-                    sorteoTerminado = true;
-                    pintarTimer();
-                }
-            });
-        }
-
-        function renderizarGanadores() {
-            document.querySelectorAll('.prize-winners').forEach(el => el.innerHTML = '');
-            const agrupado = {};
-            Object.values(ganadoresLista).forEach(g => {
-                if (!agrupado[g.premio]) agrupado[g.premio] = [];
-                agrupado[g.premio].push(g);
-            });
-            Object.entries(agrupado).forEach(([premio, gs]) => {
-                let catId = null;
-                premios.forEach(p => { if (premio.startsWith(p.nombre)) catId = p.catId; });
-                if (catId) {
-                    const lista = document.getElementById(catId);
-                    if (lista) {
-                        gs.forEach(g => {
-                            const item = document.createElement('div');
-                            item.className = 'winner-item';
-                            const waMsg = encodeURIComponent('🎉 ¡Felicitaciones ' + (g.nombre || '') + '! 🎉\nGanaste: *' + (g.premio || '') + '*\nNúmero #' + g.casilla);
-                            const cleanTel = (g.telefono || '').replace(/\D/g, '');
-                            const waLink = 'https://wa.me/' + cleanTel + '?text=' + waMsg;
-                            item.innerHTML = '<strong>#' + String(g.casilla).padStart(2, '0') + '</strong> ' + escapeHtml(g.nombre || '') + '<br><a href="' + waLink + '" target="_blank" rel="noopener noreferrer" class="wa-btn">📱 Notificar</a>';
-                            lista.appendChild(item);
-                        });
-                    }
-                }
-            });
-        }
-
-        function pintarTimer() {
-            const el = document.getElementById('timer');
-            if (!el) return;
-            if (modoSorteoActivo) { el.innerText = '🎉 ¡SORTEO EN VIVO! 🎉'; return; }
-            if (sorteoTerminado) { el.innerText = '🏆 ¡Sorteo finalizado! Mirá los ganadores'; return; }
-            const diff = fechaObjetivo - Date.now();
-            if (diff <= 0) {
-                el.innerText = "🎉 ¡SORTEO EN VIVO! 🎉";
-                return;
-            }
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            let t = '';
-            if (d > 0) t += d + 'd ';
-            t += h + 'h ' + m + 'm ' + s + 's';
-            el.innerText = '💐 ' + t;
-        }
-
-        function iniciarTimerLocal() {
-            if (timerInterval) clearInterval(timerInterval);
-            pintarTimer();
-            timerInterval = setInterval(pintarTimer, 1000);
-        }
-
-        async function sincronizarFecha() {
-            if (!db) return;
+        // ==========================================
+        // CARGA DE DATOS DESDE FIREBASE
+        // ==========================================
+        async function fetchRaffleData() {
             try {
-                const snap = await db.ref('configuracion/fechaSorteo').once('value');
-                if (snap.exists() && snap.val()) {
-                    const t = new Date(snap.val()).getTime();
-                    if (!isNaN(t)) fechaObjetivo = t;
-                } else {
-                    db.ref('configuracion/fechaSorteo').set(FECHA_SORTEO_FIJA).catch(() => {});
-                }
-                pintarTimer();
-            } catch (e) {
-                console.warn('⚠️ Sin conexión a Firebase: uso fecha local.', e);
-            }
-        }
-
-        iniciarTimerLocal();
-        sincronizarFecha();
-
-        // ============================================================
-        // ===== ANIMACIÓN DE ALTA TENSIÓN (3 MINUTOS TOTALES) ========
-        // ============================================================
-
-        function mulberry32(a) {
-            return function() {
-                a |= 0; a = a + 0x6D2B79F5 | 0;
-                let t = Math.imul(a ^ a >>> 15, 1 | a);
-                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-                return ((t ^ t >>> 14) >>> 0) / 4294967296;
-            };
-        }
-
-        function poolDisponibles() {
-            return Object.keys(participantesRegistrados).map(Number).filter(n => !numerosYaGanadores.has(n));
-        }
-
-        function pintarLucesGrid(gridIdPrefix, cant) {
-            const prefix = gridIdPrefix ? gridIdPrefix + '-' : 'cell-';
-            document.querySelectorAll('.' + (gridIdPrefix ? 'sim-cell' : 'cell') + '.lit').forEach(c => c.classList.remove('lit'));
-            const pool = poolDisponibles();
-            const mezcladas = pool.slice().sort(() => Math.random() - 0.5).slice(0, cant);
-            mezcladas.forEach(n => {
-                const cell = document.getElementById(prefix + n);
-                if (cell) cell.classList.add('lit');
-            });
-        }
-
-        let intervaloCaosGlobal = null;
-        function iniciarCaosAmbiente() {
-            if (intervaloCaosGlobal) clearInterval(intervaloCaosGlobal);
-            intervaloCaosGlobal = setInterval(() => pintarLucesGrid('', 14), 140);
-        }
-
-        function detenerCaosAmbiente() {
-            if (intervaloCaosGlobal) { clearInterval(intervaloCaosGlobal); intervaloCaosGlobal = null; }
-        }
-
-        function entrarModoSorteoVisual() {
-            document.body.classList.add('modo-sorteo');
-            const fondo = document.getElementById('fondoParpadeo');
-            if (fondo) fondo.classList.add('activo');
-            modoSorteoActivo = true;
-            pintarTimer();
-            const gridEl = document.getElementById('grid');
-            if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            iniciarCaosAmbiente();
-        }
-
-        function salirModoSorteoVisual() {
-            document.body.classList.remove('modo-sorteo');
-            const fondo = document.getElementById('fondoParpadeo');
-            if (fondo) fondo.classList.remove('activo');
-            modoSorteoActivo = false;
-            detenerCaosAmbiente();
-            document.querySelectorAll('.cell.lit').forEach(c => c.classList.remove('lit'));
-            pintarTimer();
-        }
-
-        if (db) {
-            db.ref('configuracion/estadoSorteo').on('value', (snap) => {
-                const estado = snap.val();
-                if (estado === 'girando') {
-                    sorteoEnCurso = true;
-                    entrarModoSorteoVisual();
-                } else if (estado === 'finalizado') {
-                    sorteoEnCurso = false;
-                    sorteoTerminado = true;
-                    salirModoSorteoVisual();
-                }
-            });
-        }
-
-        function etiquetaPremio(premioTxt) {
-            if (premioTxt.includes('BOX 1')) return 'el 1er PREMIO 🥇 (¡BOX 1 GIGANTE!)';
-            if (premioTxt.includes('BOX 2')) return 'el 2do PREMIO 🥈 (¡BOX 2 ESPECIAL!)';
-            return 'el 3er PREMIO 🥉 (¡BOX 3 SORPRESA!)';
-        }
-
-        function mostrarMensajeGanador(num, nombre, etiqueta) {
-            const el = document.getElementById('mensajeGanador');
-            if (!el) return;
-            el.innerHTML = '🎉 ¡CASILLA #' + String(num).padStart(2, '0') + '!<br>👤 ' + escapeHtml(nombre) + '<br>Ganó ' + etiqueta;
-            el.classList.add('visible');
-        }
-
-        function mostrarMensajeTexto(html) {
-            const el = document.getElementById('mensajeGanador');
-            if (!el) return;
-            el.innerHTML = html;
-            el.classList.add('visible');
-        }
-
-        function ocultarMensajeGanador() {
-            const el = document.getElementById('mensajeGanador');
-            if (el) el.classList.remove('visible');
-        }
-
-        // =========================================================================
-        // MOTOR DE ANIMACIÓN AGÓNICA DE ~60 SEGUNDOS POR PREMIO (3 MINUTOS TOTALES)
-        // =========================================================================
-        async function animarGanadorUltraDramatico(num, dataGanador, isSimulacro = false, simParticipants = null) {
-            const premioTxt = (dataGanador.premio || '');
-            const cellSelector = isSimulacro ? '.sim-cell' : '.cell';
-            const getCell = (n) => document.getElementById((isSimulacro ? 'sim-cell-' : 'cell-') + n);
-
-            detenerCaosAmbiente();
-
-            // FASE 1: Caos inicial y suspenso (12 segundos)
-            const finFase1 = Date.now() + 12000;
-            while (Date.now() < finFase1) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-                const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-                const randomSample = pool.sort(() => Math.random() - 0.5).slice(0, 15);
-                randomSample.forEach(n => { const c = getCell(n); if(c) c.classList.add('lit'); });
-                await dormir(200);
-            }
-
-            // FASE 2: Reducción gradual de luces (18 segundos)
-            const pasosReduccion = [12, 9, 6, 4, 3, 2];
-            for (const cant of pasosReduccion) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-                const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-                const randomSample = pool.sort(() => Math.random() - 0.5).slice(0, cant);
-                randomSample.forEach(n => { const c = getCell(n); if(c) c.classList.add('lit'); });
-                await dormir(3000);
-            }
-
-            // FASE 3: TRAMO FINAL DESESPERANTE (~30 segundos)
-            const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-            if (pool.indexOf(num) === -1) pool.push(num);
-            
-            const totalSaltosFinales = 30;
-            
-            for (let i = 0; i < totalSaltosFinales; i++) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
+                const response = await fetch(FIREBASE_URL);
+                if (!response.ok) throw new Error('Error al conectar con la base de datos');
                 
-                let casillaActual;
-                if (i === totalSaltosFinales - 1) {
-                    casillaActual = num;
-                } else {
-                    let tempPool = pool.filter(p => p !== num);
-                    casillaActual = tempPool[Math.floor(Math.random() * tempPool.length)];
+                const data = await response.json();
+                clearTimeout(safetyTimeout);
+
+                if (data.configuracion && data.configuracion.fechaSorteo) {
+                    targetDate = new Date(data.configuracion.fechaSorteo).getTime();[span_6](start_span)[span_6](end_span)
                 }
 
-                const c = getCell(casillaActual);
-                if (c) c.classList.add('lit');
-
-                let delay = 300 + Math.pow(i, 1.6) * 45;
-                if (i > totalSaltosFinales - 5) {
-                    delay += 300;
-                }
-                
-                if (navigator.vibrate && i > totalSaltosFinales - 8) {
-                    navigator.vibrate(60);
+                if (data.casillas) {
+                    globalCasillas = data.casillas;[span_7](start_span)[span_7](end_span)
+                    renderGrid(globalCasillas, [], []);
                 }
 
-                await dormir(delay);
+                hideLoading();
+                checkSorteoStatus();
+            } catch (error) {
+                console.error("Error de conexión:", error);
+                loadingSubtext.textContent = "Error de red. Mostrando interfaz...";
+                setTimeout(hideLoading, 1500);
             }
-
-            await dormir(600);
-            document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-            const cellGanadora = getCell(num);
-            if (cellGanadora) {
-                cellGanadora.classList.add('winner');
-                cellGanadora.classList.add('usada');
-            }
-            if (!isSimulacro) numerosYaGanadores.add(num);
-
-            lanzarConfetti();
-            if (navigator.vibrate) navigator.vibrate([150, 100, 200, 100, 300]);
-
-            const nombreGanador = isSimulacro ? simParticipants[num].name : (participantesRegistrados[num] ? participantesRegistrados[num].nombre : 'Ganador/a');
-            mostrarMensajeGanador(num, nombreGanador, etiquetaPremio(premioTxt));
-
-            await dormir(8000);
-            ocultarMensajeGanador();
-            await dormir(1000);
-            if (!isSimulacro) iniciarCaosAmbiente();
         }
 
-        async function procesarColaAnimacion() {
-            if (animandoGanador) return;
-            animandoGanador = true;
-            while (colaAnimacion.length) {
-                const item = colaAnimacion.shift();
-                await animarGanadorUltraDramatico(item.num, item.data, false);
-            }
-            animandoGanador = false;
-        }
+        // ==========================================
+        // RENDERIZADO DE LA GRILLA
+        // ==========================================
+        function renderGrid(casillasArray, winningIndices = [], activeFlashingIndices = [], activeSingleIndex = null) {
+            const gridContainer = document.getElementById('numbers-grid');
+            if (!gridContainer) return;
+            
+            gridContainer.innerHTML = '';
 
-        if (db) {
-            db.ref('ganadores').on('child_added', async (snap) => {
-                const num = parseInt(snap.key);
-                if (ganadoresAnimados.has(num)) return;
-                ganadoresAnimados.add(num);
-                const dataGanador = snap.val() || {};
-
-                if (!sorteoEnCurso || (dataGanador.fechaSorteo && Date.now() - dataGanador.fechaSorteo > 35000)) {
-                    numerosYaGanadores.add(num);
-                    const cell = document.getElementById('cell-' + num);
-                    if (cell) {
-                        cell.classList.add('winner');
-                        cell.classList.add('usada');
-                    }
-                    return;
-                }
-
-                colaAnimacion.push({ num: num, data: dataGanador });
-                procesarColaAnimacion();
-            });
-        }
-
-        async function sortearDeVerdad() {
-            if (!db) { alert('⚠️ Firebase no está conectado.'); return; }
-            const lock = await db.ref('configuracion/sorteoBloqueado').transaction(v => {
-                if (v === true) return;
-                return true;
-            });
-            if (!lock.committed) { alert('⚠️ Ya hay un sorteo en curso.'); return; }
-
-            const snapPrevio = await db.ref('ganadores').once('value');
-            if (snapPrevio.exists() && Object.keys(snapPrevio.val()).length > 0) { sorteoEjecutado = true; return; }
-
-            const casillas = Object.keys(participantesRegistrados).map(Number);
-            if (!casillas.length) { alert('No hay casillas ocupadas.'); return; }
-
-            const semilla = Date.now();
-            await db.ref('configuracion/semillaSorteo').set(semilla);
-            const rng = mulberry32(semilla);
-            let bolsa = casillas.slice();
-            const ganadoresCalculados = [];
-            for (const p of [...premios].reverse()) {
-                for (let i = 1; i <= p.cantidad; i++) {
-                    if (!bolsa.length) break;
-                    const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
-                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
-                }
-            }
-
-            await db.ref('configuracion/estadoSorteo').set('girando');
-            await new Promise(r => setTimeout(r, 6000));
-
-            await escribirGanador(ganadoresCalculados[0]);
-            await new Promise(r => setTimeout(r, 62000));
-            await escribirGanador(ganadoresCalculados[1]);
-            await new Promise(r => setTimeout(r, 62000));
-            await escribirGanador(ganadoresCalculados[2]);
-            await new Promise(r => setTimeout(r, 62000));
-
-            await db.ref('configuracion/estadoSorteo').set('finalizado');
-            sorteoEjecutado = true;
-        }
-
-        async function escribirGanador(g) {
-            if (!db) return;
-            const d = participantesRegistrados[g.numero] || {};
-            await db.ref('ganadores/' + g.numero).set({
-                casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
-                telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
-            });
-        }
-
-        // ============================================================
-        // ===== 🎭 SIMULACRO DE SORTEO DE ALTA TENSIÓN (3 MINUTOS) ===
-        // ============================================================
-        let simulandoActivo = false;
-
-        async function abrirSimulacro() {
-            if (simulandoActivo) return;
-            simulandoActivo = true;
-
-            const nombres = ['Ana','Luis','Marta','Jorge','Sofía','Pedro','Lucía','Diego','Valentina','Camila','Franco','Rocío','Nicolás','Julieta','Mateo','Abril','Thiago','Emma','Bautista','Isabela'];
-            const apellidos = ['García','López','Martínez','Pérez','Gómez','Fernández','Rodríguez','Silva','Torres','Ramírez','Castro','Morales'];
-            let simParticipants = {};
             for (let i = 1; i <= 100; i++) {
-                simParticipants[i] = {
-                    name: nombres[Math.floor(Math.random() * nombres.length)] + ' ' + apellidos[Math.floor(Math.random() * apellidos.length)]
-                };
-            }
+                const casillaData = casillasArray[i] || null;
+                const isOccupied = casillaData !== null;
+                const isWinner = winningIndices.includes(i);
+                const isFlashing = activeFlashingIndices.includes(i);
+                const isSingleActive = activeSingleIndex === i;
 
-            const simGrid = document.getElementById('simGrid');
-            simGrid.innerHTML = '';
-            for (let i = 1; i <= 100; i++) {
                 const cell = document.createElement('div');
-                cell.className = 'cell sim-cell occupied';
-                cell.id = 'sim-cell-' + i;
-                cell.innerText = String(i).padStart(2, '0');
-                cell.title = simParticipants[i].name;
-                simGrid.appendChild(cell);
+                cell.className = "aspect-square flex flex-col items-center justify-center rounded-xl font-bold text-xs sm:text-sm transition-all duration-100 shadow-sm border p-1 text-center";
+
+                if (isWinner) {
+                    cell.className += " bg-amber-400 text-amber-950 border-amber-500 scale-110 ring-4 ring-amber-300 animate-bounce shadow-lg";
+                    cell.innerHTML = `<span class="text-base font-extrabold">#${i}</span><span class="text-[9px] truncate w-full px-1">${casillaData ? casillaData.nombre : 'Premio'}</span>`;
+                } else if (isSingleActive) {
+                    // Fase 3: Una sola casilla iluminándose de forma individual (rebote)
+                    cell.className += " bg-purple-600 text-white border-purple-700 scale-110 ring-4 ring-purple-300 shadow-xl z-20 animate-pulse";
+                    cell.innerHTML = `<span class="text-base font-extrabold">${i}</span><span class="text-[9px] truncate w-full px-1">⭐</span>`;
+                } else if (isFlashing) {
+                    // Fases 1 y 2: Múltiples casillas caóticas / dinámicas
+                    cell.className += " bg-indigo-500 text-white border-indigo-600 scale-105 ring-2 ring-indigo-300 shadow-md";
+                    cell.innerHTML = `<span class="text-base font-bold">${i}</span><span class="text-[9px] truncate w-full px-1">✨</span>`;
+                } else if (isOccupied) {
+                    cell.className += " bg-rose-500 text-white border-rose-600 shadow";
+                    cell.innerHTML = `<span class="text-base font-bold">${i}</span><span class="text-[9px] truncate w-full px-1 opacity-95">${casillaData.nombre}</span>`;
+                } else {
+                    cell.className += " bg-emerald-50 text-emerald-700 border-emerald-200 opacity-50";
+                    cell.innerHTML = `<span class="text-base font-bold">${i}</span><span class="text-[9px] text-emerald-600">Libre</span>`;
+                }
+
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        // ==========================================
+        // ANIMACIÓN DE 3 TRAMOS CON SUS RESPECTIVOS REBOTES EN FASE 3
+        // ==========================================
+        async function startRaffleAnimation() {
+            if (isAnimating || globalCasillas.length === 0) return;
+            isAnimating = true;
+
+            // Obtener casillas ocupadas válidas de Firebase[span_8](start_span)[span_8](end_span)
+            let occupiedIndices = [];
+            globalCasillas.forEach((casilla, index) => {
+                if (casilla !== null && index > 0) occupiedIndices.push(index);
+            });
+
+            if (occupiedIndices.length === 0) {
+                alert("No hay casillas ocupadas para sortear.");
+                isAnimating = false;
+                return;
             }
 
-            document.getElementById('simulacroOverlay').classList.remove('hidden');
+            // Seleccionar 3 ganadores aleatorios
+            let shuffled = [...occupiedIndices].sort(() => 0.5 - Math.random());
+            let selectedWinners = shuffled.slice(0, 3); // 3er lugar, 2do premio, 1er premio mayor
 
-            const pool = Object.keys(simParticipants).map(Number).sort(() => Math.random() - 0.5);
-            const winners = [
-                { numero: pool[0], premio: 'BOX 3' },
-                { numero: pool[1], premio: 'BOX 2' },
-                { numero: pool[2], premio: 'BOX 1' }
+            const winnersSection = document.getElementById('winners-section');
+            const winnersList = document.getElementById('winners-list');
+            const statusText = document.getElementById('winner-status-text');
+            
+            winnersSection.classList.remove('hidden');
+            winnersList.innerHTML = '';
+            statusText.textContent = "🎲 ¡Girando la tómbola en vivo!";
+
+            let confirmedWinners = [];
+            let currentUnlockedWinners = [];
+
+            // Definir configuración para los 3 tramos (Premios)
+            // tramo 0: 3er Lugar -> 10 rebotes en Fase 3
+            // tramo 1: 2do Premio -> 15 rebotes en Fase 3
+            // tramo 2: 1er Premio Mayor -> 20 rebotes en Fase 3 (máxima tensión)
+            const prizesConfig = [
+                { label: "3er Lugar", bounceCount: 10 },
+                { label: "2do Premio", bounceCount: 15 },
+                { label: "🏆 1er Premio Mayor", bounceCount: 20 }
             ];
 
-            for (const w of winners) {
-                if (!simulandoActivo) break;
-                await animarGanadorUltraDramatico(w.numero, { premio: w.premio }, true, simParticipants);
-                await dormir(2000);
-            }
+            for (let prizeIndex = 0; prizeIndex < selectedWinners.length; prizeIndex++) {
+                const targetWinner = selectedWinners[prizeIndex];
+                const config = prizesConfig[prizeIndex];
 
-            if (simulandoActivo) {
-                mostrarMensajeTexto('🎉 ¡Simulación de 3 minutos completada!<br>Máximo suspenso y dramatismo alcanzado.');
-                await dormir(4000);
-                ocultarMensajeGanador();
-                cerrarSimulacro();
-            }
-        }
+                statusText.textContent = `🎲 Sorteando ${config.label}...`;
 
-        function cerrarSimulacro() {
-            simulandoActivo = false;
-            ocultarMensajeGanador();
-            document.getElementById('simulacroOverlay').classList.add('hidden');
-        }
+                // --- FASE 1: Muy caótica y dinámica (Gran Tómbola encendida) ---
+                await runCaoticPhase(occupiedIndices, targetWinner, 28, 65, 12);
 
-        // 🎭 5 clics en la barra de progreso = simulacro
-        const progressTrigger = document.getElementById('progress-trigger');
-        if (progressTrigger) {
-            let progressTapCount = 0;
-            let progressTapTimer = null;
-            progressTrigger.addEventListener('click', () => {
-                progressTapCount++;
-                if (progressTapTimer) clearTimeout(progressTapTimer);
-                progressTapTimer = setTimeout(() => { progressTapCount = 0; }, 2000);
-                if (progressTapCount >= 5) { progressTapCount = 0; abrirSimulacro(); }
-            });
-        }
+                // --- FASE 2: Reducción progresiva (El caos baja a un grupo mediano y luego pequeño) ---
+                await runCaoticPhase(occupiedIndices, targetWinner, 12, 110, 8);
+                await runCaoticPhase(occupiedIndices, targetWinner, 4, 180, 6);
 
-        // Panel Admin trigered by 5 clicks on logo
-        let adminSessionExpires = 0;
-        let sessionCheckInterval = null;
-        let logoTapCount = 0;
-        let logoTapTimer = null;
+                // --- FASE 3: Queda una sola casilla rebotando aleatoriamente ---
+                await runSingleBoxBounces(occupiedIndices, targetWinner, config.bounceCount);
 
-        function showAdminLoginModal() {
-            if (document.getElementById('admin-login-modal')) return;
-            const modal = document.createElement('div');
-            modal.id = 'admin-login-modal';
-            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;';
-            modal.innerHTML =
-                '<div style="background:white;border-radius:20px;padding:30px;max-width:350px;width:90%;text-align:center;border:3px solid #db2777;box-shadow:0 0 40px rgba(219,39,119,0.5);">' +
-                '<h3 style="color:#db2777;margin-bottom:15px;">🔐 Acceso Admin</h3>' +
-                '<p style="font-size:13px;color:#666;margin-bottom:20px;">Ingresá tu token de administrador</p>' +
-                '<input type="password" id="admin-token-input" placeholder="Token admin" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-bottom:15px;">' +
-                '<div id="admin-login-error" style="color:#dc2626;font-size:13px;margin-bottom:10px;display:none;"></div>' +
-                '<button onclick="submitAdminToken()" style="width:100%;padding:12px;background:linear-gradient(135deg,#db2777,#f472b6);color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer;">Ingresar</button>' +
-                '<button onclick="closeAdminLoginModal()" style="width:100%;padding:10px;background:#f3f4f6;color:#666;border:none;border-radius:10px;margin-top:10px;cursor:pointer;">Cancelar</button>' +
-                '</div>';
-            document.body.appendChild(modal);
-            const input = document.getElementById('admin-token-input');
-            input.focus();
-            input.addEventListener('keypress', (e) => { if (e.key === 'Enter') submitAdminToken(); });
-        }
+                // Agregar ganador confirmado
+                confirmedWinners.push({ index: targetWinner, label: config.label, data: globalCasillas[targetWinner] });
+                currentUnlockedWinners.push(targetWinner);
 
-        function closeAdminLoginModal() {
-            const modal = document.getElementById('admin-login-modal');
-            if (modal) modal.remove();
-        }
+                // Actualizar la interfaz de ganadores
+                renderWinnersUI(confirmedWinners, currentUnlockedWinners);
 
-        async function submitAdminToken() {
-            const inputToken = document.getElementById('admin-token-input').value.trim();
-            const errorEl = document.getElementById('admin-login-error');
-            if (!inputToken) { errorEl.textContent = 'Ingresá un token'; errorEl.style.display = 'block'; return; }
-            if (!db) { errorEl.textContent = '❌ Base de datos no conectada'; errorEl.style.display = 'block'; return; }
-            try {
-                const snap = await db.ref('admin').once('value');
-                const adminData = snap.val();
-                if (!adminData || !adminData.token) { errorEl.textContent = '❌ Token admin no configurado'; errorEl.style.display = 'block'; return; }
-                if (inputToken === adminData.token) {
-                    closeAdminLoginModal();
-                    openAdminPanel(adminData.sessionMinutes || 15);
-                } else {
-                    errorEl.textContent = '❌ Token incorrecto';
-                    errorEl.style.display = 'block';
-                    document.getElementById('admin-token-input').value = '';
-                }
-            } catch (err) {
-                errorEl.textContent = '❌ Error: ' + err.message;
-                errorEl.style.display = 'block';
-            }
-        }
-
-        function openAdminPanel(sessionMinutes) {
-            adminSessionExpires = Date.now() + (sessionMinutes * 60 * 1000);
-            document.getElementById('admin-panel').classList.remove('hidden');
-            actualizarAdminPanel();
-            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
-            sessionCheckInterval = setInterval(() => {
-                if (Date.now() > adminSessionExpires) { closeAdminPanel(); alert('⏰ Sesión expirada'); }
-            }, 5000);
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('admin-panel').classList.add('hidden');
-            adminSessionExpires = 0;
-            if (sessionCheckInterval) { clearInterval(sessionCheckInterval); sessionCheckInterval = null; }
-        }
-
-        function toggleAdmin() {
-            if (!document.getElementById('admin-panel').classList.contains('hidden')) { closeAdminPanel(); return; }
-            if (adminSessionExpires > Date.now()) { openAdminPanel(15); return; }
-            showAdminLoginModal();
-        }
-
-        const logoTrigger = document.getElementById('admin-trigger');
-        if (logoTrigger) {
-            logoTrigger.addEventListener('click', () => {
-                logoTapCount++;
-                if (logoTapTimer) clearTimeout(logoTapTimer);
-                logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
-                if (logoTapCount >= 5) { logoTapCount = 0; toggleAdmin(); }
-            });
-        }
-
-        function actualizarAdminPanel() {
-            const ocupadas = Object.keys(participantesRegistrados).length;
-            const s = document.getElementById('admin-status');
-            if (s) s.innerHTML = '<strong>Números vendidos:</strong> ' + ocupadas + '/' + TOTAL_CASILLAS + '<br><strong>Ganadores:</strong> ' + Object.keys(ganadoresLista).length + '/3';
-            const g = document.getElementById('admin-ganadores');
-            if (g) {
-                if (!Object.keys(ganadoresLista).length) {
-                    g.innerHTML = '<p style="color:#666;font-size:13px;">Sin ganadores aún</p>';
-                } else {
-                    g.innerHTML = Object.entries(ganadoresLista).map(([n, d]) =>
-                        '<div class="admin-item"><span><strong>#' + String(n).padStart(2, '0') + '</strong> ' + escapeHtml(d.nombre || '') + ' - ' + escapeHtml(d.premio || '') + '</span></div>'
-                    ).join('');
-                }
-            }
-        }
-
-        async function verTokenCasilla() {
-            const casilla = parseInt(document.getElementById('admin-casilla').value);
-            if (!casilla || casilla < 1 || casilla > 100) { alert('Poné una casilla entre 1 y 100'); return; }
-            if (!db) { alert('Base de datos no conectada'); return; }
-            const snap = await db.ref('tokens').once('value');
-            let tk = null;
-            snap.forEach(ch => { if (ch.val().casilla === casilla) tk = ch.key; });
-            alert(tk ? '🔑 Token de la casilla #' + casilla + ': ' + tk : 'No hay token para esa casilla');
-        }
-
-        async function registrarManual() {
-            const casilla = parseInt(document.getElementById('admin-casilla').value);
-            const nombre = document.getElementById('admin-nombre').value.trim();
-            const telefono = document.getElementById('admin-telefono').value.trim();
-            if (!casilla || casilla < 1 || casilla > 100) { alert('Casilla entre 1 y 100'); return; }
-            if (!nombre || !telefono) { alert('Completá nombre y teléfono'); return; }
-            if (participantesRegistrados[casilla]) { alert('La casilla #' + casilla + ' ya está ocupada'); return; }
-            if (!db) { alert('Base de datos no conectada'); return; }
-            const snap = await db.ref('tokens').once('value');
-            let tokenKey = null;
-            snap.forEach(ch => { if (ch.val().casilla === casilla) tokenKey = ch.key; });
-            if (!tokenKey) { alert('No hay token para esa casilla'); return; }
-            await db.ref('tokens/' + tokenKey).update({ usado: true, nombre: nombre, telefono: telefono, fechaUso: Date.now() });
-            await db.ref('casillas/' + casilla).set({ nombre: nombre, telefono: telefono, token: tokenKey, fecha: Date.now() });
-            alert('✅ Casilla #' + casilla + ' asignada a ' + nombre + '\n🔑 Token: ' + tokenKey);
-            document.getElementById('admin-casilla').value = '';
-            document.getElementById('admin-nombre').value = '';
-            document.getElementById('admin-telefono').value = '';
-        }
-
-        async function forceSorteo() {
-            const ocupadas = Object.keys(participantesRegistrados).length;
-            if (!ocupadas) { alert('No hay casillas ocupadas para sortear.'); return; }
-            if (!db) { alert('Base de datos no conectada'); return; }
-            const snapG = await db.ref('ganadores').once('value');
-            if (snapG.exists() && Object.keys(snapG.val()).length > 0) { alert('El sorteo ya fue realizado.'); return; }
-            if (!confirm('🎲 ¿Lanzar el sorteo AHORA?\n\nDuración estimada: 3 minutos de máxima tensión.\nMantén la pantalla abierta.')) return;
-            await sortearDeVerdad();
-        }
-
-        async function resetSorteo() {
-            if (!confirm("⚠️ ¿BORRAR TODO EL SORTEO?")) return;
-            if (!db) { alert('Base de datos no conectada'); return; }
-            await db.ref('ganadores').remove();
-            await db.ref('configuracion/sorteoBloqueado').remove();
-            await db.ref('configuracion/estadoSorteo').remove();
-            await db.ref('configuracion/semillaSorteo').remove();
-            await db.ref('casillas').remove();
-            const t = await db.ref('tokens').once('value');
-            if (t.exists()) {
-                Object.keys(t.val()).forEach(k => {
-                    db.ref('tokens/' + k).update({ usado: false, nombre: null, telefono: null, fechaUso: null });
-                });
-            }
-            alert("✅ Reseteado con éxito");
-            location.reload();
-        }
-
-        async function continuarSorteo() {
-            if (!confirm('⚠️ ¿Continuar sorteo pendiente?')) return;
-            if (!db) { alert('Base de datos no conectada'); return; }
-            const semillaSnap = await db.ref('configuracion/semillaSorteo').once('value');
-            if (!semillaSnap.exists()) { alert('No hay semilla guardada.'); return; }
-            const ganadoresSnap = await db.ref('ganadores').once('value');
-            const yaEscritos = ganadoresSnap.exists() ? ganadoresSnap.val() : {};
-            if (Object.keys(yaEscritos).length >= 3) { alert('El sorteo ya está completo.'); return; }
-
-            const rng = mulberry32(semillaSnap.val());
-            let bolsa = Object.keys(participantesRegistrados).map(Number);
-            const ganadoresCalculados = [];
-            for (const p of [...premios].reverse()) {
-                for (let i = 1; i <= p.cantidad; i++) {
-                    if (!bolsa.length) break;
-                    const numGanador = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
-                    ganadoresCalculados.push({ catId: p.catId, nombrePremio: p.nombre, numero: numGanador });
+                // Pausa antes del siguiente tramo
+                if (prizeIndex < selectedWinners.length - 1) {
+                    await new Promise(r => setTimeout(r, 2000));
                 }
             }
 
-            await db.ref('configuracion/estadoSorteo').set('girando');
-            const faltantes = ganadoresCalculados.filter(g => !yaEscritos[g.numero]);
-            for (const g of faltantes) {
-                await escribirGanador(g);
-                await new Promise(r => setTimeout(r, 62000));
-            }
-            await db.ref('configuracion/estadoSorteo').set('finalizado');
-            alert('✅ Sorteo completado.');
+            statusText.textContent = "🎉 ¡Sorteo finalizado con éxito! Felicitaciones a los ganadores.";
+            isAnimating = false;
         }
 
-        function exportarGanadoresWA() {
-            if (!Object.keys(ganadoresLista).length) { alert("Sin ganadores"); return; }
-            let txt = "🏆 *GANADORES SORTEO DÍA DE LA MADRE* 🏆\n\n";
-            Object.values(ganadoresLista).forEach(g => {
-                txt += '🎁 *' + g.premio + '*\n👤 ' + g.nombre + '\n📞 ' + g.telefono + '\n🔢 #' + String(g.casilla).padStart(2, '0') + '\n\n';
+        // Función para las Fases 1 y 2 (Múltiples casillas parpadeando de forma caótica/dinámica)
+        function runCaoticPhase(pool, targetWinner, poolSize, intervalMs, iterations) {
+            return new Promise((resolve) => {
+                let currentIteration = 0;
+                const timer = setInterval(() => {
+                    let subPool = [...pool].sort(() => 0.5 - Math.random()).slice(0, Math.min(poolSize, pool.length));
+                    
+                    if (!subPool.includes(targetWinner) && Math.random() > 0.25) {
+                        subPool[0] = targetWinner;
+                    }
+
+                    renderGrid(globalCasillas, [], subPool, null);
+                    
+                    currentIteration++;
+                    if (currentIteration >= iterations) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, intervalMs);
             });
-            window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener,noreferrer');
         }
 
-        function renderizarBoletosAdmin() {
-            const cont = document.getElementById('admin-boletos-list');
-            const cnt = document.getElementById('admin-boletos-count');
-            const entradas = Object.entries(participantesRegistrados).sort((a, b) => Number(a[0]) - Number(b[0]));
-            if (cnt) cnt.textContent = entradas.length;
-            if (!cont) return;
-            if (!entradas.length) {
-                cont.innerHTML = '<p style="color:#666;font-size:13px;">Sin boletos vendidos aún</p>';
+        // Función para la Fase 3 (Una sola casilla rebotando aleatoriamente con la cantidad exacta de rebotes)
+        function runSingleBoxBounces(pool, targetWinner, totalBounces) {
+            return new Promise((resolve) => {
+                let currentBounce = 0;
+                let currentDelay = 90; // Velocidad inicial del rebote individual
+
+                function bounceStep() {
+                    let activeBox;
+                    
+                    if (currentBounce < totalBounces - 1) {
+                        // Seleccionar una casilla aleatoria distinta para cada rebote
+                        activeBox = pool[Math.floor(Math.random() * pool.length)];
+                    } else {
+                        // El último rebote cae inexorablemente en el ganador oficial
+                        activeBox = targetWinner;
+                    }
+
+                    renderGrid(globalCasillas, [], [], activeBox);
+
+                    currentBounce++;
+                    if (currentBounce < totalBounces) {
+                        // Aumentar progresivamente el retraso para simular desaceleración/frenado de ruleta
+                        currentDelay += Math.floor(currentBounce * 3.5);
+                        setTimeout(bounceStep, currentDelay);
+                    } else {
+                        // Pausa de suspenso al detenerse en el ganador antes de revelarlo
+                        setTimeout(resolve, 1100);
+                    }
+                }
+
+                bounceStep();
+            });
+        }
+
+        function renderWinnersUI(winnersArray, winningIndices) {
+            const winnersList = document.getElementById('winners-list');
+            winnersList.innerHTML = winnersArray.map(w => `
+                <div class="bg-white px-5 py-3 rounded-xl shadow border border-amber-200 text-center">
+                    <span class="text-xs font-bold text-rose-600 block">${w.label}</span>
+                    <span class="text-2xl font-extrabold text-slate-800">Casilla #${w.index}</span>
+                    <span class="text-sm font-semibold text-amber-800 block">${w.data ? w.data.nombre : 'Ganador'}</span>
+                    <span class="text-xs text-slate-400 block">${w.data ? w.data.telefono : ''}</span>
+                </div>
+            `).join('');
+
+            renderGrid(globalCasillas, winningIndices, [], null);
+        }
+
+        // ==========================================
+        // CUENTA REGRESIVA Y ESTADO
+        // ==========================================
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const daysElem = document.getElementById('days');
+            const hoursElem = document.getElementById('hours');
+            const minutesElem = document.getElementById('minutes');
+            const secondsElem = document.getElementById('seconds');
+            const simContainer = document.getElementById('simulation-container');
+
+            if (!daysElem || !hoursElem || !minutesElem || !secondsElem) return;
+
+            if (distance < 0) {
+                daysElem.textContent = "00";
+                hoursElem.textContent = "00";
+                minutesElem.textContent = "00";
+                secondsElem.textContent = "00";
+                
+                if (simContainer) simContainer.classList.remove('hidden');
                 return;
             }
-            cont.innerHTML = entradas.map(([num, d]) =>
-                '<div style="border:1px solid #fbcfe8;border-left:4px solid #ec4899;border-radius:8px;padding:8px;margin:6px 0;background:#fff5f7;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-                '<strong style="color:#be185d;font-size:1.05rem;">Casilla #' + String(num).padStart(2, '0') + '</strong>' +
-                '<span style="font-size:0.75rem;color:#8b5a6b;">🔑 ' + escapeHtml(d.token || '—') + '</span>' +
-                '</div>' +
-                '<div style="font-size:0.85rem;margin:5px 0;">👤 ' + escapeHtml(d.nombre || 'Sin nombre') + '<br>📱 ' + escapeHtml(d.telefono || '—') + '</div>' +
-                '</div>'
-            ).join('');
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysElem.textContent = String(days).padStart(2, '0');
+            hoursElem.textContent = String(hours).padStart(2, '0');
+            minutesElem.textContent = String(minutes).padStart(2, '0');
+            secondsElem.textContent = String(seconds).padStart(2, '0');
         }
 
-        function lanzarConfetti() {
-            const colores = ['#ffd700', '#ff5f8f', '#a86bff', '#5fd2ff', '#7cfc9a', '#ffffff'];
-            for (let i = 0; i < 90; i++) {
-                const c = document.createElement('div');
-                const dur = 2.2 + Math.random() * 1.8;
-                c.style.cssText = 'position:fixed;top:-12px;left:' + (Math.random() * 100) + 'vw;width:' + (6 + Math.random() * 7) + 'px;height:' + (6 + Math.random() * 7) + 'px;z-index:100000;pointer-events:none;background:' + colores[Math.floor(Math.random() * colores.length)] + ';border-radius:' + (Math.random() > .5 ? '50%' : '2px') + ';animation:caerConfetiSorteo ' + dur + 's linear forwards;animation-delay:' + (Math.random() * .4) + 's;';
-                document.body.appendChild(c);
-                setTimeout(() => c.remove(), (dur + 1) * 1000);
+        function checkSorteoStatus() {
+            const now = new Date().getTime();
+            const simContainer = document.getElementById('simulation-container');
+            if (now >= targetDate && simContainer) {
+                simContainer.classList.remove('hidden');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRaffleData();
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
     </script>
 </body>
 </html>
