@@ -301,11 +301,13 @@
         .cell.lit {
             background: linear-gradient(135deg, #ff2d78, #ff6ba0) !important;
             color: #fff !important;
-            border-color: #fff !important;
-            box-shadow: 0 0 14px #ff2d78, 0 0 32px rgba(255, 45, 120, 0.8);
-            transform: scale(1.15);
+            border-color: rgba(255,255,255,.95) !important;
+            box-shadow: 0 0 10px rgba(255,45,120,.72), 0 0 22px rgba(255,45,120,.42);
+            transform: scale(1.075);
             z-index: 5;
+            transition: background .48s ease, box-shadow .48s ease, transform .48s cubic-bezier(.22,.61,.36,1), border-color .48s ease;
         }
+        #liveGrid .cell { transition: background .48s ease, box-shadow .48s ease, transform .48s cubic-bezier(.22,.61,.36,1), border-color .48s ease, color .48s ease; }
 
         .cell.usada { position: relative; opacity: 0.92; }
         .cell.usada::after {
@@ -1170,34 +1172,49 @@
             const pool = poolLiveDeterministico();
             if (!pool.includes(g.numero)) pool.push(g.numero);
 
-            let cantidad = 18;
-            let faseSeed = semilla + indice * 7919 + Math.floor(transcurrido / 180);
+            // Animación elegante y progresiva. El reloj absoluto + semilla
+            // garantizan exactamente la misma secuencia en todos los dispositivos.
+            let cantidad = 14;
+            let faseSeed = semilla + indice * 7919;
 
-            if (transcurrido >= 10000 && transcurrido < 21000) {
-                const reduccion = [14, 10, 7, 4, 2];
-                const paso = Math.min(4, Math.floor((transcurrido - 10000) / 2200));
+            if (transcurrido < 9000) {
+                // Ambiente: luces tranquilas que cambian cada ~700 ms.
+                const ciclo = Math.floor(transcurrido / 700);
+                faseSeed += 10000 + ciclo * 379;
+                cantidad = 14;
+            } else if (transcurrido < 21000) {
+                // Reducción progresiva: 12 → 9 → 6 → 4 → 2.
+                const paso = Math.min(4, Math.floor((transcurrido - 9000) / 2400));
+                const reduccion = [12, 9, 6, 4, 2];
                 cantidad = reduccion[paso];
                 faseSeed += 50000 + paso * 997;
-            } else if (transcurrido >= 21000 && transcurrido < 29000) {
-                const saltos = indice === 0 ? 10 : (indice === 1 ? 15 : 20);
-                const delays = [];
-                for (let i = 0; i < saltos; i++) delays.push(220 + i * 35 + (i >= saltos - 3 ? 300 : 0));
-                let acumulado = 0, pos = saltos - 1;
+            } else if (transcurrido < 29000) {
+                // Una sola casilla: saltos cada vez más lentos.
+                const delays = [220,240,270,310,360,430,520,640,780,950,1150,1400];
+                let acumulado = 0;
+                let pos = delays.length - 1;
                 for (let i = 0; i < delays.length; i++) {
                     acumulado += delays[i];
                     if (transcurrido - 21000 < acumulado) { pos = i; break; }
                 }
-                if (pos === saltos - 1 && transcurrido - 21000 >= delays.reduce((a,b)=>a+b,0) - 600) {
+
+                const tiempoFinal = transcurrido - 21000;
+                const totalSaltos = delays.reduce((a,b) => a + b, 0);
+                if (tiempoFinal >= totalSaltos + 500) {
+                    // Silencio de tensión antes del golpe final.
                     const c = getCell(g.numero);
                     if (c) { c.classList.add('lit'); liveLitCells = [c]; }
                     return;
                 }
+
                 const candidatos = pool.filter(n => n !== g.numero);
-                const elegidos = seleccionarDeterministico(candidatos.length ? candidatos : pool, 1, faseSeed + pos * 1231);
+                const elegidos = seleccionarDeterministico(
+                    candidatos.length ? candidatos : pool, 1, faseSeed + pos * 1231
+                );
                 const c = getCell(elegidos[0] || g.numero);
                 if (c) { c.classList.add('lit'); liveLitCells = [c]; }
                 return;
-            } else if (transcurrido >= 29000) {
+            } else {
                 const c = getCell(g.numero);
                 if (c) c.classList.add('winner');
                 return;
@@ -1210,8 +1227,7 @@
             });
             liveLitCells = next;
         }
-
-        const DURACION_ANIMACION_LIVE = 37000;
+        const DURACION_ANIMACION_LIVE = 38000;
 
         async function reproducirAnimacionLiveSincronizada(anim) {
             if (!anim || !anim.numero || !anim.inicioMs) return;
@@ -1539,71 +1555,61 @@
             const getCell = (n) => document.getElementById((isSimulacro ? 'sim-cell-' : (esLive ? 'live-cell-' : 'cell-')) + n);
 
             detenerCaosAmbiente();
+            const poolBase = isSimulacro ? Object.keys(simParticipants || {}).map(Number) : poolDisponibles();
+            const pool = poolBase.slice();
+            if (!pool.includes(num)) pool.push(num);
 
-            const finFase1 = Date.now() + 10000;
-            while (Date.now() < finFase1) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-                const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-                const randomSample = pool.sort(() => Math.random() - 0.5).slice(0, 18);
-                randomSample.forEach(n => { const c = getCell(n); if(c) c.classList.add('lit'); });
-                await dormir(160);
+            const limpiar = () => document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
+            const poner = (cantidad, semilla) => {
+                limpiar();
+                const elegidas = seleccionarDeterministico(pool, Math.min(cantidad, pool.length), semilla);
+                elegidas.forEach(n => { const c = getCell(n); if (c) c.classList.add('lit'); });
+            };
+
+            // 1) Ambiente elegante: luces tranquilas y espaciadas.
+            const inicio = Date.now();
+            let ciclo = 0;
+            while (Date.now() - inicio < 9000) {
+                poner(14, 31000 + ciclo * 379);
+                ciclo++;
+                await dormir(700);
             }
 
-            const pasosReduccion = [14, 10, 7, 4, 2];
-            for (const cant of pasosReduccion) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-                const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-                const randomSample = pool.sort(() => Math.random() - 0.5).slice(0, cant);
-                randomSample.forEach(n => { const c = getCell(n); if(c) c.classList.add('lit'); });
-                await dormir(2200);
+            // 2) Reducción progresiva.
+            const reduccion = [12, 9, 6, 4, 2];
+            for (let i = 0; i < reduccion.length; i++) {
+                poner(reduccion[i], 50000 + i * 997);
+                await dormir(2400);
             }
 
-            let totalSaltosFinales = 10;
-            if (premioTxt.includes('BOX 2')) totalSaltosFinales = 15;
-            if (premioTxt.includes('BOX 1')) totalSaltosFinales = 20;
-
-            const pool = isSimulacro ? Object.keys(simParticipants).map(Number) : poolDisponibles();
-            if (pool.indexOf(num) === -1) pool.push(num);
-            
-            for (let i = 0; i < totalSaltosFinales; i++) {
-                document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-                
-                let casillaActual;
-                if (i === totalSaltosFinales - 1) {
-                    casillaActual = num;
-                } else {
-                    let tempPool = pool.filter(p => p !== num);
-                    casillaActual = tempPool[Math.floor(Math.random() * tempPool.length)];
-                }
-
-                const c = getCell(casillaActual);
+            // 3) Una sola luz que salta cada vez más lento.
+            const delays = [220,240,270,310,360,430,520,640,780,950,1150,1400];
+            for (let i = 0; i < delays.length; i++) {
+                limpiar();
+                const candidatos = pool.filter(p => p !== num);
+                const elegido = seleccionarDeterministico(candidatos.length ? candidatos : pool, 1, 70000 + i * 1231)[0] || num;
+                const c = getCell(elegido);
                 if (c) c.classList.add('lit');
-
-                let delay = 220 + (i * 35);
-                if (i >= totalSaltosFinales - 3) {
-                    delay += 300;
-                }
-                
-                if (navigator.vibrate && i >= totalSaltosFinales - 4) {
-                    navigator.vibrate(60);
-                }
-
-                await dormir(delay);
+                if (navigator.vibrate && i >= delays.length - 4) navigator.vibrate(35);
+                await dormir(delays[i]);
             }
 
-            await dormir(600);
-            document.querySelectorAll(cellSelector + '.lit').forEach(c => c.classList.remove('lit'));
-            const cellGanadora = getCell(num);
-            if (cellGanadora) {
-                cellGanadora.classList.add('winner');
-                cellGanadora.classList.add('usada');
+            // 4) Pausa de tensión y revelación.
+            limpiar();
+            const finalCell = getCell(num);
+            if (finalCell) finalCell.classList.add('lit');
+            await dormir(500);
+            limpiar();
+            if (finalCell) {
+                finalCell.classList.add('winner');
+                finalCell.classList.add('usada');
             }
             if (!isSimulacro) numerosYaGanadores.add(num);
 
             lanzarConfetti();
-            if (navigator.vibrate) navigator.vibrate([150, 100, 200, 100, 300]);
+            if (navigator.vibrate) navigator.vibrate([120, 80, 180, 80, 320]);
 
-            const nombreGanador = isSimulacro ? simParticipants[num].name : (participantesRegistrados[num] ? participantesRegistrados[num].nombre : 'Ganador/a');
+            const nombreGanador = isSimulacro ? (simParticipants[num] || {}).name : (participantesRegistrados[num] ? participantesRegistrados[num].nombre : 'Ganador/a');
             if (esLive) {
                 const liveWinner = document.getElementById('liveWinner');
                 if (liveWinner) {
@@ -1624,204 +1630,6 @@
             await dormir(1000);
             if (!isSimulacro && !esLive) iniciarCaosAmbiente();
         }
-
-        async function procesarColaAnimacion() {
-            if (animandoGanador) return;
-            animandoGanador = true;
-            while (colaAnimacion.length) {
-                const item = colaAnimacion.shift();
-                await animarGanadorUltraDramatico(item.num, item.data, false);
-            }
-            animandoGanador = false;
-        }
-
-        if (db) {
-            db.ref('ganadores').on('child_added', (snap) => {
-                const num = parseInt(snap.key);
-                ganadoresAnimados.add(num);
-                numerosYaGanadores.add(num);
-                // Durante el sorteo real NO arrancamos la animación desde child_added.
-                // La animación se controla por planGanadores + estadoSorteo para evitar
-                // que el ganador aparezca antes de la animación.
-                if (!sorteoEnCurso) {
-                    const cell = document.getElementById('cell-' + num);
-                    if (cell) { cell.classList.add('winner'); cell.classList.add('usada'); }
-                }
-            });
-        }
-
-        // =========================================================================
-        // SORTEO REAL / FORZADO - versión robusta con diagnóstico y recuperación
-        // =========================================================================
-        function mostrarErrorSorteo(titulo, error) {
-            const code = error && error.code ? '\nCódigo Firebase: ' + error.code : '';
-            const msg = error && error.message ? error.message : String(error || 'Error desconocido');
-            console.error(titulo, error);
-            alert('❌ ' + titulo + '\n\n' + msg + code + '\n\nSi aparece PERMISSION_DENIED, revisá las reglas de Firebase Realtime Database.');
-        }
-
-        function firebaseConTimeout(promise, ms, operacion) {
-            let timer;
-            const timeout = new Promise((_, reject) => {
-                timer = setTimeout(() => reject(new Error('Tiempo agotado (' + ms / 1000 + ' s) al realizar: ' + operacion + '. Verificá conexión y reglas de Firebase.')), ms);
-            });
-            return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-        }
-
-        function obtenerCasillasValidas() {
-            return Object.keys(participantesRegistrados || {})
-                .map(Number)
-                .filter(n => Number.isInteger(n) && n > 0 && n <= TOTAL_CASILLAS && participantesRegistrados[n] !== null && participantesRegistrados[n] !== undefined);
-        }
-
-        async function adquirirBloqueoSorteo() {
-            const lockRef = db.ref('configuracion/sorteoBloqueado');
-            const resultado = await firebaseConTimeout(
-                lockRef.transaction(v => v === true ? undefined : true),
-                10000,
-                'adquirir bloqueo del sorteo'
-            );
-            if (!resultado.committed) throw new Error('El sorteo está bloqueado por otra ejecución. Si no hay otro dispositivo sorteando, usá "Resetear sorteo" y volvé a intentar.');
-            return lockRef;
-        }
-
-        async function sortearDeVerdad(opciones = {}) {
-            if (sorteoOperando || window.__MOTOR_SORTEO_ACTIVO__) {
-                alert('⏳ El sorteo ya está ejecutándose.');
-                return false;
-            }
-            if (!db) {
-                alert('⚠️ Firebase no está conectado.');
-                return false;
-            }
-            const forzado = opciones.forzado === true;
-            if (!forzado && Date.now() < fechaObjetivo) {
-                alert('⏰ El sorteo oficial todavía no está habilitado.');
-                return false;
-            }
-
-            try {
-                const previo = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'leer ganadores existentes');
-                if (previo.exists() && Object.keys(previo.val() || {}).length) {
-                    throw new Error('Ya existen ganadores en Firebase. Para una prueba nueva, usá "Resetear sorteo".');
-                }
-
-                const casillas = obtenerCasillasValidas();
-                const totalPremios = premios.reduce((s, p) => s + Number(p.cantidad || 0), 0);
-                if (casillas.length < totalPremios) throw new Error('No hay suficientes casillas ocupadas. Ocupadas: ' + casillas.length + '. Necesarias: ' + totalPremios + '.');
-
-                const adquirido = await adquirirControladorSorteoReal();
-                if (!adquirido) throw new Error('Otro dispositivo ya controla el sorteo.');
-                sorteoOperando = true;
-
-                // Revalidación después del lock.
-                const previo2 = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'revalidar ganadores');
-                if (previo2.exists() && Object.keys(previo2.val() || {}).length) throw new Error('Otro proceso ya generó ganadores.');
-
-                const semilla = Date.now();
-                const rng = mulberry32(semilla);
-                const bolsa = casillas.slice();
-                const plan = [];
-                for (const p of [...premios].reverse()) {
-                    for (let i = 1; i <= Number(p.cantidad || 0); i++) {
-                        if (!bolsa.length) throw new Error('Se agotaron las casillas disponibles.');
-                        const numero = bolsa.splice(Math.floor(rng() * bolsa.length), 1)[0];
-                        plan.push({ catId: p.catId, nombrePremio: p.nombre, numero });
-                    }
-                }
-
-                await firebaseConTimeout(db.ref('configuracion').update({
-                    semillaSorteo: semilla,
-                    planGanadores: plan,
-                    indiceAnimacion: 0,
-                    premioEnProceso: null,
-                    numeroEnProceso: null,
-                    ultimoPremioConfirmado: null,
-                    ultimoNumeroGanador: null,
-                    faseSorteo: 'preparando',
-                    estadoSorteo: 'girando',
-                    sorteoBloqueado: true,
-                    modoForzado: forzado,
-                    inicioSorteo: Date.now(),
-                    heartbeatSorteo: Date.now()
-                }), 10000, 'guardar estado inicial del sorteo');
-
-                // El listener de estado puede intentar arrancar también, pero el lock de controlador evita duplicación.
-                sorteoEnCurso = true;
-                sorteoTerminado = false;
-                entrarModoSorteoVisual();
-                planGanadoresReal = plan;
-                actualizarLiveStatus('🎬 Preparando la transmisión en vivo...', 0, plan.length);
-                await dormir(1200);
-
-                // El motor continúa usando el mismo controlador. No liberar el lock aquí.
-                return await iniciarSeguimientoSorteoReal();
-            } catch (error) {
-                try {
-                    await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() });
-                } catch (_) {}
-                mostrarErrorSorteo('Error al iniciar el sorteo', error);
-                return false;
-            }
-        }
-
-        async function escribirGanador(g) {
-            if (!db) return;
-            const d = participantesRegistrados[g.numero] || {};
-            await db.ref('ganadores/' + g.numero).set({
-                casilla: g.numero, premio: g.nombrePremio, nombre: d.nombre || '',
-                telefono: d.telefono || '', token: d.token || '', catId: g.catId, fechaSorteo: Date.now()
-            });
-        }
-
-        // ============================================================
-        // ===== RESTAURAR BACKUP JSON DESDE EL PANEL ADMIN ===========
-        // ============================================================
-        async function restaurarBackupJson(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (!confirm("⚠️ ¿Restaurar los participantes y tokens desde este archivo JSON y borrar los ganadores actuales?")) return;
-            if (!db) { alert('Base de datos no conectada'); return; }
-
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    const updates = {};
-                    if (data.casillas) updates['casillas'] = data.casillas;
-                    if (data.tokens) updates['tokens'] = data.tokens;
-                    if (data.configuracion) updates['configuracion'] = data.configuracion;
-
-                    // Limpiar ganadores y bloqueos previos
-                    updates['ganadores'] = null;
-                    updates['configuracion/sorteoBloqueado'] = null;
-                    updates['configuracion/estadoSorteo'] = null;
-                    updates['configuracion/semillaSorteo'] = null;
-                    updates['configuracion/planGanadores'] = null;
-                    updates['configuracion/indiceAnimacion'] = null;
-                    updates['configuracion/controladorSorteo'] = null;
-                    updates['configuracion/faseSorteo'] = null;
-                    updates['configuracion/premioEnProceso'] = null;
-                    updates['configuracion/numeroEnProceso'] = null;
-                    updates['configuracion/ultimoPremioConfirmado'] = null;
-                    updates['configuracion/ultimoNumeroGanador'] = null;
-                    updates['configuracion/heartbeatSorteo'] = null;
-
-                    await db.ref().update(updates);
-                    alert("✅ ¡Backup restaurado con éxito! Participantes cargados y ganadores borrados.");
-                    location.reload();
-                } catch (err) {
-                    alert("❌ Error al procesar el JSON: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // ============================================================
-        // ===== SIMULACRO PRIVADO (ACCESO DESDE BARRA DE PROGRESO) ===
-        // ============================================================
-        let simulandoActivo = false;
-
         async function abrirSimulacro() {
             if (simulandoActivo) return;
             simulandoActivo = true;
