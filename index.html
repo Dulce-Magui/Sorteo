@@ -1002,10 +1002,162 @@
             if (!verificacion.exists()) throw new Error('Firebase no confirmó el ganador de la posición ' + (indice + 1) + '.');
         }
 
-        async function iniciarSeguimientoSorteoReal() {
-            if (!db || animacionRealEjecutandose) return false;
-            if (window.__MOTOR_SORTEO_ACTIVO__) return false;
+        // ============================================================
+        // MOTOR DE TRANSMISIÓN SINCRONIZADA
+        // Un solo dispositivo controla el sorteo y TODOS los dispositivos
+        // reproducen la misma fase mediante Firebase/animacionActual.
+        // ============================================================
+        let relojServidorOffset = 0;
+        let liveAnimacionClave = '';
+        let liveAnimacionToken = 0;
+        let liveAnimacionActiva = false;
+        let liveAnimacionIntervalo = null;
 
+        if (db) {
+            db.ref('.info/serverTimeOffset').on('value', snap => {
+                const v = Number(snap.val());
+                relojServidorOffset = Number.isFinite(v) ? v : 0;
+            });
+        }
+
+        function ahoraServidorLocal() {
+            return Date.now() + relojServidorOffset;
+        }
+
+        function poolLiveDeterministico() {
+            const previos = new Set(Object.keys(ganadoresLista || {}).map(Number));
+            return Object.keys(participantesRegistrados || {})
+                .map(Number)
+                .filter(n => Number.isInteger(n) && n > 0 && n <= TOTAL_CASILLAS && participantesRegistrados[n] && !previos.has(n));
+        }
+
+        function seleccionarDeterministico(pool, cantidad, semilla) {
+            const copia = pool.slice();
+            const rng = mulberry32((Number(semilla) | 0) ^ 0x5bd1e995);
+            for (let i = copia.length - 1; i > 0; i--) {
+                const j = Math.floor(rng() * (i + 1));
+                [copia[i], copia[j]] = [copia[j], copia[i]];
+            }
+            return copia.slice(0, Math.min(cantidad, copia.length));
+        }
+
+        function aplicarFrameLive(g, indice, transcurrido, semilla) {
+            const getCell = n => document.getElementById('live-cell-' + n);
+            const cells = document.querySelectorAll('#liveGrid .cell.lit');
+            cells.forEach(c => c.classList.remove('lit'));
+
+            const pool = poolLiveDeterministico();
+            if (!pool.includes(g.numero)) pool.push(g.numero);
+
+            let cantidad = 18;
+            let faseSeed = semilla + indice * 7919 + Math.floor(transcurrido / 180);
+
+            if (transcurrido >= 10000 && transcurrido < 21000) {
+                const reduccion = [14, 10, 7, 4, 2];
+                const paso = Math.min(4, Math.floor((transcurrido - 10000) / 2200));
+                cantidad = reduccion[paso];
+                faseSeed += 50000 + paso * 997;
+            } else if (transcurrido >= 21000 && transcurrido < 29000) {
+                // Fase final: cada vez quedan menos saltos y finalmente cae en el ganador.
+                const saltos = indice === 0 ? 10 : (indice === 1 ? 15 : 20);
+                const delays = [];
+                for (let i = 0; i < saltos; i++) delays.push(220 + i * 35 + (i >= saltos - 3 ? 300 : 0));
+                const total = delays.reduce((a,b) => a+b, 0) + 600;
+                let acumulado = 0, pos = saltos - 1;
+                for (let i = 0; i < delays.length; i++) {
+                    acumulado += delays[i];
+                    if (transcurrido - 21000 < acumulado) { pos = i; break; }
+                }
+                if (pos === saltos - 1 && transcurrido - 21000 >= total - 600) {
+                    const c = getCell(g.numero);
+                    if (c) c.classList.add('lit');
+                    return;
+                }
+                const candidatos = pool.filter(n => n !== g.numero);
+                const elegidos = seleccionarDeterministico(candidatos.length ? candidatos : pool, 1, faseSeed + pos * 1231);
+                const n = elegidos[0] || g.numero;
+                const c = getCell(n);
+                if (c) c.classList.add('lit');
+                return;
+            } else if (transcurrido >= 29000) {
+                const c = getCell(g.numero);
+                if (c) c.classList.add('winner');
+                return;
+            }
+
+            seleccionarDeterministico(pool, cantidad, faseSeed).forEach(n => {
+                const c = getCell(n);
+                if (c) c.classList.add('lit');
+            });
+        }
+
+        const DURACION_ANIMACION_LIVE = 37000;
+
+        async function reproducirAnimacionLiveSincronizada(anim) {
+            if (!anim || !anim.numero || !anim.inicioMs) return;
+            const clave = String(anim.id || (anim.indice + '-' + anim.numero + '-' + anim.inicioMs));
+            if (clave === liveAnimacionClave) return;
+            liveAnimacionClave = clave;
+            const token = ++liveAnimacionToken;
+            liveAnimacionActiva = true;
+
+            entrarModoSorteoVisual();
+            construirLiveGrid();
+            actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(anim.premio || ''), Number(anim.indice || 0), Number(anim.total || 3));
+
+            const inicio = Number(anim.inicioMs);
+            const semilla = Number(anim.semilla || 1);
+            const indice = Number(anim.indice || 0);
+            const numero = Number(anim.numero);
+            const g = { numero, nombrePremio: anim.premio || '', catId: anim.catId || '' };
+            const espera = inicio - ahoraServidorLocal();
+            if (espera > 0) await dormir(espera);
+            if (token !== liveAnimacionToken) return;
+
+            detenerCaosAmbiente();
+            if (liveAnimacionIntervalo) clearInterval(liveAnimacionIntervalo);
+
+            const tick = () => {
+                if (token !== liveAnimacionToken) return;
+                const transcurrido = ahoraServidorLocal() - inicio;
+                if (transcurrido < 0) return;
+                aplicarFrameLive(g, indice, transcurrido, semilla);
+
+                if (transcurrido >= 29000) {
+                    const liveWinner = document.getElementById('liveWinner');
+                    if (liveWinner) {
+                        const nombre = (participantesRegistrados[numero] || {}).nombre || 'Ganador/a';
+                        liveWinner.innerHTML = '🎉 ¡CASILLA #' + String(numero).padStart(2, '0') + '!<br>👤 ' + escapeHtml(nombre) + '<br>🏆 ' + escapeHtml(etiquetaPremio(anim.premio || ''));
+                        liveWinner.classList.add('visible');
+                    }
+                    const winnerCell = document.getElementById('live-cell-' + numero);
+                    if (winnerCell) winnerCell.classList.add('winner');
+                }
+
+                if (transcurrido >= DURACION_ANIMACION_LIVE) {
+                    clearInterval(liveAnimacionIntervalo);
+                    liveAnimacionIntervalo = null;
+                    if (navigator.vibrate) navigator.vibrate([150,100,200,100,300]);
+                    liveAnimacionActiva = false;
+                }
+            };
+            tick();
+            liveAnimacionIntervalo = setInterval(tick, 90);
+        }
+
+        async function sincronizarTransmisionDesdeFirebase() {
+            if (!db) return;
+            try {
+                const snap = await firebaseConTimeout(db.ref('configuracion/animacionActual').once('value'), 10000, 'leer animación actual');
+                const anim = snap.val();
+                if (anim && anim.numero && anim.inicioMs) await reproducirAnimacionLiveSincronizada(anim);
+            } catch (e) {
+                console.warn('No se pudo sincronizar la transmisión:', e);
+            }
+        }
+
+        async function iniciarSeguimientoSorteoReal() {
+            if (!db || animacionRealEjecutandose || window.__MOTOR_SORTEO_ACTIVO__) return false;
             const estadoSnap = await firebaseConTimeout(db.ref('configuracion/estadoSorteo').once('value'), 10000, 'leer estado del sorteo');
             if (estadoSnap.val() !== 'girando') return false;
 
@@ -1028,50 +1180,61 @@
                 let indiceSnap = await firebaseConTimeout(db.ref('configuracion/indiceAnimacion').once('value'), 10000, 'leer índice del sorteo');
                 let indice = Number(indiceSnap.val());
                 if (!Number.isFinite(indice) || indice < 0) indice = 0;
-
-                // El índice es la única posición que se debe animar a continuación.
-                // Si Firebase ya tiene ese ganador, avanzamos sin repetirlo.
                 while (indice < plan.length && escritos[plan[indice].numero]) indice++;
                 await db.ref('configuracion/indiceAnimacion').set(indice);
 
                 for (let i = indice; i < plan.length; i++) {
-                    if (!controladorSorteoActivo) throw new Error('El controlador del sorteo fue perdido. La ejecución quedó pausada para evitar duplicados.');
+                    if (!controladorSorteoActivo) throw new Error('Se perdió el control del sorteo. Quedó pausado para evitar duplicados.');
                     const g = plan[i];
-
                     const existente = await firebaseConTimeout(db.ref('ganadores/' + g.numero).once('value'), 10000, 'comprobar ganador actual');
                     if (existente.exists()) {
                         await db.ref('configuracion').update({ indiceAnimacion: i + 1, ultimoPremioConfirmado: i, ultimoNumeroGanador: g.numero, faseSorteo: 'confirmado', heartbeatSorteo: Date.now() });
                         continue;
                     }
 
+                    const inicioMs = ahoraServidorLocal() + 1800;
+                    const animacion = {
+                        id: 'premio-' + i + '-' + g.numero + '-' + inicioMs,
+                        indice: i,
+                        total: plan.length,
+                        numero: g.numero,
+                        premio: g.nombrePremio,
+                        catId: g.catId,
+                        inicioMs,
+                        duracionMs: DURACION_ANIMACION_LIVE,
+                        semilla: Number((await db.ref('configuracion/semillaSorteo').once('value')).val()) || Date.now()
+                    };
+
                     await firebaseConTimeout(db.ref('configuracion').update({
                         indiceAnimacion: i,
                         premioEnProceso: i,
                         numeroEnProceso: g.numero,
                         faseSorteo: 'animando',
+                        animacionActual: animacion,
                         heartbeatSorteo: Date.now()
-                    }), 10000, 'marcar premio en proceso');
+                    }), 10000, 'publicar animación del premio ' + (i + 1));
 
-                    actualizarLiveStatus('🎯 Buscando el ganador del ' + etiquetaPremio(g.nombrePremio), i, plan.length);
-                    await animarGanadorUltraDramatico(g.numero, { premio: g.nombrePremio, nombre: (participantesRegistrados[g.numero] || {}).nombre || '' }, false, null, 'live');
+                    // El controlador también escucha animacionActual, exactamente igual que los espectadores.
+                    await dormir(Math.max(0, (inicioMs + DURACION_ANIMACION_LIVE + 800) - ahoraServidorLocal()));
+                    if (!controladorSorteoActivo) throw new Error('Se perdió el control durante la animación.');
 
-                    // Confirmación atómica: ganador + avance del índice.
                     await confirmarGanadorPersistente(g, i);
-                    indiceAnimacionReal = i + 1;
-
+                    await db.ref('configuracion/animacionActual').remove();
+                    await db.ref('configuracion').update({ faseSorteo: 'confirmado', heartbeatSorteo: Date.now() });
                     if (i < plan.length - 1) await dormir(1200);
                 }
 
                 const finales = await firebaseConTimeout(db.ref('ganadores').once('value'), 10000, 'verificar todos los ganadores');
                 const finalObj = finales.val() || {};
                 const faltantes = plan.filter(g => !finalObj[g.numero]);
-                if (faltantes.length) throw new Error('El sorteo no se cerró porque faltan ' + faltantes.length + ' ganador(es) por confirmar.');
+                if (faltantes.length) throw new Error('Faltan ' + faltantes.length + ' ganador(es) por confirmar.');
 
                 await firebaseConTimeout(db.ref('configuracion').update({
                     estadoSorteo: 'finalizado',
                     sorteoBloqueado: true,
                     finalizacionSorteo: Date.now(),
                     faseSorteo: 'finalizado',
+                    animacionActual: null,
                     heartbeatSorteo: Date.now()
                 }), 10000, 'finalizar sorteo');
 
@@ -1079,13 +1242,12 @@
                 sorteoEnCurso = false;
                 sorteoTerminado = true;
                 salirModoSorteoVisual();
-                alert('✅ SORTEO COMPLETADO.\n\nSe confirmaron ' + plan.length + ' ganadores en Firebase.');
+                renderizarGanadores();
+                alert('✅ SORTEO COMPLETADO.\n\nLos 3 ganadores quedaron confirmados y sincronizados en todos los dispositivos.');
                 return true;
             } catch (error) {
                 console.error('Motor de sorteo pausado:', error);
-                try {
-                    await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() });
-                } catch (_) {}
+                try { await db.ref('configuracion').update({ estadoSorteo: 'pausado', faseSorteo: 'pausado', heartbeatSorteo: Date.now() }); } catch (_) {}
                 sorteoEnCurso = false;
                 salirModoSorteoVisual();
                 mostrarErrorSorteo('El sorteo quedó pausado y puede continuar sin perder los ganadores confirmados', error);
@@ -1099,22 +1261,32 @@
         }
 
         if (db) {
-            db.ref('configuracion/estadoSorteo').on('value', (snap) => {
+            db.ref('configuracion/estadoSorteo').on('value', async snap => {
                 const estado = snap.val();
                 if (estado === 'girando') {
                     sorteoEnCurso = true;
                     sorteoTerminado = false;
                     entrarModoSorteoVisual();
-                    // Al recargar, la transmisión se reconstruye desde el plan guardado.
-                    setTimeout(() => iniciarSeguimientoSorteoReal(), 50);
+                    await sincronizarTransmisionDesdeFirebase();
                 } else if (estado === 'finalizado') {
                     sorteoEnCurso = false;
                     sorteoTerminado = true;
+                    if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
+                    liveAnimacionToken++;
                     salirModoSorteoVisual();
+                    renderizarGanadores();
                 } else if (estado === 'pausado' || estado === 'error') {
                     sorteoEnCurso = false;
+                    liveAnimacionToken++;
+                    if (liveAnimacionIntervalo) { clearInterval(liveAnimacionIntervalo); liveAnimacionIntervalo = null; }
                     salirModoSorteoVisual();
                 }
+            });
+
+            db.ref('configuracion/animacionActual').on('value', snap => {
+                const anim = snap.val();
+                if (!anim || !anim.numero || !anim.inicioMs) return;
+                reproducirAnimacionLiveSincronizada(anim).catch(e => console.warn('Animación sincronizada:', e));
             });
         }
 
@@ -1764,7 +1936,8 @@
                     'configuracion/numeroEnProceso': null,
                     'configuracion/ultimoPremioConfirmado': null,
                     'configuracion/ultimoNumeroGanador': null,
-                    'configuracion/heartbeatSorteo': null
+                    'configuracion/heartbeatSorteo': null,
+                    'configuracion/animacionActual': null
                 }), 10000, 'resetear estado del sorteo');
                 alert('✅ Sorteo reseteado. Participantes y tokens permanecen intactos.');
                 location.reload();
